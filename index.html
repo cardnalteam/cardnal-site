@@ -1,289 +1,600 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Cardnal helps you choose the right card before you pay.">
-  <title>Cardnal — The right card. Every time.</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ink: #0b0c0e;
-      --red: #e60b21;
-      --red-deep: #a80a18;
-      --paper: #fff;
-      --muted: #676c75;
-      --line: #e6e8ec;
-      --display: "Archivo", system-ui, sans-serif;
-      --body: "Instrument Sans", system-ui, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardnal — The right card. Every time.</title>
+<meta name="description" content="Cardnal tells you which card to use before you pay. Get more from the cards you already own.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B0C0E;
+  --red:#E60B21;
+  --red-deep:#A80A18;
+  --paper:#FFFFFF;
+  --mist:#F4F5F7;
+  --line:#E6E8EC;
+  --muted:#676C75;
+  --gain:#0E9F5B;
+  --wing:26.7deg;            /* the exact edge angle of the Cardnal mark */
+  --display:'Archivo',system-ui,sans-serif;
+  --body:'Instrument Sans',system-ui,sans-serif;
+  --data:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2.5px solid var(--red);outline-offset:3px;border-radius:4px}
 
-    * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
-    body {
-      min-height: 100vh;
-      margin: 0;
-      color: var(--ink);
-      background: var(--paper);
-      font-family: var(--body);
-      -webkit-font-smoothing: antialiased;
-    }
-    button, input { font: inherit; }
-    a { color: inherit; text-decoration: none; }
-    :focus-visible { outline: 3px solid var(--red); outline-offset: 4px; }
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.82);
+  backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s ease;
+}
+.nav.scrolled{border-bottom-color:var(--line)}
+.nav-in{
+  max-width:1240px;margin:0 auto;
+  padding:18px 32px;
+  display:flex;align-items:center;gap:40px;
+}
+.brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+.brand svg{width:30px;height:30px;display:block}
+.brand span{
+  font-family:var(--display);font-weight:800;font-size:24px;
+  letter-spacing:-.035em;
+}
+.nav-links{display:flex;gap:32px;margin-left:auto;font-size:15px;font-weight:500;color:var(--muted)}
+.nav-links a{transition:color .18s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{
+  white-space:nowrap;
+  font-family:var(--body);font-weight:600;font-size:15px;
+  padding:10px 20px;border-radius:9px;
+  background:var(--ink);color:#fff;border:0;cursor:pointer;
+  transition:background .18s,transform .18s;
+}
+.nav-cta:hover{background:var(--red);transform:translateY(-1px)}
 
-    .page {
-      position: relative;
-      min-height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .page::before {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      width: 56rem;
-      height: 56rem;
-      top: -25rem;
-      right: -20rem;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(230, 11, 33, .13), transparent 66%);
-      pointer-events: none;
-    }
-    .page::after {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      inset: 0;
-      background: linear-gradient(116deg, transparent 0 52%, rgba(230, 11, 33, .025) 52% 55%, transparent 55%);
-      pointer-events: none;
-    }
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden}
+/* structural motif: a light field raked to the mark's own angle */
+.hero::before{
+  content:'';position:absolute;inset:-40% -10%;
+  background:linear-gradient(var(--wing),
+    transparent 0 46%,
+    rgba(230,11,33,.028) 46% 53%,
+    transparent 53%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;right:-14%;top:-18%;
+  width:680px;height:680px;border-radius:50%;
+  background:radial-gradient(circle,rgba(230,11,33,.19),transparent 63%);
+  filter:blur(26px);pointer-events:none;
+}
+.hero-in{
+  position:relative;z-index:1;
+  max-width:1240px;margin:0 auto;
+  padding:64px 32px 78px;
+  display:grid;grid-template-columns:1.05fr .95fr;
+  gap:64px;align-items:center;
+}
 
-    header {
-      width: min(1120px, calc(100% - 48px));
-      margin: 0 auto;
-      padding: 28px 0;
-    }
-    .brand { display: inline-flex; align-items: center; gap: 10px; }
-    .brand-mark { width: 30px; height: 30px; display: block; }
-    .brand-name {
-      font-family: var(--display);
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -.04em;
-    }
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--data);font-size:11.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--red-deep);
+  background:rgba(230,11,33,.07);
+  border:1px solid rgba(230,11,33,.16);
+  padding:7px 14px 7px 11px;border-radius:100px;
+  margin-bottom:30px;
+}
+.eyebrow i{
+  width:6px;height:6px;border-radius:50%;background:var(--red);
+  animation:pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
 
-    main {
-      width: min(1120px, calc(100% - 48px));
-      flex: 1;
-      margin: 0 auto;
-      display: grid;
-      place-items: center;
-      padding: 72px 0 112px;
-    }
-    .content { width: min(100%, 700px); text-align: center; }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 26px;
-      color: var(--red-deep);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-    }
-    .eyebrow::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--red);
-    }
-    h1 {
-      max-width: 680px;
-      margin: 0 auto 24px;
-      font-family: var(--display);
-      font-size: clamp(3.2rem, 8vw, 6.7rem);
-      font-weight: 800;
-      line-height: .93;
-      letter-spacing: -.065em;
-    }
-    h1 span { display: block; }
-    h1 span:last-child { color: var(--red); }
-    .intro {
-      max-width: 510px;
-      margin: 0 auto 42px;
-      color: var(--muted);
-      font-size: clamp(1.05rem, 2vw, 1.25rem);
-      line-height: 1.55;
-    }
-    .signup-card {
-      width: min(100%, 560px);
-      margin: 0 auto;
-      padding: 25px;
-      text-align: left;
-      background: rgba(255, 255, 255, .86);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      box-shadow: 0 22px 60px -34px rgba(11, 12, 14, .35);
-      backdrop-filter: blur(10px);
-    }
-    .signup-card h2 {
-      margin: 0 0 5px;
-      font-family: var(--display);
-      font-size: 20px;
-      letter-spacing: -.025em;
-    }
-    .signup-card p { margin: 0 0 18px; color: var(--muted); font-size: 14px; }
-    .signup { display: flex; gap: 10px; }
-    .signup input {
-      min-width: 0;
-      flex: 1;
-      height: 54px;
-      padding: 0 16px;
-      color: var(--ink);
-      background: #fff;
-      border: 1.5px solid var(--line);
-      border-radius: 10px;
-    }
-    .signup input::placeholder { color: #9aa0a8; }
-    .signup input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px rgba(230, 11, 33, .1); }
-    .signup button {
-      height: 54px;
-      padding: 0 21px;
-      color: #fff;
-      background: var(--red);
-      border: 0;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      white-space: nowrap;
-      transition: background .18s, transform .18s;
-    }
-    .signup button:hover { background: var(--red-deep); transform: translateY(-1px); }
-    .signup button:disabled { cursor: wait; opacity: .7; transform: none; }
-    .message {
-      min-height: 21px;
-      margin: 12px 2px 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .message.success { color: #0e9f5b; }
-    .message.error { color: var(--red); }
-    .privacy-note { margin-top: 18px; color: var(--muted); font-size: 12px; text-align: center; }
-    footer {
-      width: min(1120px, calc(100% - 48px));
-      margin: 0 auto;
-      padding: 22px 0 28px;
-      color: var(--muted);
-      border-top: 1px solid var(--line);
-      font-size: 13px;
-      text-align: center;
-    }
+h1{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(30px,4.9vw,76px);
+  line-height:.96;letter-spacing:-.045em;
+  margin-bottom:26px;
+}
+h1 .b{display:block;white-space:nowrap}
+h1 .r{display:block;white-space:nowrap;color:var(--red)}
+.sub{
+  font-size:clamp(16.5px,1.35vw,19px);
+  line-height:1.62;color:var(--muted);
+  max-width:26em;margin-bottom:36px;
+}
+.sub b{color:var(--ink);font-weight:600}
 
-    @media (max-width: 560px) {
-      header, main, footer { width: min(100% - 32px, 1120px); }
-      header { padding-top: 22px; }
-      main { padding: 48px 0 80px; }
-      .signup-card { padding: 20px; }
-      .signup { flex-direction: column; }
-      .signup button { width: 100%; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
-    }
-  </style>
+.actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:44px}
+.btn{
+  font-family:var(--body);font-size:17px;font-weight:600;
+  display:inline-flex;align-items:center;gap:12px;
+  padding:17px 32px;border-radius:12px;border:0;cursor:pointer;
+  background:var(--red);color:#fff;
+  box-shadow:0 8px 22px -8px rgba(230,11,33,.55);
+  transition:transform .2s cubic-bezier(.2,.7,.3,1),box-shadow .2s,background .2s;
+}
+.btn:hover{background:var(--red-deep);transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(230,11,33,.6)}
+.btn svg{transition:transform .2s cubic-bezier(.2,.7,.3,1)}
+.btn:hover svg{transform:translateX(5px)}
+.btn-ghost{
+  font-size:16px;font-weight:600;color:var(--muted);
+  background:none;border:0;cursor:pointer;padding:8px 4px;
+  border-bottom:1.5px solid var(--line);transition:color .18s,border-color .18s;
+}
+.btn-ghost:hover{color:var(--ink);border-color:var(--ink)}
+
+.trust{display:flex;align-items:center;gap:26px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.trust div{display:flex;align-items:center;gap:8px}
+.trust svg{color:var(--gain);flex-shrink:0}
+
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.signup{display:flex;align-items:stretch;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.field{flex:1 1 260px;min-width:0}
+.field input{
+  width:100%;height:100%;min-height:58px;
+  font-family:var(--body);font-size:16.5px;color:var(--ink);
+  background:#fff;border:1.5px solid var(--line);border-radius:12px;
+  padding:0 18px;transition:border-color .18s,box-shadow .18s;
+}
+.field input::placeholder{color:#A2A7AF}
+.field input:hover{border-color:#D3D7DE}
+.field input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 4px rgba(230,11,33,.11)}
+.signup.invalid .field input{border-color:var(--red)}
+.signup .btn{flex:0 0 auto;min-height:58px}
+
+.btn-spin{display:none;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.signup.loading .btn{pointer-events:none;background:var(--red-deep)}
+.signup.loading .btn-arrow{display:none}
+.signup.loading .btn-spin{display:block}
+.signup.done .btn{background:var(--gain);box-shadow:0 8px 22px -8px rgba(14,159,91,.5);pointer-events:none}
+.signup.done .btn-arrow{display:none}
+
+.msg{
+  font-size:14.5px;line-height:1.5;min-height:22px;
+  margin-bottom:22px;color:var(--muted);
+  display:flex;align-items:center;gap:7px;
+}
+.msg.err{color:var(--red)}
+.msg.ok{color:var(--gain)}
+.msg:empty{margin-bottom:22px}
+
+.stage-col{display:flex;flex-direction:column;align-items:center;gap:14px;perspective:1000px;perspective-origin:44% 50%}
+.preview-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--data);font-size:10.5px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+}
+.preview-label span{
+  width:22px;height:1.5px;background:linear-gradient(90deg,var(--red),transparent);
+}
+
+/* ---------- phone ---------- */
+.stage{display:flex;justify-content:center}
+.phone{
+  width:328px;flex-shrink:0;
+  border-radius:52px;padding:11px;
+  background:linear-gradient(102deg,#0d0f12 0%,#1d2025 34%,#4a4e55 52%,#23262b 62%,#0c0e11 100%);
+  box-shadow:
+    0 2px 3px rgba(0,0,0,.42),
+    34px 52px 70px -30px rgba(11,12,14,.42),
+    60px 96px 130px -60px rgba(230,11,33,.3);
+  transform:rotateY(-26deg) rotateX(1deg) rotateZ(5.5deg);
+  animation:rise 1s cubic-bezier(.2,.8,.25,1) both;
+}
+@keyframes rise{from{opacity:0;transform:rotateY(-34deg) rotateX(1deg) rotateZ(5.5deg) translateY(30px)}}
+.screen{
+  position:relative;background:#fff;border-radius:42px;overflow:hidden;
+  height:566px;display:flex;flex-direction:column;
+}
+.status{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:15px 26px 8px;font-size:13.5px;font-weight:600;
+  font-family:var(--body);
+}
+.island{
+  position:absolute;top:11px;left:50%;transform:translateX(-50%);
+  width:97px;height:30px;background:#000;border-radius:100px;z-index:3;
+}
+.bars{display:flex;align-items:center;gap:5px}
+.bars svg{display:block}
+
+.appbar{
+  display:flex;align-items:center;gap:9px;
+  padding:12px 22px 14px;border-bottom:1px solid var(--line);
+}
+.appbar svg.mark{width:19px;height:19px}
+.appbar b{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.03em}
+.gear{margin-left:auto;color:#9AA0A8}
+
+/* merchant */
+.merchant{
+  display:flex;align-items:center;gap:14px;
+  padding:17px 22px;border-bottom:1px solid var(--line);
+}
+.merchant .lbl{font-size:12.5px;color:var(--muted);margin-bottom:3px}
+.merchant .nm{
+  font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.03em;
+}
+.mono{
+  margin-left:auto;width:46px;height:46px;border-radius:13px;
+  display:grid;place-items:center;
+  font-family:var(--display);font-weight:800;font-size:20px;color:#fff;
+  box-shadow:0 3px 10px rgba(0,0,0,.14);
+}
+
+.reclabel{
+  display:flex;align-items:center;gap:7px;
+  padding:16px 22px 10px;
+  font-size:12.5px;font-weight:700;color:var(--red);
+  letter-spacing:.02em;
+}
+
+/* the card */
+.cardwrap{padding:0 20px}
+.card{
+  position:relative;overflow:hidden;
+  background:linear-gradient(150deg,#1B1D22,#0A0B0D);
+  border-radius:18px;padding:18px;color:#fff;
+  box-shadow:0 12px 26px -12px rgba(0,0,0,.55);
+}
+/* the mark's angle, reused as the card's light rake */
+.card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(var(--wing),transparent 46%,rgba(255,255,255,.07) 50%,transparent 54%);
+}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.card-nm{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.card-net{
+  font-family:var(--data);font-size:10px;font-weight:700;
+  letter-spacing:.16em;color:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.2);padding:3px 7px;border-radius:5px;
+}
+.rate{display:flex;align-items:flex-end;gap:9px;margin-bottom:4px}
+.rate .n{
+  font-family:var(--display);font-weight:800;font-size:42px;
+  line-height:1;letter-spacing:-.045em;color:#2BD97C;
+}
+.rate .u{font-size:13px;color:rgba(255,255,255,.6);padding-bottom:6px}
+.badge{
+  position:absolute;right:20px;bottom:60px;
+  font-size:11.5px;font-weight:600;color:#FF8A96;
+  background:rgba(230,11,33,.17);border:1px solid rgba(230,11,33,.34);
+  padding:6px 12px;border-radius:100px;
+}
+.why{
+  font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.52);
+  border-top:1px solid rgba(255,255,255,.09);padding-top:12px;margin-top:14px;
+}
+.dots{display:flex;justify-content:center;gap:6px;padding:14px 0 4px}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--line);transition:all .3s}
+.dots i.on{background:var(--red);width:16px;border-radius:3px}
+
+.others{padding:8px 22px 20px}
+.others h4{
+  font-family:var(--display);font-size:12.5px;font-weight:700;
+  color:var(--muted);letter-spacing:.01em;margin-bottom:11px;
+}
+.row{display:flex;align-items:center;gap:11px;padding:8px 0}
+.chip{width:31px;height:21px;border-radius:4px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.row .t{font-size:13.5px;font-weight:500}
+.row .v{margin-left:auto;font-family:var(--data);font-size:12.5px;font-weight:500;color:var(--muted)}
+
+
+/* the swap: content leaves and enters along the mark's angle */
+.swap{animation:swap .52s cubic-bezier(.25,.8,.3,1)}
+@keyframes swap{
+  0%{opacity:0;transform:translate(9px,-4.5px)}
+  100%{opacity:1;transform:none}
+}
+
+@media (max-width:980px){
+  h1{font-size:clamp(30px,8.4vw,58px)}
+  .hero-in{grid-template-columns:1fr;gap:56px;padding:60px 26px 76px;text-align:center}
+  .eyebrow{margin-bottom:24px}
+  .sub{margin-left:auto;margin-right:auto}
+  .signup,.trust,.msg{justify-content:center}
+  .signup{max-width:460px;margin-left:auto;margin-right:auto}
+  .phone{transform:none;animation:riseflat 1s cubic-bezier(.2,.8,.25,1) both}
+  @keyframes riseflat{from{opacity:0;transform:translateY(26px)}}
+  .nav-links{display:none}
+  .hero::after{right:-40%;top:26%}
+}
+@media (max-width:520px){
+  .nav-cta{font-size:14px;padding:9px 15px}
+  .nav-cta .full{display:none}
+}
+@media (max-width:420px){
+  .nav-in{padding:14px 20px}
+  .phone{width:min(100%,320px)}
+  .btn{width:100%;justify-content:center}
+  .field{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <a class="brand" href="/" aria-label="Cardnal home">
-        <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
-          <path fill="#E60B21" d="M962 95.91 341.94 408.23q-5.36 2.7-8.17 8L62 928.09l571.2-223.16q14.9-5.82 22.83-19.72l53.84-94.37q6.93-12.16-6.93-10.22l-317.6 44.45q61.22-57.38 94.01-69.63l276.24-103.24q16.86-6.3 25.45-22.12z"/>
-          <path fill="#BD0C1B" d="m62 928.09 571.2-223.16q14.9-5.82 22.83-19.72l53.84-94.37q6.93-12.16-6.93-10.22l-317.6 44.45q61.22-57.38 94.01-69.63L62 928.09z"/>
-        </svg>
-        <span class="brand-name">Cardnal</span>
-      </a>
-    </header>
 
-    <main>
-      <section class="content" aria-labelledby="page-title">
-        <div class="eyebrow">Coming soon</div>
-        <h1 id="page-title"><span>The right card.</span><span>Every time.</span></h1>
-        <p class="intro">Cardnal helps you choose the best card for every purchase, so you can get more from the cards you already own.</p>
+<!-- the mark, as real vector geometry -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<clipPath id="cSil" clipPathUnits="userSpaceOnUse"><path d="M962.00 95.91L341.94 408.23Q336.58 410.93 333.77 416.23L62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Q446.56 567.69 479.35 555.44L755.59 452.20Q772.45 445.90 781.03 430.08Z"/></clipPath>
+<g id="cMark">
+  <path d="M962.00 95.91L341.94 408.23Q336.58 410.93 333.77 416.23L62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Q446.56 567.69 479.35 555.44L755.59 452.20Q772.45 445.90 781.03 430.08Z" fill="#E60B21"/>
+  <g clip-path="url(#cSil)"><path d="M62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Z" fill="#BD0C1B" stroke="#BD0C1B" stroke-width="2"/></g>
+</g>
+</defs></svg>
 
-        <div class="signup-card">
-          <h2>Join the waitlist</h2>
-          <p>Be first to know when Cardnal is ready.</p>
-          <form class="signup" id="signup" novalidate>
-            <label class="sr-only" for="email">Email address</label>
-            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
-            <button id="submit" type="submit">Join the waitlist</button>
-          </form>
-          <p class="message" id="message" role="status" aria-live="polite"></p>
-          <div class="privacy-note">No card details required. Just your email.</div>
-        </div>
-      </section>
-    </main>
-
-    <footer>© 2026 Cardnal. Make every purchase count.</footer>
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#" aria-label="Cardnal home">
+      <svg viewBox="0 0 1024 1024" aria-hidden="true"><use href="#cMark"/></svg>
+      <span>Cardnal</span>
+    </a>
+    <button class="nav-cta">Reserve<span class="full"> your spot</span></button>
   </div>
+</nav>
 
-  <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
-  <script>
-    const form = document.getElementById('signup');
-    const email = document.getElementById('email');
-    const submit = document.getElementById('submit');
-    const message = document.getElementById('message');
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
+<header class="hero">
+  <div class="hero-in">
 
-    function showMessage(text, type) {
-      message.textContent = text;
-      message.className = 'message' + (type ? ' ' + type : '');
-    }
+    <div class="copy">
+      <div class="eyebrow"><i></i>Early access — spots are limited</div>
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const value = email.value.trim();
-      if (!value || !emailPattern.test(value)) {
-        showMessage('Enter a valid email address to join the waitlist.', 'error');
-        email.focus();
-        return;
-      }
+      <h1>
+        <span class="b">The right card.</span>
+        <span class="r">Every time.</span>
+      </h1>
 
-      submit.disabled = true;
-      submit.textContent = 'Joining…';
-      showMessage('Adding you to the waitlist…');
+      <p class="sub">
+        Turn every purchase into the smartest one.
+        Get more from the cards you already own.
+      </p>
 
-      try {
-        const response = await fetch('/api/waitlist', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: value })
-        });
-        const data = await response.json().catch(() => ({}));
+      <form class="signup" id="signup" novalidate>
+        <div class="field">
+          <label class="sr-only" for="email">Email address</label>
+          <input id="email" name="email" type="email" inputmode="email"
+                 autocomplete="email" placeholder="you@email.com"
+                 aria-describedby="formMsg" required>
+        </div>
+        <button class="btn" type="submit" id="submitBtn">
+          <span class="btn-label">Reserve your spot</span>
+          <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          <svg class="btn-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/></svg>
+        </button>
+      </form>
 
-        if (response.ok) {
-          submit.textContent = 'You’re on the list';
-          email.readOnly = true;
-          showMessage("You're in. We'll email you when Cardnal is ready.", 'success');
-        } else if (response.status === 409) {
-          submit.disabled = false;
-          submit.textContent = 'Join the waitlist';
-          showMessage("That email is already on the list — you're all set.", 'success');
-        } else {
-          throw new Error(data.error || 'Something went wrong. Try again.');
-        }
-      } catch (error) {
-        submit.disabled = false;
-        submit.textContent = 'Join the waitlist';
-        showMessage(error.message || 'Could not reach the server. Try again.', 'error');
-      }
+      <p class="msg" id="formMsg" role="status" aria-live="polite"></p>
+
+      <div class="trust">
+        <div>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          No card details required. Join with only your email.
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-col">
+        <div class="preview-label"><span></span>Product preview</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status">
+            <span>9:41</span>
+            <span class="bars">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor" aria-hidden="true"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor" aria-hidden="true"><path d="M7.5 9.6 9.3 7.7a2.6 2.6 0 0 0-3.6 0zM3.9 6.2l1.3 1.3a3.9 3.9 0 0 1 4.6 0l1.3-1.3a5.8 5.8 0 0 0-7.2 0zM.6 2.9l1.3 1.3a8.3 8.3 0 0 1 11.2 0l1.3-1.3a10.1 10.1 0 0 0-13.8 0z"/></svg>
+              <svg width="24" height="11" viewBox="0 0 24 11" fill="none" aria-hidden="true"><rect x=".6" y=".6" width="19" height="9.8" rx="2.8" stroke="currentColor" stroke-opacity=".4"/><rect x="2.2" y="2.2" width="15.8" height="6.6" rx="1.6" fill="currentColor"/><path d="M21.4 4v3a2 2 0 0 0 0-3z" fill="currentColor" fill-opacity=".4"/></svg>
+            </span>
+          </div>
+
+          <div class="appbar">
+            <svg class="mark" viewBox="0 0 1024 1024" aria-hidden="true"><use href="#cMark"/></svg>
+            <b>Cardnal</b>
+            <svg class="gear" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.1 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H1a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1.1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H7a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1 1.6 1.6 0 0 0 .3-1.8" transform="translate(1.9 0) scale(.92)"/></svg>
+          </div>
+
+          <div class="merchant">
+            <div>
+              <div class="lbl">Shopping at</div>
+              <div class="nm" id="mName">Amazon</div>
+            </div>
+            <div class="mono" id="mMono">A</div>
+          </div>
+
+          <div class="reclabel">
+            <svg width="13" height="13" viewBox="0 0 1024 1024" aria-hidden="true"><use href="#cMark"/></svg>
+            Recommended card
+          </div>
+
+          <div class="cardwrap">
+            <div class="card" id="card">
+              <div class="card-top">
+                <div class="card-nm" id="cName">Prime Visa</div>
+                <div class="card-net" id="cNet">VISA</div>
+              </div>
+              <div class="rate">
+                <span class="n" id="cRate">5%</span>
+                <span class="u">back</span>
+              </div>
+              <div class="badge">Best choice</div>
+              <div class="why" id="cWhy">Highest rewards for Amazon purchases.</div>
+            </div>
+            <div class="dots" id="dots"></div>
+          </div>
+
+          <div class="others">
+            <h4>Other options</h4>
+            <div id="rows"></div>
+          </div>
+
+        </div>
+      </div>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<script>
+const SCENES = [
+  { m:'Amazon',       mono:'A', tint:'#F0932B',
+    card:'Prime Visa',        net:'VISA',   rate:'5%',
+    why:'Highest rewards for Amazon purchases.',
+    others:[['Freedom Flex','#1C5FAB','3% back'],['Blue Cash Preferred','#1D9BD1','1% back'],['Active Cash','#B21F2D','1% back']] },
+  { m:'Whole Foods',  mono:'W', tint:'#0E9F5B',
+    card:'Prime Visa',        net:'VISA',   rate:'5%',
+    why:'Grocery bonus applies at Whole Foods.',
+    others:[['Blue Cash Preferred','#1D9BD1','3% back'],['Freedom Flex','#1C5FAB','1% back'],['Active Cash','#B21F2D','1% back']] },
+  { m:'Shell',        mono:'S', tint:'#E8B21A',
+    card:'Blue Cash Preferred', net:'AMEX', rate:'3%',
+    why:'Best standing rate on fuel this quarter.',
+    others:[['Freedom Flex','#1C5FAB','2% back'],['Active Cash','#B21F2D','1.5% back'],['Prime Visa','#1C3FAB','1% back']] },
+  { m:'Delta',        mono:'D', tint:'#8E44AD',
+    card:'Freedom Flex',      net:'MASTERCARD', rate:'5%',
+    why:'Travel is this quarter\u2019s rotating category.',
+    others:[['Active Cash','#B21F2D','2% back'],['Prime Visa','#1C3FAB','1% back'],['Blue Cash Preferred','#1D9BD1','1% back']] },
+  { m:'Chipotle',     mono:'C', tint:'#C0392B',
+    card:'Freedom Flex',      net:'MASTERCARD', rate:'3%',
+    why:'Dining bonus beats your flat-rate cards.',
+    others:[['Active Cash','#B21F2D','2% back'],['Prime Visa','#1C3FAB','1% back'],['Blue Cash Preferred','#1D9BD1','1% back']] }
+];
+
+const $ = id => document.getElementById(id);
+const dots = $('dots');
+SCENES.forEach(() => dots.appendChild(document.createElement('i')));
+
+let i = 0;
+function paint(n){
+  const s = SCENES[n];
+  $('mName').textContent = s.m;
+  $('mMono').textContent = s.mono;
+  $('mMono').style.background = s.tint;
+  $('cName').textContent = s.card;
+  $('cNet').textContent  = s.net;
+  $('cRate').textContent = s.rate;
+  $('cWhy').textContent  = s.why;
+  $('rows').innerHTML = s.others.map(([t,c,v]) =>
+    `<div class="row"><span class="chip" style="background:${c}"></span><span class="t">${t}</span><span class="v">${v}</span></div>`
+  ).join('');
+  [...dots.children].forEach((d,k) => d.classList.toggle('on', k === n));
+
+  ['mName','mMono','card','rows'].forEach(id => {
+    const el = $(id);
+    el.classList.remove('swap');
+    void el.offsetWidth;
+    el.classList.add('swap');
+  });
+}
+paint(0);
+
+const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!still) setInterval(() => { i = (i + 1) % SCENES.length; paint(i); }, 3400);
+
+
+/* ---------- waitlist signup ---------- */
+const form = $('signup'), input = $('email'), msg = $('formMsg'), submitBtn = $('submitBtn');
+const btnLabel = submitBtn.querySelector('.btn-label');
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
+let sending = false;
+
+function setMsg(text, kind){
+  msg.textContent = text;
+  msg.className = 'msg' + (kind ? ' ' + kind : '');
+}
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (sending || form.classList.contains('done')) return;
+
+  const email = input.value.trim();
+  form.classList.remove('invalid');
+
+  if (!email)              { form.classList.add('invalid'); input.focus(); return setMsg('Enter your email to join the waitlist.','err'); }
+  if (!EMAIL_RE.test(email)){ form.classList.add('invalid'); input.focus(); return setMsg('That email doesn\u2019t look right. Check it and try again.','err'); }
+
+  sending = true;
+  form.classList.add('loading');
+  btnLabel.textContent = 'Reserving\u2026';
+  setMsg('Adding you to the waitlist\u2026');
+
+  try {
+    const res = await fetch('/api/waitlist', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email })
     });
-  </script>
+    let data = {};
+    try { data = await res.json(); } catch {}
+
+    form.classList.remove('loading');
+
+    if (res.ok) {
+      form.classList.add('done');
+      btnLabel.textContent = "You're on the list";
+      input.readOnly = true;
+      setMsg("You're in. We'll email you when your spot opens up.",'ok');
+    } else if (res.status === 409) {
+      btnLabel.textContent = 'Reserve your spot';
+      setMsg("That email is already on the list \u2014 you're all set.",'ok');
+    } else if (res.status === 400) {
+      btnLabel.textContent = 'Reserve your spot';
+      form.classList.add('invalid'); input.focus();
+      setMsg(data.error || 'That email doesn\u2019t look right. Check it and try again.','err');
+    } else if (res.status === 429) {
+      btnLabel.textContent = 'Reserve your spot';
+      setMsg('Too many attempts. Give it a minute and try again.','err');
+    } else {
+      btnLabel.textContent = 'Reserve your spot';
+      setMsg(data.error || 'Something went wrong on our end. Try again in a moment.','err');
+    }
+  } catch (err) {
+    form.classList.remove('loading');
+    btnLabel.textContent = 'Reserve your spot';
+    setMsg("Couldn't reach the server. Check your connection and try again.",'err');
+  } finally {
+    sending = false;
+  }
+});
+
+input.addEventListener('input', () => {
+  if (form.classList.contains('invalid')) { form.classList.remove('invalid'); setMsg(''); }
+});
+
+/* every "Reserve your spot" control sends you to the email field */
+function goToEmail(){
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  input.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block:'center' });
+  setTimeout(() => input.focus({ preventScroll:true }), still ? 0 : 420);
+}
+document.querySelector('.nav-cta').addEventListener('click', goToEmail);
+
+addEventListener('scroll', () => {
+  $('nav').classList.toggle('scrolled', scrollY > 8);
+}, {passive:true});
+</script>
 </body>
 </html>

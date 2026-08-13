@@ -1,7 +1,7 @@
 # Cardnal MVP Roadmap
 
 **Document status:** Living project document  
-**Last updated:** 2026-08-03  
+**Last updated:** 2026-08-13  
 **Owner:** Cardnal technical founder  
 **Product:** Cardnal — recommend the right card to use before a purchase.
 
@@ -654,6 +654,8 @@ Record decisions here. Each entry should include the date, decision, context, an
 | 2026-08-03 | Prefer separate Supabase development and production environments. | Prevents test data and schema changes from affecting real users. |
 | 2026-08-03 | Recommended MVP path is rules-first web app, preceded by concierge validation. | Tests the core value without bank integrations or sensitive financial data. |
 | 2026-08-03 | Do not require Google Workspace yet. | Use Porkbun forwarding/SMTP and one secured shared Gmail account while the team is small. |
+| 2026-08-13 | Keep the current production landing page simple until the phone-preview variant is explicitly selected. | The phone-preview page exists in `Cardnal/Website/cardnal-site/index.html` but is not the page currently deployed. |
+| 2026-08-13 | Enforce waitlist uniqueness in both the API and Postgres. | The API lowercases emails before insertion, while `public.waitlist` has a unique email index and a unique `lower(email)` index, making concurrent duplicate submissions safe. |
 
 _Add new decisions; do not silently rewrite old decisions. If a decision changes, add a new row explaining why._
 
@@ -677,6 +679,9 @@ Update this section at the end of every meaningful work session.
 - [x] Build initial waitlist function and Supabase schema.
 - [x] Define separate marketing-site and product-app direction.
 - [x] Replace the landing page with a focused branded waitlist page.
+- [x] Create the live `public.waitlist` table in Supabase.
+- [x] Deploy the landing page and Vercel waitlist API to Cardnal production.
+- [x] Confirm database-level duplicate protection for waitlist emails.
 
 ### Blocked / needs decision
 
@@ -687,9 +692,9 @@ Update this section at the end of every meaningful work session.
 
 ### Next three actions
 
-1. Deploy the branded waitlist page and test the live `/api/waitlist` endpoint.
-2. Create and secure the company-owned GitHub/deployment/Supabase organizations.
-3. Create the `cardnal-app` repository and bootstrap local development.
+1. Add and verify `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the Cardnal Vercel project.
+2. Point Porkbun DNS for `getcardnal.com` and `www.getcardnal.com` to the Vercel records.
+3. Test the live waitlist endpoint, then create the `cardnal-app` repository and bootstrap local development.
 
 ---
 
