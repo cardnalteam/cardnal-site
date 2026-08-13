@@ -85,3 +85,4 @@ export default async function handler(req, res) {
     return respond(res, 502, { error: 'Could not save your spot. Try again shortly.' });
   }
 }
+
