@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardnal — Brand Design System</title>
+<meta name="description" content="The single source of truth for Cardnal's visual identity, product design, and voice.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* brand */
+  --red-50:#FFF1F2;  --red-100:#FFE0E3; --red-200:#FFC5CB; --red-300:#FF9BA6;
+  --red-400:#F85567; --red-500:#E60B21; --red-600:#C90A1C; --red-700:#A80A18;
+  --red-800:#8A0914; --red-900:#6B0710; --red-950:#3D0409;
+  --ink-50:#F7F8F9;  --ink-100:#EEF0F2; --ink-200:#E1E4E8; --ink-300:#C7CCD3;
+  --ink-400:#9AA1AB; --ink-500:#6B727C; --ink-600:#4C525A; --ink-700:#343940;
+  --ink-800:#1E2126; --ink-900:#131519; --ink-950:#0B0C0E;
+  /* semantic */
+  --success:#0E9F5B; --success-text:#097A44; --success-fill:#08703E; --success-bg:#E9F8F0;
+  --warning:#B26A00; --warning-text:#9A5C00; --warning-bg:#FDF3E3;
+  --alert:#A61B2B;   --alert-text:#A61B2B;   --alert-bg:#FCEDEF;
+  --info:#1B63C7;    --info-text:#1B63C7;    --info-bg:#EBF2FD;
+  --gold:#B8892B;    --slate:#5A6472;
+  /* surfaces */
+  --paper:#FFFFFF; --canvas:#FAFBFC; --line:#E6E8EC; --line-strong:#D3D8DF;
+  /* type */
+  --display:'Archivo',system-ui,sans-serif;
+  --body:'Instrument Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  /* the constant: the exact edge angle of the Cardnal mark */
+  --wing:26.7deg;
+  /* radius */
+  --r-sm:6px; --r-md:10px; --r-lg:14px; --r-xl:20px; --r-2xl:28px; --r-full:999px;
+  /* elevation */
+  --sh-sm:0 1px 2px rgba(11,12,14,.06), 0 1px 1px rgba(11,12,14,.04);
+  --sh-md:0 4px 12px -2px rgba(11,12,14,.08), 0 2px 4px -2px rgba(11,12,14,.05);
+  --sh-lg:0 12px 28px -8px rgba(11,12,14,.12), 0 4px 8px -4px rgba(11,12,14,.06);
+  --sh-float:0 24px 56px -16px rgba(11,12,14,.18), 0 8px 16px -8px rgba(11,12,14,.08);
+  --sh-brand:0 8px 22px -8px rgba(230,11,33,.5);
+  /* motion */
+  --t-instant:80ms; --t-fast:140ms; --t-base:200ms; --t-slow:320ms; --t-deliberate:480ms;
+  --ease-out:cubic-bezier(.2,.7,.3,1);
+  --ease-in:cubic-bezier(.5,0,.9,.4);
+  --ease-spring:cubic-bezier(.2,.9,.25,1.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:24px;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);color:var(--ink-950);background:var(--paper);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:2.5px solid var(--red-500);outline-offset:3px;border-radius:4px}
+img,svg{display:block}
+
+/* ---------------- shell ---------------- */
+.shell{display:grid;grid-template-columns:264px minmax(0,1fr);max-width:1440px;margin:0 auto}
+
+.side{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--line);padding:28px 20px 48px;background:var(--paper);
+}
+.side-brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.side-brand svg{width:26px;height:26px}
+.side-brand b{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.035em}
+.side-sub{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-400);margin-bottom:26px;padding-left:36px}
+.side nav a{
+  display:flex;gap:10px;align-items:baseline;
+  padding:6px 8px;border-radius:7px;text-decoration:none;
+  font-size:13.5px;color:var(--ink-600);transition:background var(--t-fast),color var(--t-fast);
+}
+.side nav a:hover{background:var(--ink-50);color:var(--ink-950)}
+.side nav a.on{background:var(--red-50);color:var(--red-700);font-weight:600}
+.side nav a i{font-family:var(--mono);font-size:10.5px;font-style:normal;color:var(--ink-400);min-width:16px}
+.side nav a.on i{color:var(--red-500)}
+.navdd summary{display:none}
+.navdd>summary{list-style:none}
+.navdd>summary::-webkit-details-marker{display:none}
+.side-group{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-400);margin:22px 0 8px 8px}
+
+.main{min-width:0;padding:0 0 140px}
+.wrap{max-width:960px;padding:0 56px}
+
+/* ---------------- cover ---------------- */
+.cover{position:relative;overflow:hidden;padding:104px 56px 88px;border-bottom:1px solid var(--line)}
+.cover::before{
+  content:'';position:absolute;inset:-50% -20%;
+  background:linear-gradient(var(--wing),transparent 0 47%,rgba(230,11,33,.032) 47% 52%,transparent 52%);
+}
+.cover-in{position:relative}
+.cover h1{font-family:var(--display);font-weight:800;font-size:clamp(44px,6vw,74px);letter-spacing:-.045em;line-height:.98;margin:18px 0 20px}
+.cover h1 em{font-style:normal;color:var(--red-500);display:block}
+.cover p{font-size:19px;color:var(--ink-600);max-width:44ch;margin-bottom:32px}
+.cover-meta{display:flex;gap:34px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-400)}
+.cover-meta b{display:block;font-weight:500;color:var(--ink-900);margin-top:5px;letter-spacing:.04em}
+
+/* ---------------- sections ---------------- */
+.sec{padding:76px 0 8px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.sec-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--red-500);letter-spacing:.1em}
+.sec-rule{flex:1;height:1px;background:var(--line)}
+.sec h2{font-family:var(--display);font-weight:700;font-size:34px;letter-spacing:-.03em;line-height:1.12;margin-bottom:12px}
+.sec h3{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.02em;margin:36px 0 12px}
+.sec h4{font-family:var(--display);font-weight:700;font-size:15.5px;letter-spacing:-.01em;margin:24px 0 8px}
+.sec p{color:var(--ink-700);margin-bottom:14px;max-width:70ch}
+.sec p.lead{font-size:18px;color:var(--ink-600);max-width:62ch;margin-bottom:24px}
+.sec ul,.sec ol{margin:0 0 16px 20px;color:var(--ink-700);max-width:70ch}
+.sec li{margin-bottom:7px}
+.sec strong{font-weight:600;color:var(--ink-950)}
+code{font-family:var(--mono);font-size:.88em;background:var(--ink-50);border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--ink-800)}
+
+.callout{
+  border:1px solid var(--line);border-left:3px solid var(--red-500);
+  border-radius:var(--r-md);padding:18px 20px;margin:22px 0;background:var(--canvas);
+}
+.callout b{display:block;font-family:var(--display);font-size:14px;margin-bottom:5px}
+.callout p{margin:0;font-size:14.5px;color:var(--ink-600)}
+.callout.info{border-left-color:var(--info)}
+.callout.warn{border-left-color:var(--warning)}
+
+/* tables */
+.tblwrap{max-width:100%}
+.tbl{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:13.5px}
+.tbl th{
+  text-align:left;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-500);padding:0 12px 9px;border-bottom:1px solid var(--line-strong);
+}
+.tbl td{padding:11px 12px;border-bottom:1px solid var(--line);color:var(--ink-700);vertical-align:top}
+.tbl td:first-child,.tbl th:first-child{padding-left:0}
+.tbl td.m{font-family:var(--mono);font-size:12px;color:var(--ink-900);white-space:nowrap}
+.tbl tr:hover td{background:var(--ink-50)}
+
+/* swatches */
+.ramp{display:grid;grid-template-columns:repeat(11,1fr);border-radius:var(--r-md);overflow:hidden;border:1px solid var(--line);margin:14px 0 6px}
+.ramp div{height:64px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-family:var(--mono);font-size:9.5px;font-weight:700}
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:16px 0 24px}
+.sw{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--paper)}
+.sw-chip{height:74px;position:relative}
+.sw-chip span{position:absolute;right:10px;bottom:8px;font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;opacity:.85}
+.sw-body{padding:12px 14px}
+.sw-body b{font-family:var(--display);font-size:14px;display:block;margin-bottom:3px}
+.sw-body code{background:none;border:0;padding:0;font-size:11.5px;color:var(--ink-500);display:block}
+.sw-body p{font-size:12.5px;color:var(--ink-500);margin:7px 0 0;line-height:1.45}
+
+/* specimen */
+.spec{border:1px solid var(--line);border-radius:var(--r-lg);padding:26px 28px;margin:16px 0 24px;background:var(--paper)}
+.spec-row{padding:16px 0;border-bottom:1px solid var(--line)}
+.spec-row:last-child{border-bottom:0;padding-bottom:0}
+.spec-row:first-child{padding-top:0}
+.spec-meta{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-400);margin-bottom:7px}
+
+/* demo canvas */
+.demo{
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--canvas);
+  padding:28px;margin:16px 0 24px;
+}
+.demo-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.demo-row:last-child{margin-bottom:0}
+.demo-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-400);margin:22px 0 10px;width:100%}
+.demo-label:first-child{margin-top:0}
+
+/* --- real components (these ARE the spec) --- */
+.btn{
+  font-family:var(--body);font-size:15px;font-weight:600;line-height:1;
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 20px;border-radius:var(--r-md);border:1.5px solid transparent;cursor:pointer;
+  transition:background var(--t-base) var(--ease-out),border-color var(--t-base),color var(--t-base),transform var(--t-base) var(--ease-out),box-shadow var(--t-base);
+}
+.btn-primary{background:var(--red-500);color:#fff;box-shadow:var(--sh-brand)}
+.btn-primary:hover{background:var(--red-600);transform:translateY(-1px)}
+.btn-primary:active{background:var(--red-700);transform:translateY(0)}
+.btn-secondary{background:var(--paper);color:var(--ink-900);border-color:var(--line-strong)}
+.btn-secondary:hover{border-color:var(--ink-400);background:var(--ink-50)}
+.btn-ghost{background:transparent;color:var(--ink-700)}
+.btn-ghost:hover{background:var(--ink-100);color:var(--ink-950)}
+.btn-danger{background:var(--alert);color:#fff}
+.btn-danger:hover{background:#8E1524}
+.btn[disabled]{background:var(--ink-100);color:var(--ink-400);border-color:transparent;box-shadow:none;cursor:not-allowed;transform:none}
+.btn-loading{background:var(--red-600);color:#fff;pointer-events:none}
+.btn-loading svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-sm{font-size:13.5px;padding:9px 14px}
+.btn-lg{font-size:16.5px;padding:16px 26px}
+
+.inp{
+  width:100%;font-family:var(--body);font-size:15px;color:var(--ink-950);
+  background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r-md);
+  padding:13px 15px;transition:border-color var(--t-fast),box-shadow var(--t-fast);
+}
+.inp::placeholder{color:var(--ink-400)}
+.inp:hover{border-color:var(--line-strong)}
+.inp:focus{outline:none;border-color:var(--red-500);box-shadow:0 0 0 4px rgba(230,11,33,.11)}
+.inp.is-error{border-color:var(--alert)}
+.inp[disabled]{background:var(--ink-50);color:var(--ink-400);cursor:not-allowed}
+.field-l{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px}
+.field-h{font-size:12.5px;color:var(--ink-500);margin-top:6px}
+.field-h.err{color:var(--alert-text)}
+
+.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--body);font-size:12px;font-weight:600;padding:4px 9px;border-radius:var(--r-sm);border:1px solid}
+.badge-brand{background:var(--red-50);color:var(--red-700);border-color:var(--red-200)}
+.badge-success{background:var(--success-bg);color:var(--success-text);border-color:#B9E7D0}
+.badge-warning{background:var(--warning-bg);color:var(--warning-text);border-color:#F0D8AC}
+.badge-alert{background:var(--alert-bg);color:var(--alert-text);border-color:#F0C4CA}
+.badge-neutral{background:var(--ink-50);color:var(--ink-600);border-color:var(--line)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:7px 14px;border-radius:var(--r-full);border:1px solid var(--line-strong);background:var(--paper);color:var(--ink-700);cursor:pointer;transition:all var(--t-fast)}
+.pill:hover{border-color:var(--ink-400)}
+.pill.on{background:var(--ink-950);color:#fff;border-color:var(--ink-950)}
+
+.uicard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;box-shadow:var(--sh-sm);transition:box-shadow var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out),border-color var(--t-base)}
+.uicard:hover{box-shadow:var(--sh-md);transform:translateY(-2px);border-color:var(--line-strong)}
+
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto;max-width:100%}
+.tab{flex:0 0 auto}
+.tab{font-family:var(--body);font-size:14px;font-weight:500;color:var(--ink-500);background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;cursor:pointer;transition:color var(--t-fast),border-color var(--t-fast)}
+.tab:hover{color:var(--ink-900)}
+.tab.on{color:var(--red-600);border-bottom-color:var(--red-500);font-weight:600}
+
+.toast{display:flex;gap:11px;align-items:flex-start;background:var(--ink-950);color:#fff;border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--sh-lg);max-width:400px}
+.toast b{display:block;font-family:var(--display);font-size:14px;margin-bottom:2px}
+.toast p{margin:0;font-size:13px;color:rgba(255,255,255,.62)}
+
+.skel{background:linear-gradient(90deg,var(--ink-100) 25%,var(--ink-50) 37%,var(--ink-100) 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite;border-radius:var(--r-sm)}
+@keyframes shimmer{0%{background-position:100% 50%}100%{background-position:0 50%}}
+
+.tip{position:relative;display:inline-block}
+.tipbox{background:var(--ink-950);color:#fff;font-size:12.5px;padding:7px 11px;border-radius:8px;box-shadow:var(--sh-md);display:inline-block}
+
+.check{display:flex;align-items:center;gap:9px;font-size:14px;cursor:pointer}
+.check .box{width:19px;height:19px;border:1.5px solid var(--line-strong);border-radius:var(--r-sm);display:grid;place-items:center;transition:all var(--t-fast) var(--ease-out);background:var(--paper);flex-shrink:0}
+.check input{position:absolute;opacity:0;width:0;height:0}
+.check input:checked + .box{background:var(--red-500);border-color:var(--red-500)}
+.check input:checked + .box svg{opacity:1;transform:scale(1)}
+.check .box svg{opacity:0;transform:scale(.5);transition:all var(--t-fast) var(--ease-spring);color:#fff}
+.check input:focus-visible + .box{outline:2.5px solid var(--red-500);outline-offset:2px}
+.radio .box{border-radius:var(--r-full)}
+.radio input:checked + .box{background:var(--paper);border-color:var(--red-500);border-width:5.5px}
+
+.empty{text-align:center;padding:44px 24px;border:1px dashed var(--line-strong);border-radius:var(--r-lg);background:var(--canvas)}
+.empty h4{margin:14px 0 6px}
+.empty p{margin:0 auto 18px;font-size:14px;color:var(--ink-500);max-width:34ch}
+
+/* recommendation card — the product's signature component */
+.reccard{position:relative;overflow:hidden;background:linear-gradient(150deg,#1B1D22,#0A0B0D);border-radius:var(--r-xl);padding:22px;color:#fff;box-shadow:var(--sh-float);max-width:360px}
+.reccard::after{content:'';position:absolute;inset:0;background:linear-gradient(var(--wing),transparent 46%,rgba(255,255,255,.07) 50%,transparent 54%);pointer-events:none}
+.reccard .rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.reccard .rc-name{font-size:16px;font-weight:600}
+.reccard .rc-net{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.2);padding:3px 7px;border-radius:5px}
+.reccard .rc-rate{display:flex;align-items:flex-end;gap:9px}
+.reccard .rc-rate b{font-family:var(--display);font-weight:800;font-size:42px;line-height:1;letter-spacing:-.045em;color:#2BD97C}
+.reccard .rc-rate span{font-size:13px;color:rgba(255,255,255,.6);padding-bottom:6px}
+.reccard .rc-why{font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.55);border-top:1px solid rgba(255,255,255,.09);padding-top:12px;margin-top:14px}
+
+/* do / don't */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0 26px}
+.dd-item{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.dd-head{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:9px 14px;display:flex;align-items:center;gap:7px}
+.dd-do .dd-head{background:var(--success-bg);color:var(--success-text)}
+.dd-no .dd-head{background:var(--alert-bg);color:var(--alert-text)}
+.dd-body{padding:16px;background:var(--paper);min-height:96px;display:grid;place-items:center}
+.dd-cap{padding:0 16px 14px;font-size:13px;color:var(--ink-600);background:var(--paper)}
+
+/* logo lockups */
+.lock{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin:16px 0 24px}
+.lock-item{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.lock-stage{height:128px;display:grid;place-items:center;padding:20px}
+.lock-cap{border-top:1px solid var(--line);padding:10px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-500)}
+.lk-h{display:flex;align-items:center;gap:11px}
+.lk-h svg{width:34px;height:34px}
+.lk-h b{font-family:var(--display);font-weight:800;font-size:27px;letter-spacing:-.035em}
+.lk-v{display:flex;flex-direction:column;align-items:center;gap:9px}
+.lk-v svg{width:40px;height:40px}
+.lk-v b{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.03em}
+
+/* voice pairs */
+.vp{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:14px 0 22px}
+.vp>div{padding:16px 18px}
+.vp .no{background:var(--canvas);border-right:1px solid var(--line)}
+.vp .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.vp .no .tag{color:var(--ink-400)}
+.vp .yes .tag{color:var(--success-text)}
+.vp p{margin:0;font-size:14.5px}
+.vp .no p{color:var(--ink-500)}
+.vp .yes p{color:var(--ink-950);font-weight:500}
+
+/* token block */
+.tok{background:var(--ink-950);border-radius:var(--r-lg);padding:22px 24px;overflow-x:auto;margin:16px 0 24px}
+.tok pre{font-family:var(--mono);font-size:12.5px;line-height:1.75;color:#C9CED6}
+.tok .c{color:#6B727C}
+.tok .k{color:#FF9BA6}
+.tok .v{color:#8FD8B0}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:16px 0 24px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0 24px}
+.mini{border:1px solid var(--line);border-radius:var(--r-lg);padding:18px}
+.mini b{font-family:var(--display);font-size:15px;display:block;margin-bottom:6px}
+.mini p{font-size:13.5px;color:var(--ink-600);margin:0}
+.mini .n{font-family:var(--mono);font-size:10.5px;color:var(--red-500);letter-spacing:.1em;display:block;margin-bottom:8px}
+
+.icongrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;margin:16px 0 24px}
+.ic{border:1px solid var(--line);border-radius:var(--r-md);padding:16px 10px;text-align:center;transition:border-color var(--t-fast),transform var(--t-fast)}
+.ic:hover{border-color:var(--ink-400);transform:translateY(-2px)}
+.ic svg{margin:0 auto 9px;color:var(--ink-800)}
+.ic span{font-size:11.5px;color:var(--ink-500)}
+
+.sbar{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.sbar .bar{background:var(--red-200);border:1px solid var(--red-300);height:20px;border-radius:3px}
+.sbar .lb{font-family:var(--mono);font-size:11px;color:var(--ink-600);min-width:96px}
+
+.rad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin:16px 0 24px}
+.rad{border:1.5px solid var(--ink-300);background:var(--ink-50);height:76px;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--ink-600)}
+
+.sh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:20px;margin:20px 0 28px}
+.sh{background:var(--paper);border-radius:var(--r-lg);height:88px;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--ink-500);border:1px solid var(--line)}
+
+.footer{border-top:1px solid var(--line);margin-top:70px;padding:36px 0 0;font-size:13.5px;color:var(--ink-500)}
+
+@media (max-width:1080px){
+  .shell{grid-template-columns:1fr}
+  .navdd summary{
+    display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-600);padding:10px 8px;
+    border:1px solid var(--line);border-radius:var(--r-md);
+  }
+  .navdd summary::after{content:'+';font-size:15px;color:var(--ink-400)}
+  .navdd[open] summary::after{content:'\2212'}
+  .navdd[open] summary{margin-bottom:14px}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:20px 24px 26px}
+  .side nav{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:2px}
+  .side-group{grid-column:1/-1}
+  .wrap{padding:0 24px}
+  .cover{padding:64px 24px 56px}
+}
+@media (max-width:860px){
+  .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 24px;
+           border-right:1px solid var(--line)}
+  .tblwrap .tbl{margin:0;min-width:560px}
+}
+@media (max-width:720px){
+  .dd,.grid2,.vp{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+  .vp .no{border-right:0;border-bottom:1px solid var(--line)}
+  .ramp{grid-template-columns:repeat(4,1fr)}
+  .sec h2{font-size:27px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<clipPath id="cSil" clipPathUnits="userSpaceOnUse"><path d="M962.00 95.91L341.94 408.23Q336.58 410.93 333.77 416.23L62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Q446.56 567.69 479.35 555.44L755.59 452.20Q772.45 445.90 781.03 430.08Z"/></clipPath>
+<path id="cPath" d="M962.00 95.91L341.94 408.23Q336.58 410.93 333.77 416.23L62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Q446.56 567.69 479.35 555.44L755.59 452.20Q772.45 445.90 781.03 430.08Z"/>
+<path id="cWing" d="M62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Z"/>
+<g id="cMark"><use href="#cPath" fill="#E60B21"/><g clip-path="url(#cSil)"><use href="#cWing" fill="#BD0C1B" stroke="#BD0C1B" stroke-width="2"/></g></g>
+<g id="cMarkMono"><use href="#cPath" fill="currentColor"/><g clip-path="url(#cSil)"><use href="#cWing" fill="currentColor" opacity=".72"/></g></g>
+</defs></svg>
+<div class="shell"><aside class="side">
+<div class="side-brand"><svg viewBox="0 0 1024 1024"><use href="#cMark"/></svg><b>Cardnal</b></div>
+<div class="side-sub">Design System v1.0</div>
+<details class="navdd" open><summary>Contents</summary><nav>
+<div class="side-group">Foundations</div>
+<a href="#logo"><i>01</i>Logo System</a>
+<a href="#color"><i>02</i>Color System</a>
+<a href="#type"><i>03</i>Typography</a>
+<a href="#spacing"><i>04</i>Spacing</a>
+<a href="#radius"><i>05</i>Radius</a>
+<a href="#shadows"><i>06</i>Elevation</a>
+<a href="#icons"><i>07</i>Iconography</a>
+<a href="#motion"><i>08</i>Motion</a>
+<div class="side-group">Components</div>
+<a href="#components"><i>09</i>UI Components</a>
+<a href="#reccard"><i>10</i>Recommendation Card</a>
+<div class="side-group">Expression</div>
+<a href="#photo"><i>11</i>Photography</a>
+<a href="#illustration"><i>12</i>Illustration</a>
+<a href="#voice"><i>13</i>Voice & Tone</a>
+<div class="side-group">Strategy</div>
+<a href="#personality"><i>14</i>Brand Personality</a>
+<a href="#story"><i>15</i>Brand Story</a>
+<a href="#pillars"><i>16</i>Brand Pillars</a>
+<a href="#principles"><i>17</i>Product Principles</a>
+<a href="#positioning"><i>18</i>Positioning</a>
+<a href="#pitches"><i>19</i>Elevator Pitches</a>
+<div class="side-group">Application</div>
+<a href="#social"><i>20</i>Social Media</a>
+<a href="#marketing"><i>21</i>Marketing Assets</a>
+<a href="#website"><i>22</i>Website</a>
+<a href="#app"><i>23</i>App & Extension</a>
+<a href="#inspiration"><i>24</i>Design Inspiration</a>
+<a href="#tokens"><i>25</i>Token Reference</a>
+</nav></details></aside>
+<main class="main">
+<header class="cover">
+  <div class="cover-in">
+    <div class="cover-meta" style="margin-bottom:8px"><span>Brand Design System</span></div>
+    <h1>The right card.<em>Every time.</em></h1>
+    <p>Turn every purchase into the smartest one.
+       Get more from the cards you already own.</p>
+    <div class="cover-meta">
+      <div>Version<b>1.0</b></div>
+      <div>Owner<b>Cardnal</b></div>
+      <div>Co-Founders<b>Suhas · Abhi</b></div>
+      <div>Structural constant<b>26.7&deg;</b></div>
+    </div>
+  </div>
+</header>
+
+<section class="sec" id="logo">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><span class="sec-rule"></span></div>
+    <h2>Logo System</h2>
+    
+<p class="lead">The mark is a stylised wing built from two red planes. It is the only piece of
+Cardnal that can never be redrawn, re-angled, or re-coloured. Everything else in this system
+is derived from it.</p>
+
+<h3>The lockups</h3>
+<div class="lock">
+  <div class="lock-item"><div class="lock-stage"><div class="lk-h"><svg viewBox="0 0 1024 1024"><use href="#cMark"/></svg><b>Cardnal</b></div></div><div class="lock-cap">Primary — horizontal</div></div>
+  <div class="lock-item"><div class="lock-stage"><div class="lk-v"><svg viewBox="0 0 1024 1024"><use href="#cMark"/></svg><b>Cardnal</b></div></div><div class="lock-cap">Secondary — vertical</div></div>
+  <div class="lock-item"><div class="lock-stage"><svg viewBox="0 0 1024 1024" style="width:52px;height:52px"><use href="#cMark"/></svg></div><div class="lock-cap">Icon only</div></div>
+  <div class="lock-item"><div class="lock-stage"><div class="lk-h" style="color:var(--ink-950)"><svg viewBox="0 0 1024 1024"><use href="#cMarkMono"/></svg><b>Cardnal</b></div></div><div class="lock-cap">Black — one colour</div></div>
+  <div class="lock-item"><div class="lock-stage" style="background:var(--ink-950)"><div class="lk-h" style="color:#fff"><svg viewBox="0 0 1024 1024"><use href="#cMarkMono"/></svg><b style="color:#fff">Cardnal</b></div></div><div class="lock-cap">White — knockout</div></div>
+  <div class="lock-item"><div class="lock-stage" style="background:var(--red-500)"><div class="lk-h" style="color:#fff"><svg viewBox="0 0 1024 1024"><use href="#cMarkMono"/></svg><b style="color:#fff">Cardnal</b></div></div><div class="lock-cap">White on brand red</div></div>
+</div>
+
+<h3>Which lockup, where</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Lockup</th><th>Use it for</th><th>Never</th></tr>
+<tr><td class="m">Horizontal</td><td>Website nav, pitch decks, email signatures, press kit, business cards</td><td>Below 96px wide</td></tr>
+<tr><td class="m">Vertical</td><td>Square social profiles, merch, event backdrops, app splash</td><td>In a horizontal nav bar</td></tr>
+<tr><td class="m">Icon only</td><td>Favicon, app icon, extension toolbar, avatar, in-product header</td><td>First introduction to the brand</td></tr>
+<tr><td class="m">Black</td><td>Single-colour print, faxed or photocopied documents, engraving</td><td>When colour is available</td></tr>
+<tr><td class="m">White</td><td>Photography, dark mode, brand-red fills, video end cards</td><td>On light or busy backgrounds</td></tr>
+</table></div>
+
+<h3>Clear space</h3>
+<p>Reserve clear space equal to <strong>the height of the mark's lower wing</strong> — roughly 40% of the
+mark's total height — on all four sides. Nothing enters it: no text, no rules, no image edges,
+no other logos. It scales with the mark, so it never needs recalculating.</p>
+
+<h3>Minimum size</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Context</th><th>Mark</th><th>Horizontal lockup</th></tr>
+<tr><td>Screen</td><td class="m">20px tall</td><td class="m">96px wide</td></tr>
+<tr><td>Print</td><td class="m">6mm tall</td><td class="m">28mm wide</td></tr>
+<tr><td>Embroidery / etch</td><td class="m">12mm tall</td><td class="m">Use icon only</td></tr>
+</table></div>
+<p>Below the screen minimum the notch between the two wings closes up and the mark reads as a
+smudge. When you are below it, the answer is the icon at a larger size — never a shrunken lockup.</p>
+
+<h3>Incorrect usage</h3>
+<div class="dd">
+  <div class="dd-item dd-do"><div class="dd-head">Correct</div>
+    <div class="dd-body"><div class="lk-h"><svg viewBox="0 0 1024 1024"><use href="#cMark"/></svg><b>Cardnal</b></div></div>
+    <div class="dd-cap">Original proportions, brand red, on a clean surface.</div></div>
+  <div class="dd-item dd-no"><div class="dd-head">Stretched</div>
+    <div class="dd-body"><div class="lk-h" style="transform:scaleX(1.5)"><svg viewBox="0 0 1024 1024"><use href="#cMark"/></svg><b>Cardnal</b></div></div>
+    <div class="dd-cap">Never scale one axis. The wing angle is the brand.</div></div>
+  <div class="dd-item dd-no"><div class="dd-head">Recoloured</div>
+    <div class="dd-body"><div class="lk-h" style="color:#1B63C7"><svg viewBox="0 0 1024 1024"><use href="#cMarkMono"/></svg><b>Cardnal</b></div></div>
+    <div class="dd-cap">Only brand red, black, or white. No other colour, ever.</div></div>
+  <div class="dd-item dd-no"><div class="dd-head">Rotated</div>
+    <div class="dd-body"><svg viewBox="0 0 1024 1024" style="width:46px;height:46px;transform:rotate(-20deg)"><use href="#cMark"/></svg></div>
+    <div class="dd-cap">The mark already carries its angle. Adding another destroys it.</div></div>
+  <div class="dd-item dd-no"><div class="dd-head">Effects added</div>
+    <div class="dd-body"><svg viewBox="0 0 1024 1024" style="width:46px;height:46px;filter:drop-shadow(0 6px 6px rgba(0,0,0,.5))"><use href="#cMark"/></svg></div>
+    <div class="dd-cap">No shadows, bevels, glows, outlines, or gradients over the mark.</div></div>
+  <div class="dd-item dd-no"><div class="dd-head">Low contrast</div>
+    <div class="dd-body" style="background:var(--red-500)"><svg viewBox="0 0 1024 1024" style="width:46px;height:46px"><use href="#cMark"/></svg></div>
+    <div class="dd-cap">Red on red. On brand red the mark is always white.</div></div>
+</div>
+
+<div class="callout"><b>The 26.7&deg; rule</b>
+<p>The top edge of the mark sits at exactly 26.7&deg;. That angle is the system's structural constant —
+it sets the rake of light across the recommendation card, the direction content enters on a swap,
+and the diagonal in marketing artwork. When a design needs an angle, it uses this one.</p></div>
+
+  </div>
+</section>
+<section class="sec" id="color">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><span class="sec-rule"></span></div>
+    <h2>Color System</h2>
+    
+<p class="lead">Cardnal is a white brand with one red. Red appears rarely enough that when it does
+appear, it means something: this is the action, or this is the recommendation.</p>
+
+<h3>Cardnal Red</h3><p>The mark's own red. Brand, primary action, and the recommendation moment. Nothing else.</p><div class="ramp"><div style="background:#FFF1F2;color:#0B0C0E">50</div><div style="background:#FFE0E3;color:#0B0C0E">100</div><div style="background:#FFC5CB;color:#0B0C0E">200</div><div style="background:#FF9BA6;color:#0B0C0E">300</div><div style="background:#F85567;color:#fff">400</div><div style="background:#E60B21;color:#fff">500</div><div style="background:#C90A1C;color:#fff">600</div><div style="background:#A80A18;color:#fff">700</div><div style="background:#8A0914;color:#fff">800</div><div style="background:#6B0710;color:#fff">900</div><div style="background:#3D0409;color:#fff">950</div></div><div class="tblwrap"><table class="tbl"><tr><th>Step</th><th>Hex</th><th>RGB</th><th>HSL</th><th>Token</th></tr><tr><td class="m">50</td><td class="m">#FFF1F2</td><td class="m">rgb(255 241 242)</td><td class="m">hsl(356 100% 97%)</td><td class="m">--red-50</td></tr><tr><td class="m">100</td><td class="m">#FFE0E3</td><td class="m">rgb(255 224 227)</td><td class="m">hsl(354 100% 94%)</td><td class="m">--red-100</td></tr><tr><td class="m">200</td><td class="m">#FFC5CB</td><td class="m">rgb(255 197 203)</td><td class="m">hsl(354 100% 89%)</td><td class="m">--red-200</td></tr><tr><td class="m">300</td><td class="m">#FF9BA6</td><td class="m">rgb(255 155 166)</td><td class="m">hsl(353 100% 80%)</td><td class="m">--red-300</td></tr><tr><td class="m">400</td><td class="m">#F85567</td><td class="m">rgb(248 85 103)</td><td class="m">hsl(353 92% 65%)</td><td class="m">--red-400</td></tr><tr><td class="m">500</td><td class="m">#E60B21</td><td class="m">rgb(230 11 33)</td><td class="m">hsl(354 91% 47%)</td><td class="m">--red-500</td></tr><tr><td class="m">600</td><td class="m">#C90A1C</td><td class="m">rgb(201 10 28)</td><td class="m">hsl(354 91% 41%)</td><td class="m">--red-600</td></tr><tr><td class="m">700</td><td class="m">#A80A18</td><td class="m">rgb(168 10 24)</td><td class="m">hsl(355 89% 35%)</td><td class="m">--red-700</td></tr><tr><td class="m">800</td><td class="m">#8A0914</td><td class="m">rgb(138 9 20)</td><td class="m">hsl(355 88% 29%)</td><td class="m">--red-800</td></tr><tr><td class="m">900</td><td class="m">#6B0710</td><td class="m">rgb(107 7 16)</td><td class="m">hsl(355 88% 22%)</td><td class="m">--red-900</td></tr><tr><td class="m">950</td><td class="m">#3D0409</td><td class="m">rgb(61 4 9)</td><td class="m">hsl(355 88% 13%)</td><td class="m">--red-950</td></tr></table></div>
+<h3>Ink</h3><p>Text, surfaces in dark mode, and the chassis of the product. Cool-neutral, never pure black.</p><div class="ramp"><div style="background:#F7F8F9;color:#0B0C0E">50</div><div style="background:#EEF0F2;color:#0B0C0E">100</div><div style="background:#E1E4E8;color:#0B0C0E">200</div><div style="background:#C7CCD3;color:#0B0C0E">300</div><div style="background:#9AA1AB;color:#0B0C0E">400</div><div style="background:#6B727C;color:#fff">500</div><div style="background:#4C525A;color:#fff">600</div><div style="background:#343940;color:#fff">700</div><div style="background:#1E2126;color:#fff">800</div><div style="background:#131519;color:#fff">900</div><div style="background:#0B0C0E;color:#fff">950</div></div><div class="tblwrap"><table class="tbl"><tr><th>Step</th><th>Hex</th><th>RGB</th><th>HSL</th><th>Token</th></tr><tr><td class="m">50</td><td class="m">#F7F8F9</td><td class="m">rgb(247 248 249)</td><td class="m">hsl(210 14% 97%)</td><td class="m">--ink-50</td></tr><tr><td class="m">100</td><td class="m">#EEF0F2</td><td class="m">rgb(238 240 242)</td><td class="m">hsl(210 13% 94%)</td><td class="m">--ink-100</td></tr><tr><td class="m">200</td><td class="m">#E1E4E8</td><td class="m">rgb(225 228 232)</td><td class="m">hsl(214 13% 90%)</td><td class="m">--ink-200</td></tr><tr><td class="m">300</td><td class="m">#C7CCD3</td><td class="m">rgb(199 204 211)</td><td class="m">hsl(215 12% 80%)</td><td class="m">--ink-300</td></tr><tr><td class="m">400</td><td class="m">#9AA1AB</td><td class="m">rgb(154 161 171)</td><td class="m">hsl(215 9% 64%)</td><td class="m">--ink-400</td></tr><tr><td class="m">500</td><td class="m">#6B727C</td><td class="m">rgb(107 114 124)</td><td class="m">hsl(215 7% 45%)</td><td class="m">--ink-500</td></tr><tr><td class="m">600</td><td class="m">#4C525A</td><td class="m">rgb(76 82 90)</td><td class="m">hsl(214 8% 33%)</td><td class="m">--ink-600</td></tr><tr><td class="m">700</td><td class="m">#343940</td><td class="m">rgb(52 57 64)</td><td class="m">hsl(215 10% 23%)</td><td class="m">--ink-700</td></tr><tr><td class="m">800</td><td class="m">#1E2126</td><td class="m">rgb(30 33 38)</td><td class="m">hsl(218 12% 13%)</td><td class="m">--ink-800</td></tr><tr><td class="m">900</td><td class="m">#131519</td><td class="m">rgb(19 21 25)</td><td class="m">hsl(220 14% 9%)</td><td class="m">--ink-900</td></tr><tr><td class="m">950</td><td class="m">#0B0C0E</td><td class="m">rgb(11 12 14)</td><td class="m">hsl(220 12% 5%)</td><td class="m">--ink-950</td></tr></table></div>
+
+<h3>Semantic &amp; accent</h3>
+<div class="sw-grid"><div class="sw"><div class="sw-chip" style="background:#0E9F5B"><span>#0E9F5B</span></div><div class="sw-body"><b>Success</b><code>--success · rgb(14 159 91) · hsl(152 84% 34%)</code><p>Rewards earned, card added, waitlist confirmed.</p></div></div><div class="sw"><div class="sw-chip" style="background:#B26A00"><span>#B26A00</span></div><div class="sw-body"><b>Warning</b><code>--warning · rgb(178 106 0) · hsl(36 100% 35%)</code><p>Annual fee due, rotating category expiring, cap approaching.</p></div></div><div class="sw"><div class="sw-chip" style="background:#A61B2B"><span>#A61B2B</span></div><div class="sw-body"><b>Alert</b><code>--alert · rgb(166 27 43) · hsl(353 72% 38%)</code><p>Destructive actions and failures. Deliberately darker than the brand red.</p></div></div><div class="sw"><div class="sw-chip" style="background:#1B63C7"><span>#1B63C7</span></div><div class="sw-body"><b>Info</b><code>--info · rgb(27 99 199) · hsl(215 76% 44%)</code><p>Explanations, tips, and the reason behind a recommendation.</p></div></div><div class="sw"><div class="sw-chip" style="background:#B8892B"><span>#B8892B</span></div><div class="sw-body"><b>Gold</b><code>--gold · rgb(184 137 43) · hsl(40 62% 45%)</code><p>Premium tiers, welcome bonuses, lounge and travel benefits.</p></div></div><div class="sw"><div class="sw-chip" style="background:#5A6472"><span>#5A6472</span></div><div class="sw-body"><b>Slate</b><code>--slate · rgb(90 100 114) · hsl(215 12% 40%)</code><p>Secondary data, inactive cards, disabled rails.</p></div></div></div>
+
+<div class="callout warn"><b>The red-on-red problem, and how we solve it</b>
+<p>Our brand colour is red. The universal colour for errors is also red. Left alone, users cannot tell
+a primary action from a failure. Our rule: <strong>vivid brand red (<code>--red-500</code>) is reserved for
+brand marks and primary actions only.</strong> Errors use Alert (<code>--alert</code>, #A61B2B) — noticeably
+darker and cooler — and <strong>always carry an icon and a text label</strong>, never colour alone.
+A destructive button is Alert, never brand red.</p></div>
+
+<h3>Contrast, verified</h3>
+<p>Every pairing below was measured, not eyeballed. WCAG AA requires 4.5:1 for body text and 3:1 for
+large text and meaningful graphics.</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Foreground</th><th>Background</th><th>Ratio</th><th>Verdict</th></tr>
+<tr><td class="m">--ink-950</td><td class="m">--paper</td><td class="m">19.6:1</td><td>Body text. Default.</td></tr>
+<tr><td class="m">--ink-600</td><td class="m">--paper</td><td class="m">7.9:1</td><td>Secondary text.</td></tr>
+<tr><td class="m">--ink-500</td><td class="m">--paper</td><td class="m">4.9:1</td><td>Smallest allowed muted text.</td></tr>
+<tr><td class="m">--ink-400</td><td class="m">--paper</td><td class="m">2.8:1</td><td>Non-text only — icons, rules, placeholders.</td></tr>
+<tr><td class="m">--red-500</td><td class="m">--paper</td><td class="m">4.7:1</td><td>Passes, but use --red-700 for long red text.</td></tr>
+<tr><td class="m">--paper</td><td class="m">--red-500</td><td class="m">4.7:1</td><td>White on the primary button. Passes.</td></tr>
+<tr><td class="m">--success-text</td><td class="m">--paper</td><td class="m">5.4:1</td><td>Use for text. --success is fills and icons only.</td></tr>
+<tr><td class="m">--warning-text</td><td class="m">--paper</td><td class="m">5.4:1</td><td>Use for text.</td></tr>
+<tr><td class="m">--alert</td><td class="m">--paper</td><td class="m">7.5:1</td><td>Error text and destructive buttons.</td></tr>
+<tr><td class="m">--red-400</td><td class="m">--ink-950</td><td class="m">6.0:1</td><td>Dark mode red text. --red-500 fails here (4.1:1).</td></tr>
+</table></div>
+
+<h3>The 60/30/10 discipline</h3>
+<p>On any Cardnal screen: roughly <strong>60% white or near-white surface</strong>, <strong>30% ink</strong> for
+type and structure, and <strong>no more than 10% red</strong>. If a screen has two red elements competing,
+one of them is not the primary action and should be secondary or ghost.</p>
+
+  </div>
+</section>
+<section class="sec" id="type">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><span class="sec-rule"></span></div>
+    <h2>Typography</h2>
+    
+<p class="lead">Three faces, three jobs, no exceptions. Archivo carries voice, Instrument Sans carries
+information, JetBrains Mono carries data and system labels.</p>
+
+<div class="spec">
+  <div class="spec-row"><div class="spec-meta">Archivo · Display · 500 600 700 800</div>
+    <div style="font-family:var(--display);font-weight:800;font-size:46px;letter-spacing:-.045em;line-height:1">The right card. Every time.</div></div>
+  <div class="spec-row"><div class="spec-meta">Instrument Sans · Body · 400 500 600</div>
+    <div style="font-size:19px;line-height:1.6;color:var(--ink-700)">Add the cards you already own. Cardnal tells you which one to use before you pay, and explains why in one line.</div></div>
+  <div class="spec-row"><div class="spec-meta">JetBrains Mono · Data · 400 500 700</div>
+    <div style="font-family:var(--mono);font-size:19px;letter-spacing:-.01em">5.00% &middot; 4x MR &middot; $0 AF &middot; Q3 2026</div></div>
+</div>
+
+<h3>Why these three</h3>
+<p>Archivo is a grotesque with a slightly narrow, high-pressure feel — it holds tight negative
+letter-spacing at display sizes without falling apart, which is what makes the headline feel engineered
+rather than generic. Instrument Sans is quieter and more open, so long explanations stay comfortable.
+JetBrains Mono has tabular figures, so a column of reward rates aligns on the decimal without extra work.</p>
+
+<div class="callout info"><b>Why not Inter</b>
+<p>Inter is the default for every fintech and dev-tool site built in the last five years. It is an
+excellent typeface and it would make Cardnal look like everyone else. Instrument Sans gets the same
+neutrality with slightly more character in the <code>a</code>, <code>g</code>, and <code>t</code>.</p></div>
+
+<h3>The scale</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Style</th><th>Size</th><th>Family</th><th>Weight</th><th>Tracking</th><th>Leading</th><th>Use</th></tr>
+<tr><td><b style="font-family:var(--display)">Display</b></td><td class="m">clamp(48px, 6vw, 76px)</td><td class="m">Archivo</td><td class="m">800</td><td class="m">-4.5%</td><td class="m">0.96</td><td>Hero headline. One per page, never two.</td></tr><tr><td><b style="font-family:var(--display)">H1</b></td><td class="m">44px</td><td class="m">Archivo</td><td class="m">800</td><td class="m">-4%</td><td class="m">1.04</td><td>Page title.</td></tr><tr><td><b style="font-family:var(--display)">H2</b></td><td class="m">34px</td><td class="m">Archivo</td><td class="m">700</td><td class="m">-3%</td><td class="m">1.12</td><td>Section heading.</td></tr><tr><td><b style="font-family:var(--display)">H3</b></td><td class="m">26px</td><td class="m">Archivo</td><td class="m">700</td><td class="m">-2.5%</td><td class="m">1.2</td><td>Subsection.</td></tr><tr><td><b style="font-family:var(--display)">H4</b></td><td class="m">20px</td><td class="m">Archivo</td><td class="m">700</td><td class="m">-2%</td><td class="m">1.3</td><td>Card title, modal title.</td></tr><tr><td><b style="font-family:var(--display)">H5</b></td><td class="m">17px</td><td class="m">Archivo</td><td class="m">700</td><td class="m">-1.5%</td><td class="m">1.4</td><td>Dense UI heading.</td></tr><tr><td><b style="font-family:var(--display)">H6</b></td><td class="m">14px</td><td class="m">Archivo</td><td class="m">700</td><td class="m">-1%</td><td class="m">1.45</td><td>Table group label.</td></tr><tr><td><b style="font-family:var(--display)">Body Large</b></td><td class="m">18px</td><td class="m">Instrument Sans</td><td class="m">400</td><td class="m">-0.5%</td><td class="m">1.62</td><td>Hero subcopy, marketing paragraphs.</td></tr><tr><td><b style="font-family:var(--display)">Body</b></td><td class="m">16px</td><td class="m">Instrument Sans</td><td class="m">400</td><td class="m">0</td><td class="m">1.6</td><td>Default. Everything unless stated otherwise.</td></tr><tr><td><b style="font-family:var(--display)">Body Strong</b></td><td class="m">16px</td><td class="m">Instrument Sans</td><td class="m">600</td><td class="m">0</td><td class="m">1.6</td><td>Emphasis inside body copy.</td></tr><tr><td><b style="font-family:var(--display)">Small</b></td><td class="m">14px</td><td class="m">Instrument Sans</td><td class="m">400</td><td class="m">0</td><td class="m">1.5</td><td>Helper text, secondary rows.</td></tr><tr><td><b style="font-family:var(--display)">Caption</b></td><td class="m">12.5px</td><td class="m">Instrument Sans</td><td class="m">500</td><td class="m">1%</td><td class="m">1.45</td><td>Timestamps, footnotes, legal.</td></tr><tr><td><b style="font-family:var(--display)">Overline</b></td><td class="m">11px</td><td class="m">JetBrains Mono</td><td class="m">700</td><td class="m">14%</td><td class="m">1.3</td><td>Eyebrows and section markers. Uppercase.</td></tr><tr><td><b style="font-family:var(--display)">Data</b></td><td class="m">14px</td><td class="m">JetBrains Mono</td><td class="m">500</td><td class="m">0</td><td class="m">1.4</td><td>Reward rates, percentages, currency, IDs.</td></tr>
+</table></div>
+
+<h3>Rules</h3>
+<ul>
+<li><strong>Tracking tightens as size grows.</strong> Display is &minus;4.5%, body is 0. Never track out headings.</li>
+<li><strong>Sentence case everywhere</strong> except Overline, which is uppercase mono. No Title Case Headlines.</li>
+<li><strong>One display face per screen.</strong> If two things are both H1, neither is.</li>
+<li><strong>Numbers that represent money or rewards use JetBrains Mono</strong>, so they align in columns and read as data.</li>
+<li><strong>Line length caps at 70 characters</strong> for body, 62 for lead paragraphs.</li>
+<li><strong>Never use faux bold or faux italic.</strong> Load the real weight or pick another.</li>
+</ul>
+
+  </div>
+</section>
+<section class="sec" id="spacing">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><span class="sec-rule"></span></div>
+    <h2>Spacing</h2>
+    
+<p class="lead">An 8-point grid. Every margin, padding, and gap is a multiple of 8 — with 4px available
+for the one case that needs it, the gap between an icon and its label.</p>
+<div class="demo"><div class="sbar"><span class="lb">px · 1px</span><span class="bar" style="width:1px"></span></div><div class="sbar"><span class="lb">1 · 4px</span><span class="bar" style="width:4px"></span></div><div class="sbar"><span class="lb">2 · 8px</span><span class="bar" style="width:8px"></span></div><div class="sbar"><span class="lb">3 · 12px</span><span class="bar" style="width:12px"></span></div><div class="sbar"><span class="lb">4 · 16px</span><span class="bar" style="width:16px"></span></div><div class="sbar"><span class="lb">5 · 20px</span><span class="bar" style="width:20px"></span></div><div class="sbar"><span class="lb">6 · 24px</span><span class="bar" style="width:24px"></span></div><div class="sbar"><span class="lb">8 · 32px</span><span class="bar" style="width:32px"></span></div><div class="sbar"><span class="lb">10 · 40px</span><span class="bar" style="width:40px"></span></div><div class="sbar"><span class="lb">12 · 48px</span><span class="bar" style="width:48px"></span></div><div class="sbar"><span class="lb">16 · 64px</span><span class="bar" style="width:64px"></span></div><div class="sbar"><span class="lb">20 · 80px</span><span class="bar" style="width:80px"></span></div><div class="sbar"><span class="lb">24 · 96px</span><span class="bar" style="width:96px"></span></div><div class="sbar"><span class="lb">32 · 128px</span><span class="bar" style="width:128px"></span></div></div>
+<div class="tblwrap"><table class="tbl"><tr><th>Token</th><th>Value</th><th>Typical use</th></tr><tr><td class="m">--space-0</td><td class="m">0px</td><td></td></tr><tr><td class="m">--space-px</td><td class="m">1px</td><td>Hairline borders only</td></tr><tr><td class="m">--space-1</td><td class="m">4px</td><td>Icon-to-label gap</td></tr><tr><td class="m">--space-2</td><td class="m">8px</td><td>Base unit. Tight stacks</td></tr><tr><td class="m">--space-3</td><td class="m">12px</td><td>Inside small controls</td></tr><tr><td class="m">--space-4</td><td class="m">16px</td><td>Default gap between related items</td></tr><tr><td class="m">--space-5</td><td class="m">20px</td><td>Input padding</td></tr><tr><td class="m">--space-6</td><td class="m">24px</td><td>Card padding, form row rhythm</td></tr><tr><td class="m">--space-8</td><td class="m">32px</td><td>Between component groups</td></tr><tr><td class="m">--space-10</td><td class="m">40px</td><td>Card padding on desktop</td></tr><tr><td class="m">--space-12</td><td class="m">48px</td><td>Between subsections</td></tr><tr><td class="m">--space-16</td><td class="m">64px</td><td>Section padding, mobile</td></tr><tr><td class="m">--space-20</td><td class="m">80px</td><td>Section padding, tablet</td></tr><tr><td class="m">--space-24</td><td class="m">96px</td><td>Section padding, desktop</td></tr><tr><td class="m">--space-32</td><td class="m">128px</td><td>Hero breathing room</td></tr></table></div>
+<h3>Rhythm rules</h3>
+<ul>
+<li><strong>Related things sit closer than unrelated things.</strong> A label is 8px from its input; the next
+field is 24px away. Spacing is how a form explains its own structure.</li>
+<li><strong>Section padding scales with viewport:</strong> 64px mobile, 80px tablet, 96px desktop.</li>
+<li><strong>Never use an arbitrary value.</strong> If 8 is too tight and 16 too loose, the problem is the layout,
+not the scale.</li>
+</ul>
+
+  </div>
+</section>
+<section class="sec" id="radius">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><span class="sec-rule"></span></div>
+    <h2>Border Radius</h2>
+    
+<p class="lead">Radius encodes hierarchy: the larger the surface, the softer the corner. A 6px badge
+inside a 20px modal reads as nested, not mismatched.</p>
+<div class="rad-grid"><div class="rad" style="border-radius:0px">none<br>0px</div><div class="rad" style="border-radius:6px">sm<br>6px</div><div class="rad" style="border-radius:10px">md<br>10px</div><div class="rad" style="border-radius:14px">lg<br>14px</div><div class="rad" style="border-radius:20px">xl<br>20px</div><div class="rad" style="border-radius:28px">2xl<br>28px</div><div class="rad" style="border-radius:999px">full<br>999px</div></div>
+<div class="tblwrap"><table class="tbl"><tr><th>Token</th><th>Value</th><th>Applies to</th></tr><tr><td class="m">--r-none</td><td class="m">0px</td><td>Tables, full-bleed dividers</td></tr><tr><td class="m">--r-sm</td><td class="m">6px</td><td>Badges, pills, chips, checkboxes</td></tr><tr><td class="m">--r-md</td><td class="m">10px</td><td>Buttons, inputs, dropdowns, tooltips</td></tr><tr><td class="m">--r-lg</td><td class="m">14px</td><td>Cards, toasts, popovers</td></tr><tr><td class="m">--r-xl</td><td class="m">20px</td><td>Modals, sheets, the recommendation card</td></tr><tr><td class="m">--r-2xl</td><td class="m">28px</td><td>Marketing panels, feature blocks</td></tr><tr><td class="m">--r-full</td><td class="m">999px</td><td>Avatars, status dots, tag pills</td></tr></table></div>
+<p>The one hard rule: <strong>a child element's radius is always smaller than its parent's.</strong>
+Nesting a 14px card inside a 14px card looks like a rendering bug.</p>
+
+  </div>
+</section>
+<section class="sec" id="shadows">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><span class="sec-rule"></span></div>
+    <h2>Elevation</h2>
+    
+<p class="lead">Shadows describe distance from the page, nothing else. They are never decorative and
+never coloured — except the one brand shadow under a primary button.</p>
+<div class="demo"><div class="sh-grid"><div class="sh" style="box-shadow:0 1px 2px rgba(11,12,14,.06), 0 1px 1px rgba(11,12,14,.04)">sm</div><div class="sh" style="box-shadow:0 4px 12px -2px rgba(11,12,14,.08), 0 2px 4px -2px rgba(11,12,14,.05)">md</div><div class="sh" style="box-shadow:0 12px 28px -8px rgba(11,12,14,.12), 0 4px 8px -4px rgba(11,12,14,.06)">lg</div><div class="sh" style="box-shadow:0 24px 56px -16px rgba(11,12,14,.18), 0 8px 16px -8px rgba(11,12,14,.08)">float</div><div class="sh" style="box-shadow:0 8px 22px -8px rgba(230,11,33,.5)">brand</div></div></div>
+<div class="tblwrap"><table class="tbl"><tr><th>Token</th><th>Value</th><th>Use</th></tr><tr><td class="m">--sh-sm</td><td class="m" style="white-space:normal">0 1px 2px rgba(11,12,14,.06), 0 1px 1px rgba(11,12,14,.04)</td><td>Resting cards, input focus lift</td></tr><tr><td class="m">--sh-md</td><td class="m" style="white-space:normal">0 4px 12px -2px rgba(11,12,14,.08), 0 2px 4px -2px rgba(11,12,14,.05)</td><td>Dropdowns, hover on cards</td></tr><tr><td class="m">--sh-lg</td><td class="m" style="white-space:normal">0 12px 28px -8px rgba(11,12,14,.12), 0 4px 8px -4px rgba(11,12,14,.06)</td><td>Popovers, toasts</td></tr><tr><td class="m">--sh-float</td><td class="m" style="white-space:normal">0 24px 56px -16px rgba(11,12,14,.18), 0 8px 16px -8px rgba(11,12,14,.08)</td><td>Modals, the extension panel over a merchant page</td></tr><tr><td class="m">--sh-brand</td><td class="m" style="white-space:normal">0 8px 22px -8px rgba(230,11,33,.5)</td><td>Primary buttons only. Never on surfaces.</td></tr></table></div>
+<div class="callout"><b>Prefer a border to a shadow</b>
+<p>On a white product surface, a 1px <code>--line</code> border separates things more cleanly than a shadow
+and costs nothing in render time. Reach for elevation only when something genuinely floats above the
+page: a dropdown, a modal, a toast, or the extension panel sitting over a merchant's checkout.</p></div>
+
+  </div>
+</section>
+<section class="sec" id="icons">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">07</span><span class="sec-rule"></span></div>
+    <h2>Iconography</h2>
+    
+<p class="lead">We use <strong>Lucide</strong> — open source, MIT licensed, ~1,500 icons, and already the
+default in the React ecosystem we build on.</p>
+<h3>Style specification</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Property</th><th>Value</th></tr>
+<tr><td>Grid</td><td class="m">24 &times; 24</td></tr>
+<tr><td>Stroke width</td><td class="m">1.75px at 20–24px · 2px below 20px</td></tr>
+<tr><td>Caps &amp; joins</td><td class="m">round / round</td></tr>
+<tr><td>Fill</td><td class="m">none — outline only</td></tr>
+<tr><td>Sizes</td><td class="m">16 · 20 · 24 · 32 (nothing between)</td></tr>
+<tr><td>Default colour</td><td class="m">--ink-600, inherits currentColor</td></tr>
+<tr><td>Optical alignment</td><td class="m">Centred on the cap height of adjacent text, not the line box</td></tr>
+</table></div>
+<div class="demo"><div class="icongrid"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 14.5 9 21 9.5 16 13.8 17.6 20 12 16.7 6.4 20 8 13.8 3 9.5 9.5 9Z"/></svg><span>Rewards</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6 15h3"/></svg><span>Cards</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1.3 11.2a2 2 0 0 1-2 1.8H7.3a2 2 0 0 1-2-1.8Z"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7"/></svg><span>Shopping</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 15.5 21 10a1.8 1.8 0 0 0-1.2-3.4l-3.4 1-4.6-3.2-2 .6 2.8 3.6-3.4 1L6 7.4l-1.6.5 1.3 3-2.9.9a1.5 1.5 0 0 0 .7 3.7Z"/><path d="M6 20h13"/></svg><span>Travel</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V5.5A1.5 1.5 0 0 1 5.5 4h6A1.5 1.5 0 0 1 13 5.5V20"/><path d="M3 20h11M13 11h3.5a1.5 1.5 0 0 1 1.5 1.5V16a1.5 1.5 0 0 0 3 0V9l-3-3"/><path d="M6.5 8.5h4"/></svg><span>Gas</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v8a2.5 2.5 0 0 0 5 0V3M8.5 11v10"/><path d="M17.5 3c-1.4 1.2-2 3-2 5.2 0 1.6.7 2.8 2 3.3V21"/></svg><span>Restaurants</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2.3 11.4a1.8 1.8 0 0 0 1.8 1.4h8.3a1.8 1.8 0 0 0 1.8-1.4L21 8H6"/><circle cx="10" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg><span>Groceries</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V12M9.3 20V7M14.7 20v-5M20 20V4"/></svg><span>Finance</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg><span>Settings</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.2 2.9 7.6 7 9 4.1-1.4 7-4.8 7-9V6Z"/><path d="M9.2 12.2 11 14l4-4.2"/></svg><span>Security</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.5a6 6 0 1 0-12 0c0 5-2 6.5-2 6.5h16s-2-1.5-2-6.5Z"/><path d="M10.3 19a2 2 0 0 0 3.4 0"/></svg><span>Notifications</span></div><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 12.3 12.4 4.1a1.8 1.8 0 0 0-1.3-.5L5 3.8a1.4 1.4 0 0 0-1.3 1.3l-.2 6a1.8 1.8 0 0 0 .5 1.4l8.2 8.2a1.5 1.5 0 0 0 2.1 0l6.3-6.3a1.5 1.5 0 0 0 0-2.1Z"/><circle cx="8.2" cy="8.2" r="1.3"/></svg><span>Offers</span></div></div></div>
+<h3>Rules</h3>
+<ul>
+<li><strong>Never mix filled and outline icons</strong> in the same view. Outline is our style; the one
+exception is a status dot, which is a shape, not an icon.</li>
+<li><strong>An icon never appears alone if it triggers an action</strong> the user can't undo. Icon-only
+buttons are for reversible things — close, expand, copy.</li>
+<li><strong>Category icons are semantic, not decorative.</strong> Groceries always uses the same glyph, everywhere.</li>
+<li><strong>Never recolour category icons</strong> to match a merchant's brand.</li>
+</ul>
+
+  </div>
+</section>
+<section class="sec" id="motion">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">08</span><span class="sec-rule"></span></div>
+    <h2>Motion</h2>
+    
+<p class="lead">Motion has one job at Cardnal: to show that something responded. It is never the
+point of a screen. If an animation makes the product feel slower, it is wrong regardless of how good
+it looks.</p>
+<h3>Duration</h3>
+<div class="tblwrap"><table class="tbl"><tr><th>Token</th><th>Value</th><th>Use</th></tr><tr><td class="m">--t-instant</td><td class="m">80ms</td><td>Toggle flips, checkbox marks</td></tr><tr><td class="m">--t-fast</td><td class="m">140ms</td><td>Hover, focus, color and border changes</td></tr><tr><td class="m">--t-base</td><td class="m">200ms</td><td>Buttons, dropdown open, tooltip</td></tr><tr><td class="m">--t-slow</td><td class="m">320ms</td><td>Modals, sheets, card swap</td></tr><tr><td class="m">--t-deliberate</td><td class="m">480ms</td><td>Page-level reveals, first-load sequence</td></tr></table></div>
+<h3>Easing</h3>
+<div class="tblwrap"><table class="tbl"><tr><th>Token</th><th>Curve</th><th>Use</th></tr><tr><td class="m">--ease-out</td><td class="m">cubic-bezier(.2,.7,.3,1)</td><td>Things entering or responding to the user. Default.</td></tr><tr><td class="m">--ease-in</td><td class="m">cubic-bezier(.5,0,.9,.4)</td><td>Things leaving the screen.</td></tr><tr><td class="m">--ease-spring</td><td class="m">cubic-bezier(.2,.9,.25,1.15)</td><td>One small overshoot: the card-swap and success check.</td></tr><tr><td class="m">--ease-linear</td><td class="m">linear</td><td>Spinners and progress only.</td></tr></table></div>
+<h3>The defined interactions</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Interaction</th><th>Specification</th></tr>
+<tr><td>Button hover</td><td>background shift + <code>translateY(-1px)</code> over <code>--t-base</code></td></tr>
+<tr><td>Button press</td><td>returns to <code>translateY(0)</code>, darker fill, <code>--t-instant</code></td></tr>
+<tr><td>Card hover</td><td><code>--sh-sm</code> to <code>--sh-md</code>, <code>translateY(-2px)</code>, <code>--t-base</code></td></tr>
+<tr><td>Card swap (recommendation changes)</td><td>Old card exits along <strong>26.7&deg;</strong>, new card enters on the same axis, <code>--t-slow</code>, <code>--ease-spring</code></td></tr>
+<tr><td>Dropdown / popover</td><td>opacity 0→1 with <code>scale(.97)</code>→1 from the trigger edge, <code>--t-base</code></td></tr>
+<tr><td>Modal</td><td>Backdrop fades <code>--t-base</code>; panel rises 12px and fades, <code>--t-slow</code></td></tr>
+<tr><td>Toast</td><td>Slides in from the right 16px, <code>--t-base</code>; auto-dismisses after 5s</td></tr>
+<tr><td>Page transition</td><td>Content fades and rises 8px, <code>--t-deliberate</code>, staggered 40ms per block</td></tr>
+<tr><td>Loading</td><td>Skeletons shimmer 1.4s linear. Spinners only for actions over 400ms.</td></tr>
+<tr><td>Success check</td><td>Path draws over <code>--t-base</code> with <code>--ease-spring</code>. One overshoot, no bounce loop.</td></tr>
+</table></div>
+<div class="callout"><b>The 26.7&deg; swap</b>
+<p>The one piece of motion unique to Cardnal. When a recommendation changes — new merchant, new
+category, new card — content leaves and arrives along the angle of the mark rather than sliding
+straight across. It is subtle at 9px of travel, and it is the brand moving.</p></div>
+<div class="callout info"><b>Reduced motion is not optional</b>
+<p>Every animation sits behind <code>@media (prefers-reduced-motion: reduce)</code>. Under that query,
+transitions drop to 0.01ms and the card swap becomes a straight cross-fade. Nothing loses function.</p></div>
+
+  </div>
+</section>
+<section class="sec" id="components">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">09</span><span class="sec-rule"></span></div>
+    <h2>UI Components</h2>
+    
+<p class="lead">Every component below is live — this page renders the real CSS, so what you see is
+the specification. Copy the tokens, not the screenshots.</p>
+
+<h3>Buttons</h3>
+<div class="demo">
+  <div class="demo-label">Variants</div>
+  <div class="demo-row">
+    <button class="btn btn-primary">Reserve your spot <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+    <button class="btn btn-secondary">Add a card</button>
+    <button class="btn btn-ghost">Not now</button>
+    <button class="btn btn-danger">Remove card</button>
+  </div>
+  <div class="demo-label">States</div>
+  <div class="demo-row">
+    <button class="btn btn-loading"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/></svg> Reserving…</button>
+    <button class="btn btn-primary" disabled>Disabled</button>
+    <button class="btn btn-secondary" disabled>Disabled</button>
+  </div>
+  <div class="demo-label">Sizes</div>
+  <div class="demo-row">
+    <button class="btn btn-primary btn-sm">Small</button>
+    <button class="btn btn-primary">Default</button>
+    <button class="btn btn-primary btn-lg">Large</button>
+  </div>
+</div>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Variant</th><th>Purpose</th><th>Per screen</th></tr>
+<tr><td class="m">Primary</td><td>The one action we want taken</td><td><strong>Exactly one</strong></td></tr>
+<tr><td class="m">Secondary</td><td>Real alternatives with equal standing</td><td>Up to two</td></tr>
+<tr><td class="m">Ghost</td><td>Dismissals, "maybe later", tertiary nav</td><td>Unlimited</td></tr>
+<tr><td class="m">Danger</td><td>Destructive and irreversible only</td><td>One, behind confirmation</td></tr>
+</table></div>
+<p>Labels are verbs describing the outcome: <strong>Add card</strong>, not Submit. The label stays
+constant through the flow — a button that says Reserve produces a toast that says Reserved.</p>
+
+<h3>Inputs &amp; forms</h3>
+<div class="demo">
+  <div style="max-width:420px;display:grid;gap:18px">
+    <div><label class="field-l" for="d1">Email address</label>
+      <input class="inp" id="d1" placeholder="you@email.com"><div class="field-h">We only email you when your spot opens.</div></div>
+    <div><label class="field-l" for="d2">Card nickname</label>
+      <input class="inp is-error" id="d2" value="   "><div class="field-h err">Enter a nickname so you can tell this card apart.</div></div>
+    <div><label class="field-l" for="d3">Issuer</label>
+      <select class="inp" id="d3"><option>Select an issuer</option><option>American Express</option><option>Chase</option><option>Citi</option></select></div>
+    <div><label class="field-l" for="d4">Annual fee</label>
+      <input class="inp" id="d4" value="$0" disabled><div class="field-h">Pulled from the card's terms. Not editable.</div></div>
+  </div>
+</div>
+<ul>
+<li>Labels sit <strong>above</strong> the field, always visible. Placeholders are examples, never labels.</li>
+<li>Helper text is present from the start where it helps — it does not appear only on failure.</li>
+<li><strong>Validate on blur, not on keystroke.</strong> Telling someone their email is invalid while they
+type the third character is hostile.</li>
+<li>Error text says what happened and how to fix it. It never apologises and never blames.</li>
+</ul>
+
+<h3>Selection controls</h3>
+<div class="demo">
+  <div class="demo-row" style="gap:26px">
+    <label class="check"><input type="checkbox" checked><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span> Include annual fee in the math</label>
+    <label class="check"><input type="checkbox"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span> Show alternatives</label>
+  </div>
+  <div class="demo-row" style="gap:26px">
+    <label class="check radio"><input type="radio" name="r" checked><span class="box"></span> Maximise cashback</label>
+    <label class="check radio"><input type="radio" name="r"><span class="box"></span> Maximise points</label>
+  </div>
+</div>
+
+<h3>Badges, pills &amp; tabs</h3>
+<div class="demo">
+  <div class="demo-label">Badges — state, not decoration</div>
+  <div class="demo-row">
+    <span class="badge badge-brand">Best choice</span>
+    <span class="badge badge-success"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Card added</span>
+    <span class="badge badge-warning">Fee due in 12 days</span>
+    <span class="badge badge-alert">Expired offer</span>
+    <span class="badge badge-neutral">Inactive</span>
+  </div>
+  <div class="demo-label">Pills — filters the user controls</div>
+  <div class="demo-row">
+    <button class="pill on">All categories</button>
+    <button class="pill">Dining</button>
+    <button class="pill">Travel</button>
+    <button class="pill">Groceries</button>
+  </div>
+  <div class="demo-label">Tabs — peer views of the same object</div>
+  <div class="tabs"><button class="tab on">Recommendation</button><button class="tab">Alternatives</button><button class="tab">Card details</button></div>
+  <p style="margin:0;font-size:14px;color:var(--ink-500)">Tabs never change what the object is — only which face of it you see.</p>
+</div>
+
+<h3>Cards, modals &amp; overlays</h3>
+<div class="demo">
+  <div class="grid2" style="margin:0">
+    <div class="uicard">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="width:30px;height:21px;border-radius:4px;background:#1C5FAB;display:block"></span>
+        <b style="font-family:var(--display);font-size:15px">Freedom Flex</b>
+      </div>
+      <p style="margin:0;font-size:13.5px;color:var(--ink-500)">3% back on dining this quarter. $0 annual fee.</p>
+    </div>
+    <div class="uicard" style="display:grid;gap:9px">
+      <div class="skel" style="height:13px;width:52%"></div>
+      <div class="skel" style="height:13px;width:88%"></div>
+      <div class="skel" style="height:13px;width:70%"></div>
+    </div>
+  </div>
+  <div class="demo-label">Toast</div>
+  <div class="toast"><span style="color:#2BD97C;margin-top:2px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Card added</b><p>Prime Visa is now part of your recommendations.</p></div></div>
+  <div class="demo-label">Tooltip</div>
+  <div class="tipbox">Rates come from the issuer's published terms.</div>
+</div>
+
+<h3>Empty states</h3>
+<div class="demo">
+  <div class="empty">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink-400)" stroke-width="1.5" style="margin:0 auto"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/></svg>
+    <h4>No cards yet</h4>
+    <p>Add the cards already in your wallet and Cardnal starts recommending immediately.</p>
+    <button class="btn btn-primary btn-sm">Add your first card</button>
+  </div>
+</div>
+<p>An empty state is an invitation, never an apology. It names what is missing, says what happens once
+it exists, and offers exactly one way forward.</p>
+
+<h3>Tables</h3>
+<div class="demo" style="background:var(--paper)">
+<div class="tblwrap"><table class="tbl" style="margin:0">
+<tr><th>Card</th><th>Category</th><th>Rate</th><th>Annual fee</th></tr>
+<tr><td>Prime Visa</td><td>Amazon</td><td class="m">5.00%</td><td class="m">$0</td></tr>
+<tr><td>Blue Cash Preferred</td><td>Groceries</td><td class="m">6.00%</td><td class="m">$95</td></tr>
+<tr><td>Freedom Flex</td><td>Dining</td><td class="m">3.00%</td><td class="m">$0</td></tr>
+</table></div>
+</div>
+<ul>
+<li>Numeric columns are <strong>mono, right-aligned</strong>, with consistent decimal places.</li>
+<li>Header row is mono uppercase at 10px — it labels, it does not compete.</li>
+<li>Rows separate with a 1px <code>--line</code>. No zebra striping; it adds noise at our densities.</li>
+<li>Hover tints the row <code>--ink-50</code> only when the row is clickable.</li>
+</ul>
+
+<h3>Navigation</h3>
+<ul>
+<li><strong>Marketing site:</strong> logo left, up to four links, one primary action right. Sticky, background
+blurs and a hairline border appears after 8px of scroll.</li>
+<li><strong>App:</strong> persistent left rail on desktop (icon + label), bottom tab bar on mobile with at most
+four destinations. If a fifth is needed, the information architecture is wrong.</li>
+<li><strong>Extension:</strong> no navigation at all. It is one panel with one recommendation.</li>
+</ul>
+
+  </div>
+</section>
+<section class="sec" id="reccard">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">10</span><span class="sec-rule"></span></div>
+    <h2>The Recommendation Card</h2>
+    
+<p class="lead">One component matters more than the rest of the system combined. Everything Cardnal
+promises is delivered by this card, so it gets its own specification.</p>
+<div class="demo" style="display:grid;place-items:center;padding:44px">
+  <div class="reccard">
+    <div class="rc-top"><span class="rc-name">Prime Visa</span><span class="rc-net">VISA</span></div>
+    <div class="rc-rate"><b>5%</b><span>back</span></div>
+    <div class="rc-why">Highest rewards for Amazon purchases.</div>
+  </div>
+</div>
+<h3>Anatomy, in priority order</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>#</th><th>Element</th><th>Rule</th></tr>
+<tr><td class="m">1</td><td>The rate</td><td>Largest element on the card. Archivo 800, 42px, mono-aligned. This is the answer.</td></tr>
+<tr><td class="m">2</td><td>The card name</td><td>16px semibold. Must match what is printed on the physical card.</td></tr>
+<tr><td class="m">3</td><td>The reason</td><td>One sentence, under 60 characters, above the fold. Never truncated.</td></tr>
+<tr><td class="m">4</td><td>The network</td><td>Mono, 10px, low contrast. Confirmation, not information.</td></tr>
+<tr><td class="m">5</td><td>Light rake</td><td>A single highlight at <strong>26.7&deg;</strong> across the surface. The brand's fingerprint.</td></tr>
+</table></div>
+<h3>Non-negotiables</h3>
+<ul>
+<li><strong>A recommendation never appears without its reason.</strong> If we cannot explain it in one sentence,
+we do not show it.</li>
+<li><strong>The rate is green, not red.</strong> Red is the brand and the action; earnings are gains.</li>
+<li><strong>Ties are shown as ties.</strong> Two cards within 0.5% both appear, with the tiebreaker named.</li>
+<li><strong>No merchant logos on the card.</strong> Trademark risk, and it makes us look like an affiliate.</li>
+<li><strong>The card never covers the checkout button</strong> in the extension. It anchors above or beside.</li>
+</ul>
+
+  </div>
+</section>
+<section class="sec" id="photo">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">11</span><span class="sec-rule"></span></div>
+    <h2>Photography</h2>
+    
+<p class="lead">Cardnal photography shows the two seconds before a payment — the hand, the terminal,
+the phone, the ordinary transaction. Never the money itself.</p>
+<h3>Direction</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Attribute</th><th>Specification</th></tr>
+<tr><td>Subject</td><td>Hands and devices at the moment of paying. People are present but rarely the focus.</td></tr>
+<tr><td>Light</td><td>Natural, directional, single source. Soft shadows with real falloff.</td></tr>
+<tr><td>Palette</td><td>Desaturated neutrals — concrete, paper, denim, brushed steel. One red object at most.</td></tr>
+<tr><td>Depth of field</td><td>Shallow. The card or phone is sharp; the merchant context is soft.</td></tr>
+<tr><td>Framing</td><td>Off-centre, generous negative space for type. Shoot for the crop.</td></tr>
+<tr><td>Grade</td><td>Slightly cool, gentle contrast, no crushed blacks, no filters.</td></tr>
+<tr><td>Aspect</td><td>3:2 marketing · 16:9 web hero · 4:5 Instagram · 1:1 avatar</td></tr>
+</table></div>
+<h3>Shot list</h3>
+<ul>
+<li>A hand pulling one card from a wallet holding several — the decision, made.</li>
+<li>A phone on a café counter, screen showing a recommendation, coffee arriving behind it.</li>
+<li>A laptop at checkout with the extension panel open, over the user's shoulder.</li>
+<li>A fuel pump, a grocery belt, an airport gate — the categories, as real places.</li>
+<li>Hands, close, at a contactless terminal. No faces needed.</li>
+</ul>
+<h3>Never</h3>
+<ul>
+<li><strong>Fans of cash, gold coins, stock charts, bull statues, or rockets.</strong> That is crypto, and we are not.</li>
+<li><strong>Smiling people in blazers shaking hands.</strong> That is a bank, and we are not.</li>
+<li><strong>Obvious stock photography</strong> — white backgrounds, isolated products, artificial smiles.</li>
+<li><strong>Real card numbers, names, CVVs, or bank statements.</strong> Ever, even blurred.</li>
+<li><strong>Identifiable merchant branding</strong> we do not have permission to use.</li>
+<li><strong>Heavy grade, vignettes, lens flares, or motion blur</strong> used as style.</li>
+</ul>
+<div class="callout warn"><b>Legal note</b>
+<p>Any photograph containing a real credit card must use a card we own, with the number digitally
+replaced by a non-issued test range. Never photograph a user's card, even with permission.</p></div>
+
+  </div>
+</section>
+<section class="sec" id="illustration">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">12</span><span class="sec-rule"></span></div>
+    <h2>Illustration</h2>
+    
+<p class="lead">The answer is <strong>minimal geometric</strong> — flat, two-colour, built from the mark's own
+angles. Not 3D. Not glassmorphism.</p>
+<h3>The decision, and why</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Style</th><th>Verdict</th><th>Reasoning</th></tr>
+<tr><td><strong>Minimal geometric</strong></td><td class="m" style="color:var(--success-text)">Chosen</td><td>Derives from the logo, renders at any size, costs nothing to produce, and stays out of the way of information. Scales as we add surfaces.</td></tr>
+<tr><td>Flat character illustration</td><td class="m" style="color:var(--ink-500)">No</td><td>Reads friendly-startup rather than premium, and it dates fast. Every fintech had it in 2019.</td></tr>
+<tr><td>3D render</td><td class="m" style="color:var(--ink-500)">No</td><td>Expensive, slow to iterate, and impossible to keep consistent across a small team. Also the current default for crypto.</td></tr>
+<tr><td>Glassmorphism</td><td class="m" style="color:var(--alert-text)">Never</td><td>Blur and transparency reduce contrast, which fails the accessibility floor we set in section 02. It is also a trend with a visible expiry date.</td></tr>
+</table></div>
+<h3>Construction rules</h3>
+<ul>
+<li>Built from <strong>rectangles, circles, and lines at 26.7&deg; or 90&deg;</strong>. No other angles.</li>
+<li><strong>Two colours maximum</strong> per illustration: one ink value plus brand red, or ink plus white.</li>
+<li>Stroke weights match the icon system: 1.75px at standard scale.</li>
+<li>No gradients, no drop shadows, no texture. Flat fills only.</li>
+<li>Illustrations carry meaning — a diagram of how routing works, not a decorative blob.</li>
+</ul>
+<div class="callout"><b>Where illustration is allowed</b>
+<p>Empty states, onboarding steps, blog headers, and explainer diagrams. <strong>Not</strong> in the
+recommendation flow. When someone is about to pay, the interface shows data and nothing else.</p></div>
+
+  </div>
+</section>
+<section class="sec" id="voice">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">13</span><span class="sec-rule"></span></div>
+    <h2>Voice &amp; Tone</h2>
+    
+<p class="lead">Cardnal speaks like a knowledgeable friend who respects your time: short sentences,
+plain verbs, no hedging, no hype. We state the answer, then the reason.</p>
+<h3>The four rules</h3>
+<ol>
+<li><strong>Lead with the answer.</strong> The recommendation comes first, the explanation second.</li>
+<li><strong>Always give the reason.</strong> A recommendation without a "because" is a guess as far as the user knows.</li>
+<li><strong>Never oversell.</strong> We say 5% back. We do not say unlock incredible rewards.</li>
+<li><strong>Own failures plainly.</strong> Say what happened and what to do. Do not apologise twice.</li>
+</ol>
+
+<h3>Website</h3>
+<div class="vp"><div class="no"><div class="tag">Not this</div><p>Cardnal leverages intelligent optimisation to maximise your credit card rewards ecosystem.</p></div><div class="yes"><div class="tag">This</div><p>Know which card to use before you pay. Add your cards, and we do the rest.</p></div></div>
+<h3>Marketing</h3>
+<div class="vp"><div class="no"><div class="tag">Not this</div><p>Revolutionary AI-powered fintech disruption for the modern consumer.</p></div><div class="yes"><div class="tag">This</div><p>You already own the right card. You just don't know which one it is.</p></div></div>
+<h3>Email</h3>
+<div class="vp"><div class="no"><div class="tag">Not this</div><p>Dear Valued User, We are pleased to inform you that your account has been successfully provisioned.</p></div><div class="yes"><div class="tag">This</div><p>You're in. Add your first card and Cardnal starts working at your next checkout.</p></div></div>
+<h3>Push notification</h3>
+<div class="vp"><div class="no"><div class="tag">Not this</div><p>Don't miss out on amazing rewards! Open Cardnal now! 🎉</p></div><div class="yes"><div class="tag">This</div><p>At Whole Foods? Use Blue Cash Preferred — 6% back on groceries.</p></div></div>
+<h3>Error message</h3>
+<div class="vp"><div class="no"><div class="tag">Not this</div><p>Oops! Something went wrong. Please try again later or contact support.</p></div><div class="yes"><div class="tag">This</div><p>We couldn't reach your card issuer. Your data is safe — try again in a minute.</p></div></div>
+<h3>Success message</h3>
+<div class="vp"><div class="no"><div class="tag">Not this</div><p>Congratulations! You have successfully added a new card to your wallet! 🎊</p></div><div class="yes"><div class="tag">This</div><p>Card added. Prime Visa is now part of your recommendations.</p></div></div>
+<h3>Empty state</h3>
+<div class="vp"><div class="no"><div class="tag">Not this</div><p>You have no cards. Please add a card to continue using the application.</p></div><div class="yes"><div class="tag">This</div><p>No cards yet. Add the ones already in your wallet and recommendations start immediately.</p></div></div>
+
+<h3>Vocabulary</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Say</th><th>Not</th><th>Why</th></tr>
+<tr><td class="m">card</td><td class="m">payment instrument</td><td>People say card.</td></tr>
+<tr><td class="m">back</td><td class="m">cashback yield</td><td>Shorter, and it is what issuers print.</td></tr>
+<tr><td class="m">reason</td><td class="m">rationale / insight</td><td>Plain word for a plain thing.</td></tr>
+<tr><td class="m">add a card</td><td class="m">link / onboard / connect</td><td>Describes what the user does, not what the system does.</td></tr>
+<tr><td class="m">we</td><td class="m">Cardnal (third person)</td><td>We is a company talking. Cardnal is a press release.</td></tr>
+<tr><td class="m">you</td><td class="m">users / customers</td><td>Address one person.</td></tr>
+</table></div>
+<h3>Banned</h3>
+<p>seamless · frictionless · revolutionise · disrupt · game-changing · unlock · supercharge ·
+leverage · robust · best-in-class · empower · journey · solutions · exciting news · we're thrilled ·
+exclamation marks in product UI · emoji in the recommendation flow.</p>
+
+  </div>
+</section>
+<section class="sec" id="personality">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">14</span><span class="sec-rule"></span></div>
+    <h2>Brand Personality</h2>
+    
+<p class="lead">Cardnal in five words: <strong>Decisive. Clear. Precise. Discreet. Useful.</strong></p>
+<div class="grid3">
+  <div class="mini"><span class="n">01</span><b>Decisive</b><p>We give one answer. Design consequence: one primary button per screen, one recommendation per checkout, no dashboards of options.</p></div>
+  <div class="mini"><span class="n">02</span><b>Clear</b><p>Every claim carries its reason. Design consequence: the reason line is never truncated, never behind a tooltip, never optional.</p></div>
+  <div class="mini"><span class="n">03</span><b>Precise</b><p>Numbers are exact and sourced. Design consequence: mono figures, consistent decimals, issuer terms as the citation.</p></div>
+  <div class="mini"><span class="n">04</span><b>Discreet</b><p>We appear at the moment of payment and then leave. Design consequence: no badges begging for attention, no daily engagement notifications.</p></div>
+  <div class="mini"><span class="n">05</span><b>Useful</b><p>Utility over delight. Design consequence: we cut an animation before we cut a millisecond of speed.</p></div>
+</div>
+<h3>How the traits arbitrate</h3>
+<p>When two good options conflict, the earlier trait wins. A screen that is beautiful but offers three
+equal choices loses to a plainer screen that gives one answer — <strong>Decisive</strong> outranks everything.
+When a designer asks "should we show more here?", the honest answer is almost always no.</p>
+
+  </div>
+</section>
+<section class="sec" id="story">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">15</span><span class="sec-rule"></span></div>
+    <h2>Brand Story</h2>
+    
+<h3>Our story</h3>
+<p>Most people carry three to five credit cards. Each one is best at something — this one at
+groceries, that one at restaurants, another at travel — and the differences are worth real money over
+a year. Almost nobody keeps track. At the counter, in the two seconds before paying, people reach for
+whichever card is in front.</p>
+<p>Cardnal started from a plain observation: the information needed to make that decision already
+exists, it is just never present at the moment it matters. The rewards are published. The categories
+are known. The card is in the wallet. The only missing piece is someone telling you, right then,
+which one to use.</p>
+<p>So we built that. Not a budgeting app, not a bank, not another card to apply for — a layer of
+intelligence sitting between a person and the payment they are already about to make.</p>
+
+<h3>Our mission</h3>
+<p style="font-family:var(--display);font-size:23px;font-weight:700;letter-spacing:-.02em;color:var(--ink-950);max-width:22ch;line-height:1.25;margin:6px 0 18px">Help people get more from the cards they already own.</p>
+<p>Note what the mission does not say. It does not say help people get more cards. Every product
+decision is measured against whether it makes an existing wallet work harder.</p>
+
+<h3>Our vision</h3>
+<p>To become the intelligence layer between every purchase and every payment method. Google Maps
+tells you the best route. Cardnal tells you the best way to pay.</p>
+<p>The extension is the first surface, not the destination. The path runs through mobile, wallet
+integrations, spending insights, and eventually smart payment routing — one card that decides, at the
+moment of tap, which of your cards actually pays.</p>
+
+<h3>Why Cardnal exists</h3>
+<ul>
+<li><strong>Because the rewards are already yours.</strong> This is not a new financial product. It is
+unclaimed value sitting in wallets people already carry.</li>
+<li><strong>Because the decision is genuinely hard.</strong> Rotating categories, caps, multipliers, and
+transfer partners change quarterly. No reasonable person should be expected to track this.</li>
+<li><strong>Because the moment is specific.</strong> Advice a week before a purchase is trivia. Advice two
+seconds before is worth money.</li>
+<li><strong>Because nobody has made it simple.</strong> The tools that exist are spreadsheets, forums, and
+blogs written for hobbyists. This should work for someone who has never heard the phrase points optimisation.</li>
+</ul>
+
+  </div>
+</section>
+<section class="sec" id="pillars">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">16</span><span class="sec-rule"></span></div>
+    <h2>Brand Pillars</h2>
+    
+<p class="lead">Five pillars. Every product, design, and marketing decision should visibly support at
+least one, and never contradict any.</p>
+<div class="grid2">
+  <div class="mini"><span class="n">Pillar 01</span><b>Answer, don't advise</b><p>We give a decision, not a comparison table. If the interface leaves the user still choosing, it has failed at its only job.</p></div>
+  <div class="mini"><span class="n">Pillar 02</span><b>Show the reason</b><p>Every recommendation carries a plain-language because. A black box that is right is worth less than a glass box that is right.</p></div>
+  <div class="mini"><span class="n">Pillar 03</span><b>Trust over rewards</b><p>Where maximising rewards conflicts with the user's interest — pushing a card with a fee they will not recoup — we lose the rewards.</p></div>
+  <div class="mini"><span class="n">Pillar 04</span><b>Arrive at the moment</b><p>Value is delivered at checkout, not in a weekly digest. We measure success by decisions improved, not sessions opened.</p></div>
+  <div class="mini"><span class="n">Pillar 05</span><b>Earn the wallet</b><p>We touch the most sensitive thing a person owns. Security, data minimisation, and clarity about what we store come before any growth tactic.</p></div>
+</div>
+<div class="callout"><b>Using the pillars in review</b>
+<p>In design and product review, name the pillar. "This supports Pillar 01 because it removes the
+comparison step." A feature that supports none of the five is a feature for a different company.</p></div>
+
+  </div>
+</section>
+<section class="sec" id="principles">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">17</span><span class="sec-rule"></span></div>
+    <h2>Product Principles</h2>
+    
+<p class="lead">The pillars say what we stand for. These principles say what to do on Tuesday when
+two reasonable engineers disagree.</p>
+
+<h3>1. Simple before powerful</h3>
+<p>Ship the version a first-time user understands without explanation, then add depth behind
+progressive disclosure. Power that costs comprehension is not power, it is debt.</p>
+<p><em>In practice:</em> The MVP shows one card, one rate, one reason. Alternatives sit one tap away, not
+on the surface.</p>
+
+<h3>2. Trust before growth</h3>
+<p>We will decline growth tactics that borrow against trust: dark patterns, pre-checked consent, cards
+recommended because they pay us more, or notifications engineered for habit rather than utility.</p>
+<p><em>In practice:</em> If affiliate revenue and the best recommendation ever diverge, the recommendation
+wins and the divergence gets disclosed.</p>
+
+<h3>3. Explain every recommendation</h3>
+<p>The reason is a product requirement, not a nicety. If the system cannot articulate why in one
+sentence, the recommendation is not ready to ship.</p>
+<p><em>In practice:</em> The reason string is a required field in the recommendation schema. No default,
+no null.</p>
+
+<h3>4. Never overwhelm</h3>
+<p>Every additional element on the payment screen costs attention at the exact moment attention is
+scarcest. Additions must earn their place by removing something else.</p>
+<p><em>In practice:</em> A hard cap of one recommendation plus three alternatives. Beyond that we are a
+comparison site.</p>
+
+<h3>5. Speed matters</h3>
+<p>A recommendation that arrives after the user has already paid is worth nothing. Latency is a
+correctness property here, not a performance nice-to-have.</p>
+<p><em>In practice:</em> Budget of <strong>200ms</strong> from merchant detection to rendered recommendation.
+Card rules cached client-side; the network is an enhancement, not a dependency.</p>
+
+<h3>6. The wallet is the user's, not ours</h3>
+<p>We store the minimum that makes recommendations work. We do not need card numbers to know that a
+Prime Visa earns 5% at Amazon — so we do not ask for them.</p>
+<p><em>In practice:</em> Card identity, not card credentials. Say so on the marketing site, in the
+onboarding, and in the privacy policy, in the same words.</p>
+
+<h3>7. Be right, then be fast, then be pretty</h3>
+<p>The order is not negotiable. A beautiful wrong recommendation damages the brand more than a plain
+right one ever could.</p>
+
+<div class="callout info"><b>Applying these to engineering decisions</b>
+<p>These principles have architectural consequences. Principle 5 argues for a client-side rules engine
+with a cached ruleset. Principle 6 argues against storing PANs, which keeps us out of PCI scope
+entirely at this stage. Principle 3 argues for a rules-based recommendation core — a model that
+cannot explain itself cannot satisfy the requirement.</p></div>
+
+  </div>
+</section>
+<section class="sec" id="positioning">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">18</span><span class="sec-rule"></span></div>
+    <h2>Positioning</h2>
+    
+<h3>Who we are</h3>
+<p>Cardnal is a consumer decision tool that tells you which card to use before you pay, and why. We
+are the two seconds before the transaction.</p>
+
+<h3>Who we are not</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>We are not</th><th>Because</th></tr>
+<tr><td>A bank or issuer</td><td>We do not hold funds, extend credit, or issue cards. We make the cards you have work better.</td></tr>
+<tr><td>A budgeting app</td><td>We are not interested in what you spent last month. We are interested in the next 10 seconds.</td></tr>
+<tr><td>A card-comparison affiliate site</td><td>Those exist to make you apply for a new card. We exist to make your current wallet pay.</td></tr>
+<tr><td>A points-hacking community</td><td>Our user has never read a churning forum and never will.</td></tr>
+<tr><td>A rewards marketplace</td><td>We do not sell offers. We surface the value already in your cards' terms.</td></tr>
+<tr><td>A crypto or neobank play</td><td>No new account, no new asset, no new balance to manage.</td></tr>
+</table></div>
+
+<h3>The competitive frame</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Alternative</th><th>What it does well</th><th>Where we differ</th></tr>
+<tr><td>Card comparison sites</td><td>Deep research on cards you might get</td><td>They optimise acquisition. We optimise the wallet you have.</td></tr>
+<tr><td>Issuer apps</td><td>Authoritative for one issuer</td><td>They can only ever recommend themselves. We are cross-issuer and neutral.</td></tr>
+<tr><td>Cashback extensions</td><td>Coupon and portal cashback at checkout</td><td>They answer "is there a discount?" We answer "which card do I use?"</td></tr>
+<tr><td>Budgeting apps</td><td>A full picture of past spending</td><td>Retrospective. We are present-tense and prescriptive.</td></tr>
+<tr><td>Points blogs and forums</td><td>Depth for enthusiasts</td><td>Requires effort and expertise. We require adding a card once.</td></tr>
+<tr><td>Doing nothing</td><td>Free, zero effort — our real competitor</td><td>We must be lower-effort than guessing, or we lose to habit.</td></tr>
+</table></div>
+
+<h3>Positioning statement</h3>
+<div class="callout"><b>For everyday cardholders who own several credit cards and can't track which
+one to use</b>
+<p>Cardnal is a decision layer that recommends the best card before every purchase and explains why —
+unlike comparison sites that push new cards or issuer apps that can only recommend their own, Cardnal
+is neutral, instant, and works with the wallet you already have.</p></div>
+
+<h3>The one-line frame</h3>
+<p style="font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.02em;max-width:26ch;line-height:1.3">Google Maps for your wallet.</p>
+<p>Use this frame in conversation and investor contexts. Do not use it as a website headline — it
+explains the category rather than the benefit, and the headline's job is the benefit.</p>
+
+  </div>
+</section>
+<section class="sec" id="pitches">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">19</span><span class="sec-rule"></span></div>
+    <h2>Elevator Pitches</h2>
+    
+<h3>10 seconds</h3>
+<p style="font-size:18px;color:var(--ink-950)">Cardnal tells you which credit card to use before you
+pay. Add the cards you already own, and we do the rest.</p>
+
+<h3>30 seconds</h3>
+<p style="font-size:17px;color:var(--ink-950)">Most people carry several credit cards and have no idea
+which one is best where. Cardnal fixes that. You add the cards you already own, and when you shop —
+starting with online checkout — we tell you which card to use and why: 5% back at Amazon on your Prime
+Visa, 6% on groceries with Blue Cash. No new card, no credit pull, no spreadsheet. Just the right card,
+every time.</p>
+
+<h3>60 seconds</h3>
+<p>Americans leave billions in credit card rewards unclaimed every year, not because the rewards are
+hidden but because the decision happens at the worst possible moment — standing at a counter, or one
+click from checkout, with no way to remember that this card does 5% here and that one does 1%.</p>
+<p>Cardnal is the layer that makes that decision for you. Add your cards once. At checkout, our
+browser extension detects the merchant and shows one recommendation with one reason. Under 200
+milliseconds, before you pay.</p>
+<p>We start as an extension because that is where the decision is easiest to intercept. From there:
+mobile, wallet integrations, and eventually smart routing — one card that decides at tap which of your
+cards actually pays. Google Maps tells you the best route. Cardnal tells you the best way to pay.</p>
+
+<h3>Investor version</h3>
+<p>Cardnal is the intelligence layer between consumers and payment methods. The wedge is a browser
+extension that recommends the optimal credit card at online checkout, with a plain-language reason —
+a daily, high-intent moment that no incumbent owns.</p>
+<p>Issuer apps are structurally unable to recommend a competitor's card. Comparison sites monetise
+acquisition, so their incentive is new applications, not better usage. That leaves the cross-issuer
+decision layer open.</p>
+<p>Because we need card identity rather than card credentials, we stay outside PCI scope and can
+onboard a user in under a minute. Near-term monetisation is affiliate and premium optimisation; the
+long-term position is payment routing, where the decision layer becomes infrastructure and the
+economics move from referral to interchange.</p>
+
+<h3>Friend version</h3>
+<p>You know how you've got like four cards and you just grab whatever's on top? One of them probably
+does 5% at the place you're standing in. Cardnal just tells you which one. Takes a second to set up,
+then it's automatic.</p>
+
+<h3>Mom version</h3>
+<p>You have a few credit cards, right? Each one gives you money back at different stores — one is
+better at the grocery store, another is better for gas. It's impossible to remember. Cardnal tells you
+which card to use before you pay, so you get more money back on things you were already buying. It
+doesn't cost anything and it isn't a new credit card.</p>
+
+  </div>
+</section>
+<section class="sec" id="social">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">20</span><span class="sec-rule"></span></div>
+    <h2>Social Media Style Guide</h2>
+    
+<p class="lead">One system across every platform: white canvas, one red accent, Archivo headline,
+generous margins. The platform changes the crop, never the identity.</p>
+<h3>Shared rules</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Element</th><th>Specification</th></tr>
+<tr><td>Background</td><td><code>--paper</code> or <code>--ink-950</code>. Never a gradient, never a photo behind type.</td></tr>
+<tr><td>Headline</td><td>Archivo 800, &minus;4% tracking, max 7 words, sentence case.</td></tr>
+<tr><td>Body</td><td>Instrument Sans 400/500. Max 2 lines on a static post.</td></tr>
+<tr><td>Data</td><td>JetBrains Mono. Rates and figures never set in the body face.</td></tr>
+<tr><td>Margin</td><td>8% of the shorter edge on all sides. Nothing enters it.</td></tr>
+<tr><td>Logo</td><td>Icon-only, bottom-left, 5% of canvas width. Never centred, never large.</td></tr>
+<tr><td>Red</td><td>One element per post. Usually a single word or the rate.</td></tr>
+</table></div>
+<h3>Per platform</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Platform</th><th>Role</th><th>Format</th><th>Tone</th></tr>
+<tr><td class="m">Instagram</td><td>Brand and product education</td><td>4:5 posts, 1:1 grid, 9:16 stories. Carousels of 5–7.</td><td>Visual, one idea per slide</td></tr>
+<tr><td class="m">LinkedIn</td><td>Company building, hiring, fundraising</td><td>1200&times;627 or native text. Founder voice from Suhas.</td><td>Specific and factual. No hustle posting.</td></tr>
+<tr><td class="m">TikTok</td><td>Top of funnel — the "I didn't know that" moment</td><td>9:16, screen recordings over talking heads. Hook in 1.5s.</td><td>Casual, fast, genuinely useful</td></tr>
+<tr><td class="m">X</td><td>Product updates, replies, dev-adjacent audience</td><td>Text-first. Images only when they add information.</td><td>Dry, short, no threads about mindset</td></tr>
+<tr><td class="m">Threads</td><td>Conversational overflow from Instagram</td><td>Text-first, occasional single image</td><td>Loosest register we use — still no exclamation marks</td></tr>
+</table></div>
+<h3>Carousel template</h3>
+<ol>
+<li><strong>Slide 1 — the hook.</strong> One question or claim in Archivo at maximum size. No logo but the icon.</li>
+<li><strong>Slides 2–5 — one fact each.</strong> A merchant, a card, a rate. Mono figure large, one line of context.</li>
+<li><strong>Final slide — the turn.</strong> The product does this automatically, plus a single call to action.</li>
+</ol>
+<h3>Story template</h3>
+<p>Three zones stacked with equal margins: eyebrow (mono, uppercase, 11px), headline (Archivo, 3 lines
+maximum), action (single button or swipe cue). Safe area 250px from top and 320px from bottom for
+platform chrome.</p>
+<h3>Never</h3>
+<ul>
+<li>Engagement bait — "comment YES", "tag someone who".</li>
+<li>Screenshots of the app with real card data.</li>
+<li>Merchant or issuer logos in organic posts.</li>
+<li>Stock photos of money, or memes borrowed from other brands.</li>
+<li>Reposting a competitor's outage. We don't punch.</li>
+</ul>
+
+  </div>
+</section>
+<section class="sec" id="marketing">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">21</span><span class="sec-rule"></span></div>
+    <h2>Marketing Assets</h2>
+    
+<h3>Business cards</h3>
+<p>3.5&times;2in, 600gsm uncoated stock, square cut. Front: mark only, brand red, centred, 14mm tall.
+Back: name in Archivo 700 / 10pt, role and contact in Instrument Sans 8pt <code>--ink-600</code>, aligned left
+with a 10mm margin. No QR codes, no taglines, no gloss.</p>
+
+<h3>Email signature</h3>
+<div class="demo" style="background:var(--paper)">
+<div style="font-family:var(--body);font-size:13.5px;line-height:1.55">
+  <div style="font-weight:600;color:var(--ink-950)">Sai Suhas Gottemukkala</div>
+  <div style="color:var(--ink-500)">Founder &amp; CEO, Cardnal</div>
+  <div style="height:9px"></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <svg viewBox="0 0 1024 1024" style="width:15px;height:15px"><use href="#cMark"/></svg>
+    <span style="color:var(--ink-500);font-size:12.5px">cardnal.com</span>
+  </div>
+</div>
+</div>
+<p>Plain HTML, no images beyond the inline SVG mark, no quotes, no legal disclaimers, no
+"sent from my iPhone". Under 60 words including the address.</p>
+
+<h3>Pitch decks &amp; presentation slides</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Element</th><th>Specification</th></tr>
+<tr><td>Canvas</td><td>16:9, 1920&times;1080, <code>--paper</code>. Dark slides only for section breaks.</td></tr>
+<tr><td>Margins</td><td>96px all sides. Content never enters them.</td></tr>
+<tr><td>Slide title</td><td>Archivo 700, 40px, top-left. One line.</td></tr>
+<tr><td>Body</td><td>Instrument Sans 22–26px. <strong>Six lines maximum per slide.</strong></td></tr>
+<tr><td>Numbers</td><td>JetBrains Mono. One hero figure per slide at 90–120px if it carries the point.</td></tr>
+<tr><td>Charts</td><td>Two colours: <code>--ink-300</code> for context, <code>--red-500</code> for the series that matters.</td></tr>
+<tr><td>Slide numbers</td><td>Mono 11px, bottom-right, <code>--ink-400</code>.</td></tr>
+</table></div>
+<p>One idea per slide. If a slide needs a paragraph, it is two slides or it belongs in the appendix.</p>
+
+<h3>Press kit</h3>
+<ul>
+<li>Logo pack: SVG, PNG at 1024/2048/4096, in red, black, and white, horizontal, vertical, and icon.</li>
+<li>Two boilerplate paragraphs — the 30-second and 60-second pitches, verbatim from section 19.</li>
+<li>Founder headshots, neutral background, 3:2 and 1:1 crops.</li>
+<li>Product screenshots with fabricated card data only, at 2x.</li>
+<li>A one-page fact sheet: founded, founders, location, stage, category.</li>
+<li>Usage rules: the mark may be reproduced in brand red, black, or white; it may not be altered.</li>
+</ul>
+
+<h3>Website</h3>
+<p>See section 22. The marketing site and the product share this token set with no divergence — a
+button on the landing page and a button in the app are the same component.</p>
+
+<h3>Blog</h3>
+<p>680px measure, Instrument Sans 18px/1.7, Archivo for headings. One illustration or diagram per
+1,200 words, in the minimal geometric style. Author line with role, no reading-time estimate, no
+newsletter interstitial mid-article. Subheads are sentence case and descriptive, never clever.</p>
+
+<h3>App Store &amp; Play Store</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Asset</th><th>Direction</th></tr>
+<tr><td>App icon</td><td>Mark on <code>--paper</code>, centred, occupying 56% of the tile. Never the wordmark — it is illegible at 60px.</td></tr>
+<tr><td>Screenshot 1</td><td>The recommendation card, one line of caption above it. This is the whole product.</td></tr>
+<tr><td>Screenshots 2–5</td><td>Add a card · alternatives · categories · privacy. One caption each, Archivo 700.</td></tr>
+<tr><td>Caption style</td><td>Sentence case, under 6 words, above the device frame, never over it.</td></tr>
+<tr><td>Subtitle</td><td>"The right card. Every time." — 30 character budget, fits.</td></tr>
+<tr><td>Description</td><td>First two lines carry the value. Assume nobody taps "more".</td></tr>
+</table></div>
+
+  </div>
+</section>
+<section class="sec" id="website">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">22</span><span class="sec-rule"></span></div>
+    <h2>Website Guidelines</h2>
+    
+<p class="lead">The website has one job: make a stranger understand the product in eight seconds and
+give us their email. Everything else is secondary.</p>
+<h3>Layout system</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Property</th><th>Value</th></tr>
+<tr><td>Max content width</td><td class="m">1240px</td></tr>
+<tr><td>Gutters</td><td class="m">24px mobile · 32px tablet · 56px desktop</td></tr>
+<tr><td>Section padding (vertical)</td><td class="m">64px mobile · 80px tablet · 96px desktop</td></tr>
+<tr><td>Grid</td><td class="m">12 column, 24px gap</td></tr>
+<tr><td>Breakpoints</td><td class="m">420 · 720 · 980 · 1240</td></tr>
+</table></div>
+<h3>Hero</h3>
+<ul>
+<li><strong>Structure:</strong> eyebrow badge, two-line headline, one-sentence subhead, email capture, one trust line, product visual right.</li>
+<li><strong>Headline:</strong> Archivo 800, <code>clamp(30px, 4.9vw, 76px)</code>, two lines — the second in brand red. Both lines <code>white-space: nowrap</code> so the break never lands wrong.</li>
+<li><strong>The visual is live, not a screenshot.</strong> The phone cycles through real merchants and the recommendation updates. Showing the product beats describing it.</li>
+<li><strong>Device angle:</strong> <code>rotateY(-26deg) rotateX(1deg) rotateZ(5.5deg)</code> at <code>perspective: 1000px</code>. Upright on mobile.</li>
+<li><strong>One primary button.</strong> The nav CTA scrolls to and focuses the email field rather than duplicating the form.</li>
+</ul>
+<h3>Feature sections</h3>
+<p>Alternating two-column blocks: 55/45 split, visual and text swapping sides each row. Each block
+has an eyebrow (mono uppercase), an Archivo H2, at most three lines of body, and one link. No feature
+grids of nine icons — that is a page admitting it doesn't know what matters.</p>
+<h3>Waitlist page</h3>
+<ul>
+<li>Email field and button on one row at &ge;980px, stacked below.</li>
+<li>Five states, all specified: idle, loading, success, duplicate, error. Duplicate is <strong>reassuring, not an error</strong> — "You're already on the list."</li>
+<li>Validate on submit, not on keystroke. Clear the error the moment the user edits.</li>
+<li>Never claim a position number we cannot honour.</li>
+<li>The success state disables re-submission and keeps the entered address visible.</li>
+</ul>
+<h3>Motion on the site</h3>
+<p>One orchestrated moment: content rises 8px and fades on load, staggered 40ms per block, then the
+device settles. After that the page is still except for the recommendation cycling and hover states.
+Scroll-triggered animation on every section is the fastest way to look generic.</p>
+<div class="callout"><b>Performance budget</b>
+<p>Hero visible in under 1.2s on a 4G connection. Fonts preconnected and <code>display=swap</code>. No
+library shipped to render a landing page. If a decoration costs 100KB, it does not ship.</p></div>
+
+  </div>
+</section>
+<section class="sec" id="app">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">23</span><span class="sec-rule"></span></div>
+    <h2>App &amp; Extension Guidelines</h2>
+    
+<p class="lead">Two surfaces, one rule: the extension is a single answer, the app is where the wallet
+lives. Neither is a dashboard.</p>
+<h3>Browser extension</h3>
+<ul>
+<li><strong>One panel, one recommendation.</strong> No navigation, no tabs, no settings inside it.</li>
+<li><strong>Anchors near the payment step</strong> and never covers the checkout button.</li>
+<li>Renders in under 200ms from merchant detection, from cached rules.</li>
+<li>Dismissible with one click, and it remembers the dismissal for that merchant that session.</li>
+<li>Collapsed state is the icon alone — 32px, no badge count, no pulse.</li>
+</ul>
+<h3>Mobile app structure</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Screen</th><th>Job</th><th>Design notes</th></tr>
+<tr><td>Home</td><td>What to use right now</td><td>One recommendation card if location or recent merchant is known; otherwise a search field. Not a feed.</td></tr>
+<tr><td>Wallet</td><td>The cards you own</td><td>Vertical list, card art as a colour chip, name and headline rate. Tap for detail.</td></tr>
+<tr><td>Card detail</td><td>Everything about one card</td><td>Categories and rates as a table, mono figures, annual fee and renewal date up top.</td></tr>
+<tr><td>Rewards</td><td>What the wallet earned</td><td>One number, one period, one chart. Read-only — we are not a budgeting app.</td></tr>
+<tr><td>Settings</td><td>Control</td><td>Grouped list. Privacy and data controls first, not buried under Account.</td></tr>
+<tr><td>Account</td><td>Identity and plan</td><td>Boring on purpose. Export and delete are visible, not hidden.</td></tr>
+</table></div>
+<h3>Navigation</h3>
+<p>Bottom tab bar, <strong>four destinations maximum</strong>: Home, Wallet, Rewards, Settings. Icons at 24px
+with labels always visible — icon-only tab bars fail for first-time users. The active tab is
+<code>--red-600</code>; inactive is <code>--ink-500</code>.</p>
+<h3>Dark mode</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Role</th><th>Light</th><th>Dark</th></tr>
+<tr><td>Canvas</td><td class="m">--paper #FFFFFF</td><td class="m">--ink-950 #0B0C0E</td></tr>
+<tr><td>Raised surface</td><td class="m">--paper + --sh-sm</td><td class="m">--ink-900 #131519</td></tr>
+<tr><td>Border</td><td class="m">--line #E6E8EC</td><td class="m">--ink-800 #1E2126</td></tr>
+<tr><td>Primary text</td><td class="m">--ink-950</td><td class="m">--ink-50</td></tr>
+<tr><td>Secondary text</td><td class="m">--ink-600</td><td class="m">--ink-400</td></tr>
+<tr><td>Brand accent (text)</td><td class="m">--red-700</td><td class="m">--red-400</td></tr>
+<tr><td>Brand accent (fill)</td><td class="m">--red-500</td><td class="m">--red-500</td></tr>
+</table></div>
+<div class="callout warn"><b>The dark-mode red trap</b>
+<p><code>--red-500</code> on <code>--ink-950</code> measures 4.1:1 — it fails AA for body text. In dark mode, red
+<strong>text</strong> must use <code>--red-400</code> (6.0:1). The button fill stays <code>--red-500</code> because white
+on it still passes. Elevation in dark mode is expressed by surface lightness, not shadow.</p></div>
+<h3>Cross-surface consistency</h3>
+<p>The recommendation card is identical in the extension, the app, and the marketing site. Same
+anatomy, same order, same reason line. A user who learns to read it once has learned it everywhere —
+that is the entire argument for having a design system.</p>
+
+  </div>
+</section>
+<section class="sec" id="inspiration">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">24</span><span class="sec-rule"></span></div>
+    <h2>Design Inspiration</h2>
+    
+<p class="lead">What each company actually does well, the underlying principle, and how Cardnal adapts
+it without becoming a copy.</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Company</th><th>What makes it work</th><th>What Cardnal takes</th><th>What we don't</th></tr>
+<tr><td class="m">Apple</td><td>Removes choices on the user's behalf and presents one confident answer, backed by obsessive product-photography craft.</td><td>The confidence to give one recommendation instead of a comparison.</td><td>The secrecy and the premium price signalling. We are free and explain ourselves.</td></tr>
+<tr><td class="m">Linear</td><td>Speed as an identity. Keyboard-first, sub-100ms interactions, and an opinionated workflow that refuses to be everything.</td><td>Latency as a design value, and the discipline to refuse features.</td><td>The dark, power-user aesthetic. Our user is not a software engineer.</td></tr>
+<tr><td class="m">Stripe</td><td>Makes a genuinely complex domain legible through documentation, precise language, and restrained visual craft.</td><td>Explaining the mechanism plainly — our reason line is a descendant of Stripe's docs voice.</td><td>Developer-facing density. Our surface has one number on it.</td></tr>
+<tr><td class="m">Mercury</td><td>Proves a finance product can feel calm. Generous whitespace, quiet colour, no false urgency.</td><td>The calm. No badges, no streaks, no engineered urgency around money.</td><td>The dashboard-first model. We are a decision, not a control panel.</td></tr>
+<tr><td class="m">Arc</td><td>Takes real aesthetic risk and makes a familiar category feel new, with motion that has personality.</td><td>Permission to have one signature moment — for us, the 26.7&deg; swap.</td><td>The maximalism. Arc can be playful at leisure; we appear when someone is paying.</td></tr>
+<tr><td class="m">Notion</td><td>Approachable illustration and a flexible system that scales from one person to an enterprise.</td><td>A token system that stays coherent as surfaces multiply.</td><td>Infinite flexibility. Configurability is the opposite of our product.</td></tr>
+</table></div>
+<div class="callout"><b>The synthesis</b>
+<p>Apple's decisiveness, Linear's speed, Stripe's explanation, Mercury's calm — pointed at one moment
+none of them address: the two seconds before you pay. That intersection is Cardnal's own ground, and
+the reason the system is built around a single component rather than a library.</p></div>
+<h3>How to use this section</h3>
+<p>In review, "it should feel more like Linear" is not usable feedback. "It should respond faster,
+like Linear" is. Always translate the reference into the underlying principle before acting on it.</p>
+
+  </div>
+</section>
+<section class="sec" id="tokens">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">25</span><span class="sec-rule"></span></div>
+    <h2>Token Reference</h2>
+    
+<p class="lead">Everything above, as code. These are the canonical values — if this page and a
+component disagree, this page wins.</p>
+<h3>CSS custom properties</h3>
+<div class="tok"><pre><span class="c">/* cardnal.tokens.css */</span>
+<span class="k">:root</span> {
+  <span class="c">/* brand */</span>
+  <span class="k">--red-50</span>:<span class="v">#FFF1F2</span>;  <span class="k">--red-100</span>:<span class="v">#FFE0E3</span>; <span class="k">--red-200</span>:<span class="v">#FFC5CB</span>;
+  <span class="k">--red-300</span>:<span class="v">#FF9BA6</span>; <span class="k">--red-400</span>:<span class="v">#F85567</span>; <span class="k">--red-500</span>:<span class="v">#E60B21</span>;
+  <span class="k">--red-600</span>:<span class="v">#C90A1C</span>; <span class="k">--red-700</span>:<span class="v">#A80A18</span>; <span class="k">--red-800</span>:<span class="v">#8A0914</span>;
+  <span class="k">--red-900</span>:<span class="v">#6B0710</span>; <span class="k">--red-950</span>:<span class="v">#3D0409</span>;
+
+  <span class="c">/* neutral */</span>
+  <span class="k">--ink-50</span>:<span class="v">#F7F8F9</span>;  <span class="k">--ink-100</span>:<span class="v">#EEF0F2</span>; <span class="k">--ink-200</span>:<span class="v">#E1E4E8</span>;
+  <span class="k">--ink-300</span>:<span class="v">#C7CCD3</span>; <span class="k">--ink-400</span>:<span class="v">#9AA1AB</span>; <span class="k">--ink-500</span>:<span class="v">#6B727C</span>;
+  <span class="k">--ink-600</span>:<span class="v">#4C525A</span>; <span class="k">--ink-700</span>:<span class="v">#343940</span>; <span class="k">--ink-800</span>:<span class="v">#1E2126</span>;
+  <span class="k">--ink-900</span>:<span class="v">#131519</span>; <span class="k">--ink-950</span>:<span class="v">#0B0C0E</span>;
+
+  <span class="c">/* semantic — text variants are AA on white */</span>
+  <span class="k">--success</span>:<span class="v">#0E9F5B</span>; <span class="k">--success-text</span>:<span class="v">#097A44</span>; <span class="k">--success-fill</span>:<span class="v">#08703E</span>;
+  <span class="k">--warning</span>:<span class="v">#B26A00</span>; <span class="k">--warning-text</span>:<span class="v">#9A5C00</span>;
+  <span class="k">--alert</span>:<span class="v">#A61B2B</span>;   <span class="k">--info</span>:<span class="v">#1B63C7</span>;
+  <span class="k">--gold</span>:<span class="v">#B8892B</span>;    <span class="k">--slate</span>:<span class="v">#5A6472</span>;
+
+  <span class="c">/* surface */</span>
+  <span class="k">--paper</span>:<span class="v">#FFFFFF</span>; <span class="k">--canvas</span>:<span class="v">#FAFBFC</span>;
+  <span class="k">--line</span>:<span class="v">#E6E8EC</span>;  <span class="k">--line-strong</span>:<span class="v">#D3D8DF</span>;
+
+  <span class="c">/* type */</span>
+  <span class="k">--font-display</span>:<span class="v">'Archivo', system-ui, sans-serif</span>;
+  <span class="k">--font-body</span>:<span class="v">'Instrument Sans', system-ui, sans-serif</span>;
+  <span class="k">--font-mono</span>:<span class="v">'JetBrains Mono', ui-monospace, monospace</span>;
+
+  <span class="c">/* space — 8pt grid */</span>
+  <span class="k">--space-1</span>:<span class="v">4px</span>;  <span class="k">--space-2</span>:<span class="v">8px</span>;   <span class="k">--space-3</span>:<span class="v">12px</span>;  <span class="k">--space-4</span>:<span class="v">16px</span>;
+  <span class="k">--space-5</span>:<span class="v">20px</span>; <span class="k">--space-6</span>:<span class="v">24px</span>;  <span class="k">--space-8</span>:<span class="v">32px</span>;  <span class="k">--space-10</span>:<span class="v">40px</span>;
+  <span class="k">--space-12</span>:<span class="v">48px</span>;<span class="k">--space-16</span>:<span class="v">64px</span>; <span class="k">--space-20</span>:<span class="v">80px</span>; <span class="k">--space-24</span>:<span class="v">96px</span>;
+
+  <span class="c">/* radius */</span>
+  <span class="k">--r-sm</span>:<span class="v">6px</span>; <span class="k">--r-md</span>:<span class="v">10px</span>; <span class="k">--r-lg</span>:<span class="v">14px</span>;
+  <span class="k">--r-xl</span>:<span class="v">20px</span>; <span class="k">--r-2xl</span>:<span class="v">28px</span>; <span class="k">--r-full</span>:<span class="v">999px</span>;
+
+  <span class="c">/* elevation */</span>
+  <span class="k">--sh-sm</span>:<span class="v">0 1px 2px rgba(11,12,14,.06), 0 1px 1px rgba(11,12,14,.04)</span>;
+  <span class="k">--sh-md</span>:<span class="v">0 4px 12px -2px rgba(11,12,14,.08), 0 2px 4px -2px rgba(11,12,14,.05)</span>;
+  <span class="k">--sh-lg</span>:<span class="v">0 12px 28px -8px rgba(11,12,14,.12), 0 4px 8px -4px rgba(11,12,14,.06)</span>;
+  <span class="k">--sh-float</span>:<span class="v">0 24px 56px -16px rgba(11,12,14,.18), 0 8px 16px -8px rgba(11,12,14,.08)</span>;
+  <span class="k">--sh-brand</span>:<span class="v">0 8px 22px -8px rgba(230,11,33,.5)</span>;
+
+  <span class="c">/* motion */</span>
+  <span class="k">--t-instant</span>:<span class="v">80ms</span>; <span class="k">--t-fast</span>:<span class="v">140ms</span>; <span class="k">--t-base</span>:<span class="v">200ms</span>;
+  <span class="k">--t-slow</span>:<span class="v">320ms</span>;  <span class="k">--t-deliberate</span>:<span class="v">480ms</span>;
+  <span class="k">--ease-out</span>:<span class="v">cubic-bezier(.2,.7,.3,1)</span>;
+  <span class="k">--ease-in</span>:<span class="v">cubic-bezier(.5,0,.9,.4)</span>;
+  <span class="k">--ease-spring</span>:<span class="v">cubic-bezier(.2,.9,.25,1.15)</span>;
+
+  <span class="c">/* the structural constant */</span>
+  <span class="k">--wing</span>:<span class="v">26.7deg</span>;
+}</pre></div>
+
+<h3>Tailwind config</h3>
+<p>Your stack is React, Next.js, and Tailwind — this maps the tokens so classes like
+<code>bg-red-500</code> and <code>shadow-float</code> resolve to the system rather than Tailwind's defaults.</p>
+<div class="tok"><pre><span class="c">// tailwind.config.js</span>
+<span class="k">module</span>.exports = {
+  theme: {
+    extend: {
+      colors: {
+        red:  { 50:<span class="v">'#FFF1F2'</span>,100:<span class="v">'#FFE0E3'</span>,200:<span class="v">'#FFC5CB'</span>,300:<span class="v">'#FF9BA6'</span>,
+                400:<span class="v">'#F85567'</span>,500:<span class="v">'#E60B21'</span>,600:<span class="v">'#C90A1C'</span>,700:<span class="v">'#A80A18'</span>,
+                800:<span class="v">'#8A0914'</span>,900:<span class="v">'#6B0710'</span>,950:<span class="v">'#3D0409'</span> },
+        ink:  { 50:<span class="v">'#F7F8F9'</span>,100:<span class="v">'#EEF0F2'</span>,200:<span class="v">'#E1E4E8'</span>,300:<span class="v">'#C7CCD3'</span>,
+                400:<span class="v">'#9AA1AB'</span>,500:<span class="v">'#6B727C'</span>,600:<span class="v">'#4C525A'</span>,700:<span class="v">'#343940'</span>,
+                800:<span class="v">'#1E2126'</span>,900:<span class="v">'#131519'</span>,950:<span class="v">'#0B0C0E'</span> },
+        success:<span class="v">'#0E9F5B'</span>, warning:<span class="v">'#B26A00'</span>,
+        alert:<span class="v">'#A61B2B'</span>,   info:<span class="v">'#1B63C7'</span>,
+      },
+      fontFamily: {
+        display: [<span class="v">'Archivo'</span>, <span class="v">'system-ui'</span>, <span class="v">'sans-serif'</span>],
+        sans:    [<span class="v">'Instrument Sans'</span>, <span class="v">'system-ui'</span>, <span class="v">'sans-serif'</span>],
+        mono:    [<span class="v">'JetBrains Mono'</span>, <span class="v">'ui-monospace'</span>, <span class="v">'monospace'</span>],
+      },
+      borderRadius: { sm:<span class="v">'6px'</span>, md:<span class="v">'10px'</span>, lg:<span class="v">'14px'</span>, xl:<span class="v">'20px'</span>, <span class="v">'2xl'</span>:<span class="v">'28px'</span> },
+      boxShadow: {
+        sm:<span class="v">'0 1px 2px rgba(11,12,14,.06), 0 1px 1px rgba(11,12,14,.04)'</span>,
+        md:<span class="v">'0 4px 12px -2px rgba(11,12,14,.08), 0 2px 4px -2px rgba(11,12,14,.05)'</span>,
+        lg:<span class="v">'0 12px 28px -8px rgba(11,12,14,.12), 0 4px 8px -4px rgba(11,12,14,.06)'</span>,
+        float:<span class="v">'0 24px 56px -16px rgba(11,12,14,.18), 0 8px 16px -8px rgba(11,12,14,.08)'</span>,
+        brand:<span class="v">'0 8px 22px -8px rgba(230,11,33,.5)'</span>,
+      },
+      transitionTimingFunction: {
+        out:<span class="v">'cubic-bezier(.2,.7,.3,1)'</span>,
+        spring:<span class="v">'cubic-bezier(.2,.9,.25,1.15)'</span>,
+      },
+    },
+  },
+}</pre></div>
+
+<h3>Naming convention</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Pattern</th><th>Example</th><th>Rule</th></tr>
+<tr><td class="m">--{scale}-{step}</td><td class="m">--red-500</td><td>Primitives. Numeric steps, never named shades.</td></tr>
+<tr><td class="m">--{role}</td><td class="m">--alert</td><td>Semantic aliases pointing at a primitive.</td></tr>
+<tr><td class="m">--{role}-text</td><td class="m">--success-text</td><td>The AA-safe variant for type.</td></tr>
+<tr><td class="m">--{prop}-{size}</td><td class="m">--sh-lg</td><td>Property abbreviation plus t-shirt size.</td></tr>
+</table></div>
+<p><strong>Components reference semantic tokens, never primitives.</strong> A button is
+<code>var(--red-500)</code> only because it is the brand action colour; if the brand red ever changes, one
+value changes and nothing else does.</p>
+
+<h3>Governance</h3>
+<ul>
+<li>This document is the source of truth. A component that disagrees with it is a bug.</li>
+<li>Adding a token requires a use case that at least two surfaces share. One-off values stay local.</li>
+<li>Removing a token requires a codebase search first. Deprecate for one release before deleting.</li>
+<li>Version bumps: patch for values, minor for new tokens, major for anything that breaks a component.</li>
+<li>Owner: Cardnal. Co-Founders: Suhas and Abhi.</li>
+</ul>
+
+  </div>
+</section>
+<div class="wrap">
+  <div class="footer">
+    <p style="margin:0 0 6px"><strong>Cardnal Brand Design System</strong> — version 1.0</p>
+    <p style="margin:0;font-size:13px">The right card. Every time.</p>
+  </div>
+</div>
+</main>
+</div>
+
+<script>
+// highlight the section currently in view
+const links = [...document.querySelectorAll('.side nav a')];
+const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(a => a.classList.remove('on'));
+      const a = map.get(e.target.id);
+      if (a) a.classList.add('on');
+    }
+  });
+}, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+document.querySelectorAll('.sec').forEach(s => obs.observe(s));
+
+// demo-only interactions
+document.querySelectorAll('.pill').forEach(p => p.addEventListener('click', () => {
+  p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('on'));
+  p.classList.add('on');
+}));
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  t.parentElement.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+  t.classList.add('on');
+}));
+</script>
+</body>
+</html>

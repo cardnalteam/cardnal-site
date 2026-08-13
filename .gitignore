@@ -1,0 +1,12 @@
+# Local dependencies and tooling
+node_modules/
+.vercel/
+.netlify/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Operating-system files
+.DS_Store

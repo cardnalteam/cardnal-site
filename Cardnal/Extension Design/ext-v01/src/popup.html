@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root{
+  --red:#E60B21; --red-50:#FFF1F2; --red-200:#FFC5CB; --red-700:#A80A18;
+  --ink-50:#F7F8F9; --ink-100:#EEF0F2; --ink-400:#9AA1AB; --ink-500:#6B727C;
+  --ink-600:#4C525A; --ink-950:#0B0C0E;
+  --line:#E6E8EC; --line-strong:#D3D8DF;
+  --green:#0E9F5B; --green-text:#097A44; --green-bg:#E9F8F0;
+  --amber-text:#9A5C00; --amber-bg:#FDF3E3;
+  --info:#1B63C7; --info-bg:#EBF2FD;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:360px;font-family:var(--sans);color:var(--ink-950);background:#fff;font-size:14px;line-height:1.5}
+.hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.hd img{width:18px;height:18px}
+.hd b{font-size:15px;letter-spacing:-.02em}
+.hd .gear{margin-left:auto;background:none;border:0;cursor:pointer;color:var(--ink-400);padding:4px;border-radius:6px;font-size:12px}
+.hd .gear:hover{background:var(--ink-100);color:var(--ink-600)}
+.bd{padding:14px}
+
+.merchant{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:13px}
+.merchant .lb{font-size:11.5px;color:var(--ink-500)}
+.merchant .nm{font-size:17px;font-weight:700;letter-spacing:-.02em}
+.merchant .tile{margin-left:auto;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;background:var(--ink-400)}
+
+.eyebrow{font-size:11px;font-weight:700;color:var(--red);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em}
+
+.win{background:#12141A;border-radius:14px;padding:14px;color:#fff;margin-bottom:6px}
+.win .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.win .nm{font-size:15px;font-weight:600}
+.win .iss{font-size:11px;color:rgba(255,255,255,.5);margin-top:1px}
+.win .rate{display:flex;align-items:flex-end;gap:7px}
+.win .rate b{font-size:34px;font-weight:800;line-height:1;color:#2BD97C;letter-spacing:-.03em}
+.win .rate i{font-style:normal;font-size:12px;color:rgba(255,255,255,.6);padding-bottom:4px}
+.win .why{font-size:12px;color:rgba(255,255,255,.62);border-top:1px solid rgba(255,255,255,.1);padding-top:10px;margin-top:11px}
+
+.grouphd{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-400);margin:14px 0 6px}
+.row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .chip{width:24px;height:16px;border-radius:3px;flex-shrink:0;background:var(--ink-400)}
+.row .t{font-size:12.5px}
+.row .sub{font-size:10.5px;color:var(--ink-400)}
+.row .v{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:600}
+.row.first .v{color:var(--green-text)}
+
+.note{border-radius:9px;padding:10px 11px;font-size:12px;line-height:1.45;margin-top:12px}
+.note b{display:block;font-size:12.5px;margin-bottom:2px}
+.note.info{background:var(--info-bg);color:var(--ink-600)} .note.info b{color:var(--info)}
+.note.amber{background:var(--amber-bg);color:var(--ink-600)} .note.amber b{color:var(--amber-text)}
+.note.plain{background:var(--ink-50);color:var(--ink-600)} .note.plain b{color:var(--ink-950)}
+
+.empty{text-align:center;padding:26px 12px}
+.empty h3{font-size:15px;margin-bottom:5px}
+.empty p{font-size:12.5px;color:var(--ink-500);margin-bottom:14px}
+
+.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:9px 14px;border-radius:9px;border:1.5px solid var(--line-strong);background:#fff;cursor:pointer;width:100%}
+.btn:hover{background:var(--ink-50)}
+.btn-p{background:var(--red);border-color:var(--red);color:#fff}
+.btn-p:hover{background:var(--red-700)}
+
+.ft{border-top:1px solid var(--line);padding:9px 14px;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--ink-400)}
+.ft .pref{margin-left:auto;font-family:var(--mono)}
+.skel{background:var(--ink-100);border-radius:5px;height:12px;margin-bottom:7px}
+</style>
+</head>
+<body>
+  <div class="hd">
+    <img src="../icons/icon32.png" alt="">
+    <b>Cardnal</b>
+    <button class="gear" id="settings">Settings</button>
+  </div>
+  <div class="bd" id="root">
+    <div class="skel" style="width:50%"></div>
+    <div class="skel" style="width:80%"></div>
+    <div class="skel" style="height:90px"></div>
+  </div>
+  <div class="ft">
+    <span>No card details stored</span>
+    <span class="pref" id="prefLabel"></span>
+  </div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

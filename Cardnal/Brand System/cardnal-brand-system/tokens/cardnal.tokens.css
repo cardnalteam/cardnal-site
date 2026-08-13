@@ -1,0 +1,71 @@
+/* Cardnal Design System — canonical tokens
+   v1.0 · source of truth: cardnal-brand-system.html
+   Components must reference these variables, never raw hex. */
+
+:root {
+  /* ---- brand ---- */
+  --red-50:#FFF1F2;  --red-100:#FFE0E3; --red-200:#FFC5CB; --red-300:#FF9BA6;
+  --red-400:#F85567; --red-500:#E60B21; --red-600:#C90A1C; --red-700:#A80A18;
+  --red-800:#8A0914; --red-900:#6B0710; --red-950:#3D0409;
+
+  /* ---- neutral ---- */
+  --ink-50:#F7F8F9;  --ink-100:#EEF0F2; --ink-200:#E1E4E8; --ink-300:#C7CCD3;
+  --ink-400:#9AA1AB; --ink-500:#6B727C; --ink-600:#4C525A; --ink-700:#343940;
+  --ink-800:#1E2126; --ink-900:#131519; --ink-950:#0B0C0E;
+
+  /* ---- semantic ----
+     *-text variants are the AA-safe values on white. Use the base for
+     fills, icons, and large graphics only. */
+  --success:#0E9F5B; --success-text:#097A44; --success-fill:#08703E; --success-bg:#E9F8F0;
+  --warning:#B26A00; --warning-text:#9A5C00; --warning-bg:#FDF3E3;
+  --alert:#A61B2B;   --alert-text:#A61B2B;   --alert-bg:#FCEDEF;
+  --info:#1B63C7;    --info-text:#1B63C7;    --info-bg:#EBF2FD;
+  --gold:#B8892B;    --slate:#5A6472;
+
+  /* ---- surfaces ---- */
+  --paper:#FFFFFF; --canvas:#FAFBFC;
+  --line:#E6E8EC;  --line-strong:#D3D8DF;
+
+  /* ---- type ---- */
+  --font-display:'Archivo', system-ui, sans-serif;
+  --font-body:'Instrument Sans', system-ui, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, monospace;
+
+  /* ---- spacing: 8pt grid ---- */
+  --space-0:0px;   --space-px:1px;  --space-1:4px;   --space-2:8px;
+  --space-3:12px;  --space-4:16px;  --space-5:20px;  --space-6:24px;
+  --space-8:32px;  --space-10:40px; --space-12:48px; --space-16:64px;
+  --space-20:80px; --space-24:96px; --space-32:128px;
+
+  /* ---- radius: child radius is always smaller than parent ---- */
+  --r-none:0px; --r-sm:6px; --r-md:10px; --r-lg:14px;
+  --r-xl:20px;  --r-2xl:28px; --r-full:999px;
+
+  /* ---- elevation ---- */
+  --sh-sm:0 1px 2px rgba(11,12,14,.06), 0 1px 1px rgba(11,12,14,.04);
+  --sh-md:0 4px 12px -2px rgba(11,12,14,.08), 0 2px 4px -2px rgba(11,12,14,.05);
+  --sh-lg:0 12px 28px -8px rgba(11,12,14,.12), 0 4px 8px -4px rgba(11,12,14,.06);
+  --sh-float:0 24px 56px -16px rgba(11,12,14,.18), 0 8px 16px -8px rgba(11,12,14,.08);
+  --sh-brand:0 8px 22px -8px rgba(230,11,33,.5);
+
+  /* ---- motion ---- */
+  --t-instant:80ms; --t-fast:140ms; --t-base:200ms;
+  --t-slow:320ms;   --t-deliberate:480ms;
+  --ease-out:cubic-bezier(.2,.7,.3,1);
+  --ease-in:cubic-bezier(.5,0,.9,.4);
+  --ease-spring:cubic-bezier(.2,.9,.25,1.15);
+
+  /* ---- the structural constant: the mark's own edge angle ---- */
+  --wing:26.7deg;
+}
+
+/* Dark mode. Note --red-500 fails AA as text on --ink-950 (4.1:1);
+   red text switches to --red-400 (6.0:1). Fills stay --red-500. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:#0B0C0E; --canvas:#131519;
+    --line:#1E2126;  --line-strong:#343940;
+    --brand-text:var(--red-400);
+  }
+}
+:root { --brand-text:var(--red-700); }

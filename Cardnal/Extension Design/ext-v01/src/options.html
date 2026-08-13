@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Cardnal — Setup</title>
+<style>
+:root{--red:#E60B21;--red-50:#FFF1F2;--red-200:#FFC5CB;--red-700:#A80A18;
+--ink-50:#F7F8F9;--ink-100:#EEF0F2;--ink-400:#9AA1AB;--ink-500:#6B727C;--ink-600:#4C525A;--ink-950:#0B0C0E;
+--line:#E6E8EC;--line-strong:#D3D8DF;--green-text:#097A44;--green-bg:#E9F8F0;
+--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:ui-monospace,Menlo,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink-950);background:#FAFBFC;line-height:1.55;padding:40px 20px}
+.wrap{max-width:640px;margin:0 auto}
+.hd{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+.hd img{width:28px;height:28px} .hd b{font-size:22px;letter-spacing:-.03em}
+.sub{color:var(--ink-500);font-size:14.5px;margin-bottom:30px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px}
+h2{font-size:16px;letter-spacing:-.02em;margin-bottom:4px}
+.hint{font-size:13px;color:var(--ink-500);margin-bottom:16px}
+.row{display:flex;align-items:center;gap:12px;padding:11px;border:1.5px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}
+.row:hover{border-color:var(--line-strong)}
+.row.on{border-color:var(--red);background:var(--red-50)}
+.chip{width:34px;height:23px;border-radius:4px;flex-shrink:0}
+.row .t b{display:block;font-size:14px} .row .t span{font-size:12px;color:var(--ink-500)}
+.box{margin-left:auto;width:20px;height:20px;border:1.5px solid var(--line-strong);border-radius:5px;display:grid;place-items:center;background:#fff;flex-shrink:0;font-size:13px;color:#fff}
+.row.on .box{background:var(--red);border-color:var(--red)}
+.radio .box{border-radius:50%}
+.row.on.radio .box{background:#fff;border-color:var(--red);border-width:6px}
+.status{font-size:13px;color:var(--green-text);background:var(--green-bg);border:1px solid #B9E7D0;border-radius:8px;padding:9px 12px;margin-top:14px;display:none}
+.status.show{display:block}
+.merchants{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.tag{font-family:var(--mono);font-size:11.5px;background:var(--ink-50);border:1px solid var(--line);border-radius:100px;padding:5px 11px;color:var(--ink-600)}
+.meta{font-family:var(--mono);font-size:11px;color:var(--ink-400);margin-top:18px;text-align:center}
+.warn{background:#FDF3E3;border:1px solid #F0D8AC;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink-600);margin-bottom:18px}
+.warn b{display:block;color:#9A5C00;margin-bottom:2px}
+</style></head>
+<body><div class="wrap">
+  <div class="hd"><img src="../icons/icon48.png" alt=""><b>Cardnal</b></div>
+  <p class="sub">Early build. Tell us what's in your wallet and what you care about.</p>
+
+  <div class="warn"><b>Reward rates are unverified</b>
+    This build seeds rates by hand and hasn't checked them against issuer terms. Treat every number as a draft.</div>
+
+  <div class="card">
+    <h2>Your cards</h2>
+    <p class="hint">We never ask for card numbers, CVVs, or bank logins — just which products you hold.</p>
+    <div id="cards"></div>
+    <div class="status" id="cardStatus"></div>
+  </div>
+
+  <div class="card">
+    <h2>What do you care about most?</h2>
+    <p class="hint">We rank cash against cash and points against points. We never convert between them.</p>
+    <div id="prefs"></div>
+    <div class="status" id="prefStatus"></div>
+  </div>
+
+  <div class="card">
+    <h2>Supported stores</h2>
+    <p class="hint">Cardnal only speaks up where we've verified the mapping. Everywhere else it stays quiet.</p>
+    <div class="merchants" id="merchants"></div>
+  </div>
+
+  <p class="meta" id="meta"></p>
+</div>
+<script type="module" src="options.js"></script>
+</body></html>

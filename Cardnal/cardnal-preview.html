@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardnal v0.1 — interactive preview</title>
+<style>
+
+:root{
+  --red:#E60B21; --red-50:#FFF1F2; --red-200:#FFC5CB; --red-700:#A80A18;
+  --ink-50:#F7F8F9; --ink-100:#EEF0F2; --ink-400:#9AA1AB; --ink-500:#6B727C;
+  --ink-600:#4C525A; --ink-950:#0B0C0E;
+  --line:#E6E8EC; --line-strong:#D3D8DF;
+  --green:#0E9F5B; --green-text:#097A44; --green-bg:#E9F8F0;
+  --amber-text:#9A5C00; --amber-bg:#FDF3E3;
+  --info:#1B63C7; --info-bg:#EBF2FD;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:360px;font-family:var(--sans);color:var(--ink-950);background:#fff;font-size:14px;line-height:1.5}
+.hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.hd img{width:18px;height:18px}
+.hd b{font-size:15px;letter-spacing:-.02em}
+.hd .gear{margin-left:auto;background:none;border:0;cursor:pointer;color:var(--ink-400);padding:4px;border-radius:6px;font-size:12px}
+.hd .gear:hover{background:var(--ink-100);color:var(--ink-600)}
+.bd{padding:14px}
+
+.merchant{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:13px}
+.merchant .lb{font-size:11.5px;color:var(--ink-500)}
+.merchant .nm{font-size:17px;font-weight:700;letter-spacing:-.02em}
+.merchant .tile{margin-left:auto;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;background:var(--ink-400)}
+
+.eyebrow{font-size:11px;font-weight:700;color:var(--red);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em}
+
+.win{background:#12141A;border-radius:14px;padding:14px;color:#fff;margin-bottom:6px}
+.win .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.win .nm{font-size:15px;font-weight:600}
+.win .iss{font-size:11px;color:rgba(255,255,255,.5);margin-top:1px}
+.win .rate{display:flex;align-items:flex-end;gap:7px}
+.win .rate b{font-size:34px;font-weight:800;line-height:1;color:#2BD97C;letter-spacing:-.03em}
+.win .rate i{font-style:normal;font-size:12px;color:rgba(255,255,255,.6);padding-bottom:4px}
+.win .why{font-size:12px;color:rgba(255,255,255,.62);border-top:1px solid rgba(255,255,255,.1);padding-top:10px;margin-top:11px}
+
+.grouphd{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-400);margin:14px 0 6px}
+.row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .chip{width:24px;height:16px;border-radius:3px;flex-shrink:0;background:var(--ink-400)}
+.row .t{font-size:12.5px}
+.row .sub{font-size:10.5px;color:var(--ink-400)}
+.row .v{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:600}
+.row.first .v{color:var(--green-text)}
+
+.note{border-radius:9px;padding:10px 11px;font-size:12px;line-height:1.45;margin-top:12px}
+.note b{display:block;font-size:12.5px;margin-bottom:2px}
+.note.info{background:var(--info-bg);color:var(--ink-600)} .note.info b{color:var(--info)}
+.note.amber{background:var(--amber-bg);color:var(--ink-600)} .note.amber b{color:var(--amber-text)}
+.note.plain{background:var(--ink-50);color:var(--ink-600)} .note.plain b{color:var(--ink-950)}
+
+.empty{text-align:center;padding:26px 12px}
+.empty h3{font-size:15px;margin-bottom:5px}
+.empty p{font-size:12.5px;color:var(--ink-500);margin-bottom:14px}
+
+.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:9px 14px;border-radius:9px;border:1.5px solid var(--line-strong);background:#fff;cursor:pointer;width:100%}
+.btn:hover{background:var(--ink-50)}
+.btn-p{background:var(--red);border-color:var(--red);color:#fff}
+.btn-p:hover{background:var(--red-700)}
+
+.ft{border-top:1px solid var(--line);padding:9px 14px;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--ink-400)}
+.ft .pref{margin-left:auto;font-family:var(--mono)}
+.skel{background:var(--ink-100);border-radius:5px;height:12px;margin-bottom:7px}
+
+/* ---- preview chrome (not part of the extension) ---- */
+html,body{width:auto}
+body{background:#EDEFF2;padding:28px 20px 60px;font-family:var(--sans)}
+.page{max-width:1120px;margin:0 auto}
+.masthead{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+.masthead img{width:26px;height:26px}
+.masthead b{font-size:21px;letter-spacing:-.03em}
+.masthead .tag{font-family:var(--mono);font-size:10.5px;color:var(--ink-400);letter-spacing:.1em;text-transform:uppercase;margin-left:6px}
+.lede{color:var(--ink-500);font-size:14px;margin-bottom:24px;max-width:70ch}
+.grid{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px}
+.panel h3{font-size:14px;letter-spacing:-.01em;margin-bottom:3px}
+.panel .h{font-size:12.5px;color:var(--ink-500);margin-bottom:13px}
+.opt{display:flex;align-items:center;gap:11px;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;margin-bottom:7px;cursor:pointer;font-size:13px;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--line-strong)}
+.opt.on{border-color:var(--red);background:var(--red-50)}
+.opt .chip{width:30px;height:20px;border-radius:4px;flex-shrink:0}
+.opt .m{font-family:var(--mono);font-size:11.5px;color:var(--ink-400);margin-left:auto}
+.opt b{font-weight:600}
+.opt .s{display:block;font-size:11px;color:var(--ink-500);font-weight:400}
+.opt .bx{margin-left:auto;width:19px;height:19px;border:1.5px solid var(--line-strong);border-radius:5px;background:#fff;flex-shrink:0;display:grid;place-items:center;color:#fff;font-size:12px}
+.opt.on .bx{background:var(--red);border-color:var(--red)}
+.opt.radio .bx{border-radius:50%}
+.opt.on.radio .bx{background:#fff;border-color:var(--red);border-width:6px}
+.urlbar{display:flex;align-items:center;gap:8px;background:var(--ink-50);border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-family:var(--mono);font-size:11.5px;color:var(--ink-600);margin-bottom:13px}
+.urlbar .dot{width:8px;height:8px;border-radius:50%;background:var(--line-strong)}
+.stack{position:sticky;top:24px}
+.frame{border:1px solid var(--line-strong);border-radius:12px;overflow:hidden;box-shadow:0 18px 40px -18px rgba(11,12,14,.28);background:#fff;width:360px}
+.frame .bar{background:var(--ink-50);border-bottom:1px solid var(--line);padding:7px 11px;font-family:var(--mono);font-size:10px;color:var(--ink-400);display:flex;gap:6px;align-items:center}
+.pop-body{max-height:none}
+.note-preview{font-size:12px;color:var(--ink-500);margin-top:12px;line-height:1.5}
+.json{background:#12141A;border-radius:10px;padding:14px;overflow-x:auto;margin-top:12px}
+.json pre{font-family:var(--mono);font-size:11px;line-height:1.6;color:#C9CED6;white-space:pre-wrap}
+.k{color:#FF9BA6}.v{color:#8FD8B0}.c{color:#6B727C}
+details summary{cursor:pointer;font-size:12.5px;color:var(--ink-500);font-family:var(--mono);letter-spacing:.04em}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.stack{position:static}.frame{width:100%;max-width:360px}}
+</style></head>
+<body>
+<div class="page">
+  <div class="masthead"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik05NjIgOTUuOTFMMzQxLjk0IDQwOC4yM1EzMzYuNTggNDEwLjkzIDMzMy43NyA0MTYuMjNMNjIgOTI4LjA5TDYzMy4yIDcwNC45M1E2NDguMSA2OTkuMTEgNjU2LjAzIDY4NS4yMUw3MDkuODcgNTkwLjg0UTcxNi44IDU3OC42OCA3MDIuOTQgNTgwLjYyTDM4NS4zNCA2MjUuMDdRNDQ2LjU2IDU2Ny42OSA0NzkuMzUgNTU1LjQ0TDc1NS41OSA0NTIuMlE3NzIuNDUgNDQ1LjkgNzgxLjAzIDQzMC4wOFoiIGZpbGw9IiNFNjBCMjEiLz48L3N2Zz4=" alt="">
+    <b>Cardnal</b><span class="tag">v0.1 preview</span></div>
+  <p class="lede">This is the real <code style="font-family:var(--mono);font-size:12px">engine.js</code> and
+     <code style="font-family:var(--mono);font-size:12px">ruleset.json</code> from the extension, running in the page.
+     Change the store, your cards, or your preference and the popup on the right recomputes exactly as it would in Chrome.</p>
+
+  <div class="grid">
+    <div>
+      <div class="panel">
+        <h3>Which store are you on?</h3>
+        <p class="h">Merchant detection uses the hostname only — exact match, no guessing.</p>
+        <div class="urlbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span id="urlShow">https://www.amazon.com/dp/B01</span></div>
+        <div id="merchants"></div>
+      </div>
+
+      <div class="panel">
+        <h3>What do you care about most?</h3>
+        <p class="h">Cash ranks against cash, points against points. Never converted.</p>
+        <div id="prefs"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Your cards</h3>
+        <p class="h">Tick what's in your wallet. No numbers, no logins.</p>
+        <div id="cards"></div>
+      </div>
+
+      <div class="panel">
+        <details><summary>What the engine returned &nbsp;&#9662;</summary>
+          <div class="json"><pre id="raw"></pre></div>
+        </details>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="frame">
+        <div class="bar"><span>Chrome</span><span style="margin-left:auto">extension popup · 360px</span></div>
+        <div class="hd"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik05NjIgOTUuOTFMMzQxLjk0IDQwOC4yM1EzMzYuNTggNDEwLjkzIDMzMy43NyA0MTYuMjNMNjIgOTI4LjA5TDYzMy4yIDcwNC45M1E2NDguMSA2OTkuMTEgNjU2LjAzIDY4NS4yMUw3MDkuODcgNTkwLjg0UTcxNi44IDU3OC42OCA3MDIuOTQgNTgwLjYyTDM4NS4zNCA2MjUuMDdRNDQ2LjU2IDU2Ny42OSA0NzkuMzUgNTU1LjQ0TDc1NS41OSA0NTIuMlE3NzIuNDUgNDQ1LjkgNzgxLjAzIDQzMC4wOFoiIGZpbGw9IiNFNjBCMjEiLz48L3N2Zz4=" alt="">
+          <b>Cardnal</b><button class="gear">Settings</button></div>
+        <div class="bd" id="root"></div>
+        <div class="ft"><span>No card details stored</span><span class="pref" id="prefLabel"></span></div>
+      </div>
+      <p class="note-preview">The popup is pixel-identical to the extension — same HTML, same CSS.
+      Only the surrounding browser frame is simulated.</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+const RULESET = {
+  "schemaVersion": "0.1",
+  "rulesetVersion": "2026-08-09.1",
+  "publishedAt": "2026-08-09",
+
+  "_README": [
+    "EVERY RATE IN THIS FILE IS UNVERIFIED. verified=false on every rule is deliberate.",
+    "These values were seeded from general knowledge of published card terms and have NOT",
+    "been checked against issuer documentation. A human must open each termsUrl, confirm the",
+    "rate, and set verified=true with their initials and the date before this ships to anyone",
+    "outside the team. See VERIFICATION.md.",
+    "Extension logic reads this file and nothing else — updating rates never requires a code change."
+  ],
+
+  "categories": {
+    "online_retail":  { "label": "Online retail" },
+    "groceries":      { "label": "Groceries" },
+    "dining":         { "label": "Dining & restaurants" },
+    "superstore":     { "label": "Superstores & wholesale clubs" },
+    "delivery":       { "label": "Food delivery" },
+    "other":          { "label": "Everything else" }
+  },
+
+  "merchants": [
+    {
+      "merchantId": "amazon",
+      "name": "Amazon",
+      "domains": ["amazon.com", "smile.amazon.com"],
+      "categoryId": "online_retail",
+      "confidence": "high",
+      "pathOverrides": [
+        { "startsWith": "/alm/storefront", "categoryId": "groceries", "note": "Amazon Fresh storefront" }
+      ]
+    },
+    {
+      "merchantId": "whole_foods",
+      "name": "Whole Foods Market",
+      "domains": ["wholefoodsmarket.com"],
+      "categoryId": "groceries",
+      "confidence": "high",
+      "pathOverrides": []
+    },
+    {
+      "merchantId": "target",
+      "name": "Target",
+      "domains": ["target.com"],
+      "categoryId": "superstore",
+      "confidence": "medium",
+      "note": "Issuers classify Target inconsistently — some as superstore, some as groceries. Conservative default: superstore.",
+      "pathOverrides": []
+    },
+    {
+      "merchantId": "chipotle",
+      "name": "Chipotle",
+      "domains": ["chipotle.com"],
+      "categoryId": "dining",
+      "confidence": "high",
+      "pathOverrides": []
+    },
+    {
+      "merchantId": "doordash",
+      "name": "DoorDash",
+      "domains": ["doordash.com"],
+      "categoryId": "delivery",
+      "confidence": "medium",
+      "note": "Some issuers code delivery as dining, others as its own category. Mapped to delivery; card rules may treat delivery as dining explicitly.",
+      "pathOverrides": []
+    }
+  ],
+
+  "cards": [
+    {
+      "cardId": "chase_prime_visa",
+      "displayName": "Prime Visa",
+      "issuer": "Chase",
+      "network": "Visa",
+      "currency": "cash",
+      "currencyLabel": "cash back",
+      "annualFeeCents": 0,
+      "foreignTxFeePct": 0,
+      "colorHex": "#1C3FAB",
+      "termsUrl": "https://creditcards.chase.com/rewards-credit-cards/amazon-prime-rewards-visa",
+      "base": { "value": 1, "unit": "percent" },
+      "bonuses": [
+        { "match": { "merchantId": "amazon" },      "value": 5, "unit": "percent", "note": "Requires an active Prime membership", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "merchantId": "whole_foods" }, "value": 5, "unit": "percent", "note": "Requires an active Prime membership", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "categoryId": "dining" },      "value": 2, "unit": "percent", "verified": false, "verifiedAt": null, "verifiedBy": null }
+      ]
+    },
+    {
+      "cardId": "chase_freedom_unlimited",
+      "displayName": "Freedom Unlimited",
+      "issuer": "Chase",
+      "network": "Visa",
+      "currency": "cash",
+      "currencyLabel": "cash back",
+      "annualFeeCents": 0,
+      "foreignTxFeePct": 3,
+      "colorHex": "#1C5FAB",
+      "termsUrl": "https://creditcards.chase.com/cash-back-credit-cards/freedom/unlimited",
+      "base": { "value": 1.5, "unit": "percent" },
+      "bonuses": [
+        { "match": { "categoryId": "dining" }, "value": 3, "unit": "percent", "verified": false, "verifiedAt": null, "verifiedBy": null }
+      ]
+    },
+    {
+      "cardId": "amex_blue_cash_preferred",
+      "displayName": "Blue Cash Preferred",
+      "issuer": "American Express",
+      "network": "Amex",
+      "currency": "cash",
+      "currencyLabel": "cash back",
+      "annualFeeCents": 9500,
+      "foreignTxFeePct": 2.7,
+      "colorHex": "#1D9BD1",
+      "termsUrl": "https://www.americanexpress.com/us/credit-cards/card/blue-cash-preferred",
+      "base": { "value": 1, "unit": "percent" },
+      "bonuses": [
+        {
+          "match": { "categoryId": "groceries" },
+          "value": 6, "unit": "percent",
+          "cap": { "amountCents": 600000, "period": "calendar_year", "thenValue": 1, "thenUnit": "percent" },
+          "note": "US supermarkets only. Excludes superstores and warehouse clubs.",
+          "excludesMerchants": ["target"],
+          "verified": false, "verifiedAt": null, "verifiedBy": null
+        }
+      ]
+    },
+    {
+      "cardId": "amex_gold",
+      "displayName": "Amex Gold",
+      "issuer": "American Express",
+      "network": "Amex",
+      "currency": "MR",
+      "currencyLabel": "Membership Rewards points",
+      "annualFeeCents": 32500,
+      "foreignTxFeePct": 0,
+      "colorHex": "#C9A227",
+      "termsUrl": "https://www.americanexpress.com/us/credit-cards/card/gold-card",
+      "base": { "value": 1, "unit": "multiplier" },
+      "bonuses": [
+        { "match": { "categoryId": "dining" },    "value": 4, "unit": "multiplier", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "categoryId": "delivery" },  "value": 4, "unit": "multiplier", "note": "Issuer treats delivery as dining", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        {
+          "match": { "categoryId": "groceries" },
+          "value": 4, "unit": "multiplier",
+          "cap": { "amountCents": 2500000, "period": "calendar_year", "thenValue": 1, "thenUnit": "multiplier" },
+          "note": "US supermarkets only",
+          "excludesMerchants": ["target"],
+          "verified": false, "verifiedAt": null, "verifiedBy": null
+        }
+      ]
+    },
+    {
+      "cardId": "chase_sapphire_preferred",
+      "displayName": "Sapphire Preferred",
+      "issuer": "Chase",
+      "network": "Visa",
+      "currency": "UR",
+      "currencyLabel": "Ultimate Rewards points",
+      "annualFeeCents": 9500,
+      "foreignTxFeePct": 0,
+      "colorHex": "#2E6FC0",
+      "termsUrl": "https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred",
+      "base": { "value": 1, "unit": "multiplier" },
+      "bonuses": [
+        { "match": { "categoryId": "dining" },   "value": 3, "unit": "multiplier", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "categoryId": "delivery" }, "value": 3, "unit": "multiplier", "note": "Issuer treats delivery as dining", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "categoryId": "online_retail" }, "value": 1, "unit": "multiplier", "verified": false, "verifiedAt": null, "verifiedBy": null }
+      ]
+    }
+  ]
+}
+;
+
+/* Cardnal v0.1 — recommendation engine.
+ *
+ * Pure functions. No chrome.* APIs, no DOM. Everything it knows comes from
+ * ruleset.json, so updating reward rates never touches this file.
+ *
+ * Exported as an ES module so the same code runs in the popup and in Node tests.
+ */
+
+const TIE_THRESHOLD_PCT = 0.25; // below this spread, we don't claim a winner
+
+// ---------------------------------------------------------------- merchant
+
+/** Normalise a hostname for matching: lowercase, strip www. and trailing dot. */
+function normaliseHost(host) {
+  return String(host || '').toLowerCase().replace(/\.$/, '').replace(/^www\./, '');
+}
+
+/**
+ * Identify the merchant from a URL. Exact host match only — no fuzzy matching,
+ * because a near-match on a lookalike domain is a wrong answer, not a helpful one.
+ * Returns null when the host isn't in the ruleset.
+ */
+function identifyMerchant(url, ruleset) {
+  let host, path;
+  try {
+    const u = new URL(url);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    host = normaliseHost(u.hostname);
+    path = u.pathname || '/';
+  } catch {
+    return null;
+  }
+
+  for (const m of ruleset.merchants) {
+    const hit = m.domains.some(d => {
+      const dn = normaliseHost(d);
+      return host === dn || host.endsWith('.' + dn);
+    });
+    if (!hit) continue;
+
+    // path overrides can change the category (Amazon Fresh vs Amazon retail)
+    let categoryId = m.categoryId;
+    let categorySource = 'domain';
+    for (const o of (m.pathOverrides || [])) {
+      if (path.startsWith(o.startsWith)) {
+        categoryId = o.categoryId;
+        categorySource = 'path';
+        break;
+      }
+    }
+    return {
+      merchantId: m.merchantId,
+      name: m.name,
+      categoryId,
+      categorySource,
+      confidence: m.confidence || 'medium',
+      note: m.note || null
+    };
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------- rates
+
+/**
+ * Which rule applies for this card at this merchant/category.
+ * Precedence: merchant-specific bonus > category bonus > base rate.
+ * Where two bonuses tie, the merchant-specific one wins.
+ */
+function resolveRate(card, context) {
+  const { merchantId, categoryId } = context;
+  let best = null;
+
+  for (const b of (card.bonuses || [])) {
+    if (b.excludesMerchants && b.excludesMerchants.includes(merchantId)) continue;
+
+    const matchesMerchant = b.match.merchantId && b.match.merchantId === merchantId;
+    const matchesCategory = b.match.categoryId && b.match.categoryId === categoryId;
+    if (!matchesMerchant && !matchesCategory) continue;
+
+    const candidate = {
+      value: b.value,
+      unit: b.unit,
+      source: matchesMerchant ? 'merchant_bonus' : 'category_bonus',
+      specificity: matchesMerchant ? 2 : 1,
+      note: b.note || null,
+      cap: b.cap || null,
+      verified: b.verified === true,
+      verifiedAt: b.verifiedAt || null
+    };
+    if (!best || candidate.specificity > best.specificity || candidate.value > best.value) {
+      best = candidate;
+    }
+  }
+
+  if (best) return best;
+
+  return {
+    value: card.base.value,
+    unit: card.base.unit,
+    source: 'base_rate',
+    specificity: 0,
+    note: null,
+    cap: null,
+    verified: false,
+    verifiedAt: null
+  };
+}
+
+// ---------------------------------------------------------------- ranking
+
+/**
+ * Rank a wallet for one merchant.
+ *
+ * Cash and points are ranked in SEPARATE groups and never converted into one
+ * another — a point's value depends on how it's redeemed, and we don't know that.
+ * Different point currencies (MR vs UR) are also separate groups.
+ */
+function rankCards(walletCardIds, context, ruleset, preference = 'none') {
+  const byId = Object.fromEntries(ruleset.cards.map(c => [c.cardId, c]));
+  const cards = walletCardIds.map(id => byId[id]).filter(Boolean);
+
+  const scored = cards.map(card => {
+    const rate = resolveRate(card, context);
+    return {
+      cardId: card.cardId,
+      displayName: card.displayName,
+      issuer: card.issuer,
+      colorHex: card.colorHex,
+      currency: card.currency,
+      currencyLabel: card.currencyLabel,
+      annualFeeCents: card.annualFeeCents,
+      foreignTxFeePct: card.foreignTxFeePct,
+      termsUrl: card.termsUrl,
+      rate
+    };
+  });
+
+  // group by currency — comparison only ever happens inside a group
+  const groups = {};
+  for (const s of scored) (groups[s.currency] ||= []).push(s);
+  for (const k of Object.keys(groups)) {
+    groups[k].sort((a, b) =>
+      b.rate.value - a.rate.value ||
+      a.annualFeeCents - b.annualFeeCents ||      // tiebreak: cheaper card
+      a.cardId.localeCompare(b.cardId)            // deterministic last resort
+    );
+  }
+
+  const cashGroup = groups.cash || [];
+  const pointGroups = Object.entries(groups)
+    .filter(([k]) => k !== 'cash')
+    .map(([currency, list]) => ({ currency, list }));
+
+  // pick the headline card according to stated preference
+  let winner = null;
+  let winnerBasis = null;
+
+  const bestCash = cashGroup[0] || null;
+  const bestPoints = pointGroups
+    .map(g => g.list[0])
+    .sort((a, b) => b.rate.value - a.rate.value || a.cardId.localeCompare(b.cardId))[0] || null;
+
+  if (preference === 'cash') {
+    winner = bestCash || bestPoints;
+    winnerBasis = bestCash ? 'preference_cash' : 'only_option';
+  } else if (preference === 'points') {
+    winner = bestPoints || bestCash;
+    winnerBasis = bestPoints ? 'preference_points' : 'only_option';
+  } else {
+    // No preference. We can't compare cash to points, so we prefer the one whose
+    // value is certain — cash — and surface the points winner alongside it.
+    winner = bestCash || bestPoints;
+    winnerBasis = bestCash && bestPoints ? 'no_preference_prefers_cash'
+                : bestCash ? 'only_cash' : 'only_points';
+  }
+
+  // is the winner's group actually differentiated, or does everything tie?
+  const winnerGroup = winner ? (groups[winner.currency] || []) : [];
+  const spread = winnerGroup.length > 1
+    ? winnerGroup[0].rate.value - winnerGroup[1].rate.value
+    : null;
+  const isTie = spread !== null && spread < TIE_THRESHOLD_PCT;
+
+  return {
+    winner,
+    winnerBasis,
+    isTie,
+    spread,
+    cashGroup,
+    pointGroups,
+    allGroups: groups
+  };
+}
+
+// ---------------------------------------------------------------- explanation
+
+/** One sentence saying why the winner won. Required — never null when status is ok. */
+function explain(result, context, ruleset, preference) {
+  const w = result.winner;
+  if (!w) return null;
+  const catLabel = (ruleset.categories[context.categoryId] || {}).label || context.categoryId;
+  const rateStr = w.rate.unit === 'percent' ? `${w.rate.value}%` : `${w.rate.value}x`;
+
+  if (result.isTie) {
+    const runnerUp = (result.allGroups[w.currency] || [])[1];
+    if (w.annualFeeCents === 0 && runnerUp && runnerUp.annualFeeCents > 0) {
+      return `Ties with ${runnerUp.displayName} at ${rateStr} — this one has no annual fee.`;
+    }
+    return `Several cards earn ${rateStr} here. Use whichever you prefer.`;
+  }
+
+  if (w.rate.source === 'merchant_bonus') {
+    return `Highest rewards at ${context.merchantName} — ${rateStr}.`;
+  }
+  if (w.rate.source === 'category_bonus') {
+    return `${catLabel} bonus — earns ${rateStr} here.`;
+  }
+  return `Earns ${rateStr} here, more than your other cards.`;
+}
+
+// ---------------------------------------------------------------- top level
+
+/**
+ * The single entry point the popup calls.
+ * Always returns a status; "we don't know" is a first-class result.
+ */
+function recommend({ url, walletCardIds, preference, ruleset }) {
+  const base = { rulesetVersion: ruleset.rulesetVersion, publishedAt: ruleset.publishedAt };
+
+  if (!walletCardIds || walletCardIds.length === 0) {
+    return { status: 'no_cards', ...base };
+  }
+
+  const merchant = identifyMerchant(url, ruleset);
+  if (!merchant) {
+    return { status: 'no_merchant', ...base };
+  }
+  if (merchant.confidence === 'low') {
+    return { status: 'low_confidence', merchant, ...base };
+  }
+
+  const context = {
+    merchantId: merchant.merchantId,
+    merchantName: merchant.name,
+    categoryId: merchant.categoryId
+  };
+
+  const ranked = rankCards(walletCardIds, context, ruleset, preference);
+  if (!ranked.winner) {
+    return { status: 'no_cards', merchant, ...base };
+  }
+
+  const allSame = Object.values(ranked.allGroups)
+    .every(g => g.length <= 1 || (g[0].rate.value - g[g.length - 1].rate.value) < TIE_THRESHOLD_PCT);
+  const onlyBaseRates = Object.values(ranked.allGroups)
+    .flat().every(c => c.rate.source === 'base_rate');
+
+  if (allSame && onlyBaseRates && ranked.cashGroup.length + ranked.pointGroups.length > 1) {
+    return {
+      status: 'all_equal',
+      merchant, context,
+      groups: ranked.allGroups,
+      categoryLabel: (ruleset.categories[context.categoryId] || {}).label,
+      ...base
+    };
+  }
+
+  return {
+    status: 'ok',
+    merchant,
+    context,
+    categoryLabel: (ruleset.categories[context.categoryId] || {}).label,
+    winner: ranked.winner,
+    winnerBasis: ranked.winnerBasis,
+    isTie: ranked.isTie,
+    cashGroup: ranked.cashGroup,
+    pointGroups: ranked.pointGroups,
+    reason: explain(ranked, context, ruleset, preference),
+    unverifiedData: true, // every rule in v0.1 ships unverified — surfaced in the UI
+    ...base
+  };
+}
+
+
+/* ---------------- preview app ---------------- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rateStr = r => r.unit === 'percent' ? `${r.value}%` : `${r.value}x`;
+
+const SITES = [
+  { url:'https://www.amazon.com/dp/B01', label:'Amazon', host:'amazon.com' },
+  { url:'https://www.amazon.com/alm/storefront', label:'Amazon Fresh', host:'amazon.com/alm/…' },
+  { url:'https://www.wholefoodsmarket.com/', label:'Whole Foods', host:'wholefoodsmarket.com' },
+  { url:'https://www.target.com/', label:'Target', host:'target.com' },
+  { url:'https://www.chipotle.com/order', label:'Chipotle', host:'chipotle.com' },
+  { url:'https://www.doordash.com/store/1', label:'DoorDash', host:'doordash.com' },
+  { url:'https://bespoke-lamps.co/cart', label:'A store we don\u2019t know', host:'bespoke-lamps.co' },
+  { url:'https://amazon.com.evil.co/', label:'Lookalike domain', host:'amazon.com.evil.co' }
+];
+const PREFS = [
+  { id:'cash', label:'Cash back', hint:'Prioritise direct cash value' },
+  { id:'points', label:'Points & miles', hint:'Prioritise transferable travel rewards' },
+  { id:'none', label:'No preference', hint:'Show the best of each, prefer the certain one' }
+];
+
+let state = {
+  url: SITES[0].url,
+  preference: 'none',
+  cards: RULESET.cards.map(c => c.cardId)
+};
+
+function drawControls(){
+  document.getElementById('merchants').innerHTML = SITES.map((s,i) =>
+    `<div class="opt${state.url===s.url?' on':''}" data-url="${esc(s.url)}">
+       <b>${esc(s.label)}</b><span class="m">${esc(s.host)}</span></div>`).join('');
+  document.getElementById('prefs').innerHTML = PREFS.map(p =>
+    `<div class="opt radio${state.preference===p.id?' on':''}" data-pref="${p.id}">
+       <span><b>${esc(p.label)}</b><span class="s">${esc(p.hint)}</span></span><span class="bx"></span></div>`).join('');
+  document.getElementById('cards').innerHTML = RULESET.cards.map(c =>
+    `<div class="opt${state.cards.includes(c.cardId)?' on':''}" data-card="${esc(c.cardId)}">
+       <span class="chip" style="background:${esc(c.colorHex)}"></span>
+       <span><b>${esc(c.displayName)}</b><span class="s">${esc(c.issuer)} · ${esc(c.currencyLabel)}</span></span>
+       <span class="bx">&#10003;</span></div>`).join('');
+  document.getElementById('urlShow').textContent = state.url;
+}
+
+function cardRow(c, first){
+  return `<div class="row${first?' first':''}">
+    <span class="chip" style="background:${esc(c.colorHex||'#9AA1AB')}"></span>
+    <span><span class="t">${esc(c.displayName)}</span><span class="sub" style="display:block">${esc(c.issuer)}</span></span>
+    <span class="v">${esc(rateStr(c.rate))}</span></div>`;
+}
+function groupsHtml(res){
+  let h='';
+  if(res.cashGroup && res.cashGroup.length)
+    h += `<div class="grouphd">Cash back</div>` + res.cashGroup.map((c,i)=>cardRow(c,i===0)).join('');
+  for(const g of (res.pointGroups||[])){
+    if(!g.list.length) continue;
+    h += `<div class="grouphd">${esc(g.list[0].currencyLabel||g.currency)}</div>` + g.list.map((c,i)=>cardRow(c,i===0)).join('');
+  }
+  return h;
+}
+function merchantBlock(m){
+  return `<div class="merchant"><span><span class="lb">You're shopping at</span>
+    <span class="nm" style="display:block">${esc(m.name)}</span></span>
+    <span class="tile">${esc((m.name||'?').trim()[0].toUpperCase())}</span></div>`;
+}
+
+function render(){
+  const res = recommend({ url: state.url, walletCardIds: state.cards, preference: state.preference, ruleset: RULESET });
+  const root = document.getElementById('root');
+  document.getElementById('prefLabel').textContent =
+    ({cash:'cash back',points:'points & miles',none:'no preference'})[state.preference];
+
+  if(res.status==='no_cards'){
+    root.innerHTML = `<div class="empty"><h3>No cards yet</h3>
+      <p>Add the cards already in your wallet and Cardnal starts working immediately.</p>
+      <button class="btn btn-p">Add your cards</button></div>`;
+  } else if(res.status==='no_merchant'){
+    root.innerHTML = `<div class="empty"><h3>We don't know this store yet</h3>
+      <p>Cardnal supports a small set of stores in this early version. We won't guess.</p>
+      <button class="btn">See supported stores</button></div>`;
+  } else if(res.status==='all_equal'){
+    root.innerHTML = merchantBlock(res.merchant) +
+      `<div class="note plain"><b>Every card earns the same here</b>None of your cards has a bonus for ${esc(res.categoryLabel||'this category')}. Use whichever you prefer.</div>` +
+      groupsHtml({ cashGroup: res.groups.cash||[],
+        pointGroups: Object.entries(res.groups).filter(([k])=>k!=='cash').map(([currency,list])=>({currency,list})) });
+  } else {
+    const w=res.winner;
+    let h = merchantBlock(res.merchant);
+    h += `<div class="eyebrow">${res.isTie?'Either works':'Best card in your wallet'}</div>`;
+    h += `<div class="win"><div class="top"><span><span class="nm">${esc(w.displayName)}</span>
+      <span class="iss" style="display:block">${esc(w.issuer)}</span></span></div>
+      <div class="rate"><b>${esc(rateStr(w.rate))}</b><i>${esc(w.rate.unit==='percent'?'back':(w.currencyLabel||'points'))}</i></div>
+      <div class="why">${esc(res.reason)}</div></div>`;
+    if(res.winnerBasis==='no_preference_prefers_cash'){
+      const bp=(res.pointGroups[0]||{}).list?.[0];
+      if(bp) h += `<div class="note info"><b>Also worth knowing</b>${esc(bp.displayName)} earns ${esc(rateStr(bp.rate))} ${esc(bp.currencyLabel)} here. We can't compare points to cash, so we show both.</div>`;
+    }
+    h += groupsHtml(res);
+    if(w.rate.cap){
+      const cap=(w.rate.cap.amountCents/100).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+      h += `<div class="note amber"><b>Has a cap</b>This rate applies up to ${esc(cap)} per year, then drops to ${esc(w.rate.cap.thenValue)}${w.rate.cap.thenUnit==='percent'?'%':'x'}. We can't track your spending, so check where you are.</div>`;
+    }
+    if(w.foreignTxFeePct>0)
+      h += `<div class="note plain"><b>Foreign transaction fee</b>${esc(w.displayName)} charges ${esc(w.foreignTxFeePct)}% on purchases abroad.</div>`;
+    h += `<div class="note amber"><b>Rates not yet verified</b>This is an early build. Reward rates were seeded by hand and haven't been checked against issuer terms.</div>`;
+    root.innerHTML = h;
+  }
+
+  const brief = { status: res.status, merchant: res.merchant?.name ?? null,
+    category: res.context?.categoryId ?? null,
+    winner: res.winner ? { card: res.winner.displayName, rate: rateStr(res.winner.rate), currency: res.winner.currency } : null,
+    winnerBasis: res.winnerBasis ?? null, isTie: res.isTie ?? null, reason: res.reason ?? null };
+  document.getElementById('raw').innerHTML = JSON.stringify(brief,null,2)
+    .replace(/"([^"]+)":/g,'<span class="k">"$1"</span>:')
+    .replace(/: "([^"]*)"/g,': <span class="v">"$1"</span>');
+}
+
+document.addEventListener('click', e => {
+  const o = e.target.closest('.opt'); if(!o) return;
+  if(o.dataset.url){ state.url = o.dataset.url; }
+  else if(o.dataset.pref){ state.preference = o.dataset.pref; }
+  else if(o.dataset.card){
+    const id=o.dataset.card;
+    state.cards = state.cards.includes(id) ? state.cards.filter(x=>x!==id) : [...state.cards,id];
+  }
+  drawControls(); render();
+});
+
+drawControls(); render();
+</script>
+</body></html>

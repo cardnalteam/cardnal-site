@@ -1,0 +1,831 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Cardnal — Recommendation Engine v0.1</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"><style>
+:root{
+  --red-50:#FFF1F2;--red-100:#FFE0E3;--red-200:#FFC5CB;--red-400:#F85567;
+  --red-500:#E60B21;--red-600:#C90A1C;--red-700:#A80A18;
+  --ink-50:#F7F8F9;--ink-100:#EEF0F2;--ink-200:#E1E4E8;--ink-300:#C7CCD3;
+  --ink-400:#9AA1AB;--ink-500:#6B727C;--ink-600:#4C525A;--ink-700:#343940;
+  --ink-800:#1E2126;--ink-900:#131519;--ink-950:#0B0C0E;
+  --success:#0E9F5B;--success-text:#097A44;--success-bg:#E9F8F0;
+  --warning-text:#9A5C00;--warning-bg:#FDF3E3;
+  --alert:#A61B2B;--alert-bg:#FCEDEF;--info:#1B63C7;--info-bg:#EBF2FD;
+  --paper:#fff;--canvas:#FAFBFC;--line:#E6E8EC;--line-strong:#D3D8DF;
+  --display:'Archivo',system-ui,sans-serif;--body:'Instrument Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;--wing:26.7deg;
+  --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:20px;--r-full:999px;
+  --sh-sm:0 1px 2px rgba(11,12,14,.06),0 1px 1px rgba(11,12,14,.04);
+  --sh-md:0 4px 12px -2px rgba(11,12,14,.08),0 2px 4px -2px rgba(11,12,14,.05);
+  --sh-lg:0 12px 28px -8px rgba(11,12,14,.12),0 4px 8px -4px rgba(11,12,14,.06);
+  --sh-float:0 24px 56px -16px rgba(11,12,14,.18),0 8px 16px -8px rgba(11,12,14,.08);
+  --sh-brand:0 8px 22px -8px rgba(230,11,33,.5);
+  --t-fast:140ms;--t-base:200ms;--ease-out:cubic-bezier(.2,.7,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink-950);background:#fff;-webkit-font-smoothing:antialiased;line-height:1.6}
+svg{display:block} a{color:inherit}
+:focus-visible{outline:2.5px solid var(--red-500);outline-offset:3px}
+
+.shell{display:grid;grid-template-columns:238px minmax(0,1fr);max-width:1460px;margin:0 auto}
+.side{position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid var(--line);padding:26px 18px 40px}
+.side-brand{display:flex;align-items:center;gap:10px}
+.side-brand svg{width:24px;height:24px}
+.side-brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.035em}
+.side-sub{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-400);margin:5px 0 20px 34px}
+.side nav a{display:flex;gap:9px;align-items:baseline;padding:7px 8px;border-radius:7px;text-decoration:none;font-size:13px;color:var(--ink-600);transition:background var(--t-fast),color var(--t-fast)}
+.side nav a:hover{background:var(--ink-50);color:var(--ink-950)}
+.side nav a.on{background:var(--red-50);color:var(--red-700);font-weight:600}
+.side nav a i{font-family:var(--mono);font-size:10px;font-style:normal;color:var(--ink-400);min-width:14px}
+.side-group{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-400);margin:18px 0 6px 8px}
+.main{min-width:0;padding-bottom:120px}
+.wrap{max-width:1000px;padding:0 52px}
+
+.cover{position:relative;overflow:hidden;padding:80px 52px 64px;border-bottom:1px solid var(--line)}
+.cover::before{content:'';position:absolute;inset:-50% -20%;background:linear-gradient(var(--wing),transparent 0 47%,rgba(230,11,33,.03) 47% 52%,transparent 52%)}
+.cover-in{position:relative}
+.cover h1{font-family:var(--display);font-weight:800;font-size:clamp(36px,4.6vw,58px);letter-spacing:-.045em;line-height:1;margin:14px 0 16px}
+.cover h1 em{font-style:normal;color:var(--red-500)}
+.cover p{font-size:17.5px;color:var(--ink-600);max-width:56ch;margin-bottom:26px}
+.cover-meta{display:flex;gap:30px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-400)}
+.cover-meta b{display:block;font-weight:500;color:var(--ink-900);margin-top:5px;letter-spacing:.04em}
+
+.sec{padding:68px 0 6px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.sec-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--red-500);letter-spacing:.1em}
+.sec-rule{flex:1;height:1px;background:var(--line)}
+.sec h2{font-family:var(--display);font-weight:700;font-size:31px;letter-spacing:-.03em;margin-bottom:10px}
+.sec h3{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.02em;margin:30px 0 10px}
+.sec p{color:var(--ink-700);margin-bottom:13px;max-width:70ch}
+.sec p.lead{font-size:17px;color:var(--ink-600);max-width:62ch;margin-bottom:20px}
+.sec ul,.sec ol{margin:0 0 15px 20px;color:var(--ink-700);max-width:70ch}
+.sec li{margin-bottom:6px}
+.sec strong{font-weight:600;color:var(--ink-950)}
+code{font-family:var(--mono);font-size:.87em;background:var(--ink-50);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+
+.callout{border:1px solid var(--line);border-left:3px solid var(--red-500);border-radius:var(--r-md);padding:16px 18px;margin:18px 0;background:var(--canvas)}
+.callout b{display:block;font-family:var(--display);font-size:14px;margin-bottom:5px}
+.callout p{margin:0;font-size:14.5px;color:var(--ink-600);max-width:none}
+.callout.info{border-left-color:var(--info)}
+.callout.warn{border-left-color:#B26A00}
+.callout.ok{border-left-color:var(--success)}
+
+.tblwrap{max-width:100%;overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;margin:14px 0 20px;font-size:13.5px;min-width:520px}
+.tbl th{text-align:left;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-500);padding:0 12px 9px;border-bottom:1px solid var(--line-strong)}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink-700);vertical-align:top}
+.tbl td:first-child,.tbl th:first-child{padding-left:0}
+.tbl td.m{font-family:var(--mono);font-size:12px;color:var(--ink-900);white-space:nowrap}
+
+.stage{background:var(--canvas);border:1px solid var(--line);border-radius:var(--r-lg);padding:34px;margin:18px 0 22px;
+  background-image:radial-gradient(var(--ink-200) 1px,transparent 1px);background-size:16px 16px}
+.stage-row{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
+.cap{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-500);text-align:center;margin-top:11px}
+.cap span{display:block;color:var(--ink-400);font-weight:400;letter-spacing:.03em;text-transform:none;margin-top:3px;font-size:10.5px}
+
+/* ---------- app surface (web app screens) ---------- */
+.app{width:420px;background:var(--paper);border-radius:16px;border:1px solid var(--ink-200);box-shadow:var(--sh-float);overflow:hidden;display:flex;flex-direction:column}
+.app-h{display:flex;align-items:center;gap:9px;padding:15px 20px;border-bottom:1px solid var(--line)}
+.app-h svg{width:19px;height:19px}
+.app-h b{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:-.03em}
+.app-b{padding:22px 20px;flex:1}
+.app-f{padding:14px 20px;border-top:1px solid var(--line);background:var(--canvas)}
+
+/* ---------- extension popup ---------- */
+.pop{width:360px;background:var(--paper);border-radius:12px;border:1px solid var(--ink-200);box-shadow:var(--sh-float);overflow:hidden}
+.pop-h{display:flex;align-items:center;gap:8px;padding:13px 15px;border-bottom:1px solid var(--line)}
+.pop-h svg{width:17px;height:17px}
+.pop-h b{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:-.03em}
+.pop-h .ib{margin-left:auto;background:none;border:0;color:var(--ink-400);cursor:pointer;padding:5px;border-radius:6px}
+.pop-b{padding:15px}
+.pop-f{border-top:1px solid var(--line);padding:10px 15px;display:flex;gap:7px;align-items:center;font-size:11.5px;color:var(--ink-500)}
+
+.btn{font-family:var(--body);font-size:14.5px;font-weight:600;line-height:1;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 18px;border-radius:var(--r-md);border:1.5px solid transparent;cursor:pointer;transition:all var(--t-base) var(--ease-out)}
+.btn-primary{background:var(--red-500);color:#fff;box-shadow:var(--sh-brand)}
+.btn-primary:hover{background:var(--red-600);transform:translateY(-1px)}
+.btn-secondary{background:var(--paper);color:var(--ink-900);border-color:var(--line-strong)}
+.btn-secondary:hover{border-color:var(--ink-400);background:var(--ink-50)}
+.btn-ghost{background:none;color:var(--ink-600)}
+.btn-ghost:hover{background:var(--ink-100);color:var(--ink-950)}
+.btn-block{width:100%}
+.btn-sm{font-size:13px;padding:9px 13px}
+.btn[disabled]{background:var(--ink-100);color:var(--ink-400);box-shadow:none;cursor:not-allowed}
+
+.inp{width:100%;font-family:var(--body);font-size:14.5px;color:var(--ink-950);background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r-md);padding:12px 14px;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
+.inp::placeholder{color:var(--ink-400)}
+.inp:focus{outline:none;border-color:var(--red-500);box-shadow:0 0 0 4px rgba(230,11,33,.11)}
+.searchrow{position:relative;margin-bottom:14px}
+.searchrow svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-400)}
+.searchrow .inp{padding-left:36px}
+
+/* card chips + rows */
+.cchip{width:42px;height:28px;border-radius:5px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.18);position:relative;overflow:hidden}
+.cchip::after{content:'';position:absolute;inset:0;background:linear-gradient(var(--wing),transparent 45%,rgba(255,255,255,.16) 50%,transparent 55%)}
+.pickrow{display:flex;align-items:center;gap:13px;padding:12px;border:1.5px solid var(--line);border-radius:var(--r-md);margin-bottom:9px;cursor:pointer;transition:border-color var(--t-fast),background var(--t-fast)}
+.pickrow:hover{border-color:var(--ink-300)}
+.pickrow.on{border-color:var(--red-500);background:var(--red-50)}
+.pickrow .t b{display:block;font-size:13.5px;font-weight:600}
+.pickrow .t span{font-size:11.5px;color:var(--ink-500)}
+.box{width:20px;height:20px;border:1.5px solid var(--line-strong);border-radius:var(--r-sm);display:grid;place-items:center;margin-left:auto;flex-shrink:0;background:#fff;transition:all var(--t-fast)}
+.pickrow.on .box{background:var(--red-500);border-color:var(--red-500);color:#fff}
+.pickrow .box svg{opacity:0}
+.pickrow.on .box svg{opacity:1}
+
+/* wallet card visual */
+.wcard{position:relative;height:132px;border-radius:var(--r-lg);padding:15px;color:#fff;overflow:hidden;box-shadow:var(--sh-md);margin-bottom:11px}
+.wcard::after{content:'';position:absolute;inset:0;background:linear-gradient(var(--wing),transparent 44%,rgba(255,255,255,.10) 50%,transparent 56%)}
+.wcard .nm{font-size:14.5px;font-weight:600}
+.wcard .is{font-size:11.5px;opacity:.62;margin-top:1px}
+.wcard .rate{position:absolute;left:15px;bottom:14px;font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.06em;opacity:.85}
+.wcard .df{position:absolute;right:15px;top:15px;font-size:10.5px;font-weight:600;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:4px 9px;border-radius:var(--r-full)}
+.wcard .mk{position:absolute;right:-18px;bottom:-30px;width:120px;height:120px;opacity:.16}
+
+/* recommendation */
+.rec{position:relative;overflow:hidden;background:linear-gradient(150deg,#1B1D22,#0A0B0D);border-radius:var(--r-xl);padding:18px;color:#fff;box-shadow:var(--sh-lg)}
+.rec::after{content:'';position:absolute;inset:0;background:linear-gradient(var(--wing),transparent 46%,rgba(255,255,255,.07) 50%,transparent 54%);pointer-events:none}
+.rec .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.rec .nm{font-size:15px;font-weight:600}
+.rec .net{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.2);padding:3px 6px;border-radius:5px}
+.rec .rate{display:flex;align-items:flex-end;gap:8px}
+.rec .rate b{font-family:var(--display);font-weight:800;font-size:38px;line-height:1;letter-spacing:-.045em;color:#2BD97C}
+.rec .rate i{font-style:normal;font-size:12px;color:rgba(255,255,255,.6);padding-bottom:5px}
+.rec .why{font-size:12px;line-height:1.5;color:rgba(255,255,255,.55);border-top:1px solid rgba(255,255,255,.09);padding-top:11px;margin-top:12px}
+.rec .chip{position:absolute;right:18px;top:50px;font-size:10.5px;font-weight:600;color:#FF8A96;background:rgba(230,11,33,.17);border:1px solid rgba(230,11,33,.34);padding:4px 9px;border-radius:var(--r-full)}
+
+.gain{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--success-text);background:var(--success-bg);border:1px solid #B9E7D0;padding:6px 11px;border-radius:var(--r-sm)}
+.gain.big{font-size:15px;padding:8px 14px}
+
+.alt{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.alt:last-child{border-bottom:0}
+.alt .t{font-size:12.5px;font-weight:500}
+.alt .v{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--ink-500)}
+
+/* page sim */
+.psim{width:520px;background:#fff;border:1px solid var(--ink-200);border-radius:10px;overflow:hidden;box-shadow:var(--sh-md)}
+.psim-bar{background:var(--ink-100);padding:8px 12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--ink-200)}
+.psim-bar .d{width:8px;height:8px;border-radius:50%;background:var(--ink-300)}
+.psim-bar .u{margin-left:8px;background:#fff;border:1px solid var(--ink-200);border-radius:5px;font-family:var(--mono);font-size:10px;color:var(--ink-500);padding:3px 9px;flex:1}
+.psim-b{padding:16px;position:relative;min-height:300px}
+.fk{background:var(--ink-100);border-radius:5px;height:11px;margin-bottom:8px}
+.fkbtn{background:var(--ink-800);color:#fff;border-radius:7px;padding:12px;text-align:center;font-size:12.5px;font-weight:600;margin-top:16px;width:180px}
+
+.inject{position:absolute;right:16px;top:16px;width:286px;background:var(--ink-950);color:#fff;border-radius:var(--r-lg);padding:14px;box-shadow:var(--sh-float)}
+.inject .hd{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.inject .hd svg{width:16px;height:16px}
+.inject .hd b{font-size:13.5px;font-weight:600}
+.inject .hd .x{margin-left:auto;color:rgba(255,255,255,.45);cursor:pointer}
+.inject .sub{font-size:12px;color:rgba(255,255,255,.6);line-height:1.45;margin-bottom:11px}
+.inject .row{display:flex;align-items:center;gap:8px}
+
+/* OS notification */
+.notif{width:360px;background:rgba(250,250,252,.96);backdrop-filter:blur(20px);border:1px solid var(--ink-200);border-radius:16px;padding:14px;box-shadow:var(--sh-float);display:flex;gap:12px}
+.notif .ic{width:38px;height:38px;border-radius:10px;background:var(--ink-950);display:grid;place-items:center;flex-shrink:0}
+.notif .ic svg{width:20px;height:20px}
+.notif .t b{display:block;font-size:13.5px;font-weight:600;margin-bottom:2px}
+.notif .t p{margin:0;font-size:12.5px;color:var(--ink-600);line-height:1.4;max-width:none}
+.notif .when{margin-left:auto;font-size:11px;color:var(--ink-400);flex-shrink:0}
+
+/* settings list */
+.srow{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.srow:last-child{border-bottom:0}
+.srow .ic{width:32px;height:32px;border-radius:8px;background:var(--ink-50);display:grid;place-items:center;color:var(--ink-600);flex-shrink:0}
+.srow b{font-size:13.5px;font-weight:500}
+.srow .ar{margin-left:auto;color:var(--ink-400)}
+
+.flow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:16px 0 22px}
+.flow .n{border:1px solid var(--line);border-radius:var(--r-md);padding:9px 13px;font-size:12.5px;background:#fff;font-weight:500}
+.flow .n.hl{border-color:var(--red-200);background:var(--red-50);color:var(--red-700);font-weight:600}
+.flow .a{color:var(--ink-300)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0 22px}
+.mini{border:1px solid var(--line);border-radius:var(--r-lg);padding:17px}
+.mini b{font-family:var(--display);font-size:14.5px;display:block;margin-bottom:5px}
+.mini p{font-size:13px;color:var(--ink-600);margin:0;max-width:none}
+.mini .n{font-family:var(--mono);font-size:10px;color:var(--red-500);letter-spacing:.1em;display:block;margin-bottom:7px}
+
+.footer{border-top:1px solid var(--line);margin-top:60px;padding:32px 0 0;font-size:13.5px;color:var(--ink-500)}
+.navdd summary{display:none}
+.navdd>summary{list-style:none}
+
+@media (max-width:1080px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:18px 22px 22px}
+  .side nav{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:2px}
+  .side-group{grid-column:1/-1}
+  .wrap{padding:0 22px}.cover{padding:52px 22px 44px}
+  .navdd summary{display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-600);padding:10px 8px;border:1px solid var(--line);border-radius:var(--r-md)}
+  .navdd summary::after{content:'+';font-size:15px;color:var(--ink-400)}
+  .navdd[open] summary::after{content:'\2212'}
+  .navdd[open] summary{margin-bottom:12px}
+}
+@media (max-width:720px){
+  .grid2{grid-template-columns:1fr}
+  .app,.pop,.psim,.notif{width:100%;max-width:340px}
+  .stage{padding:18px 12px}
+  .sec h2{font-size:25px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><svg width="0" height="0" style="position:absolute"><defs>
+<clipPath id="cSil" clipPathUnits="userSpaceOnUse"><path d="M962.00 95.91L341.94 408.23Q336.58 410.93 333.77 416.23L62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Q446.56 567.69 479.35 555.44L755.59 452.20Q772.45 445.90 781.03 430.08Z"/></clipPath>
+<path id="cPath" d="M962.00 95.91L341.94 408.23Q336.58 410.93 333.77 416.23L62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Q446.56 567.69 479.35 555.44L755.59 452.20Q772.45 445.90 781.03 430.08Z"/>
+<path id="cWing" d="M62.00 928.09L633.20 704.93Q648.10 699.11 656.03 685.21L709.87 590.84Q716.80 578.68 702.94 580.62L385.34 625.07Z"/>
+<g id="cMark"><use href="#cPath" fill="#E60B21"/><g clip-path="url(#cSil)"><use href="#cWing" fill="#BD0C1B" stroke="#BD0C1B" stroke-width="2"/></g></g>
+<g id="cMono"><use href="#cPath" fill="currentColor"/><g clip-path="url(#cSil)"><use href="#cWing" fill="currentColor" opacity=".7"/></g></g>
+</defs></svg><div class="shell"><aside class="side">
+<div class="side-brand"><svg viewBox="0 0 1024 1024"><use href="#cMark"/></svg><b>Cardnal</b></div>
+<div class="side-sub">Rec Engine v0.2</div>
+<details class="navdd" open><summary>Contents</summary><nav>
+<div class="side-group">Frame</div>
+<a href="#scope"><i>00</i>Purpose &amp; Scope</a>
+<a href="#pipeline"><i>01</i>Pipeline</a>
+<div class="side-group">Inputs</div>
+<a href="#merchant"><i>02</i>Merchant Identification</a>
+<a href="#category"><i>03</i>Merchant Category</a>
+<a href="#rules"><i>04</i>Card Reward Rules</a>
+<div class="side-group">Earning</div>
+<a href="#rates"><i>05</i>Base &amp; Bonus Rates</a>
+<a href="#rotating"><i>06</i>Rotating Categories</a>
+<a href="#caps"><i>07</i>Spending Caps</a>
+<a href="#fx"><i>08</i>Foreign Transaction Fees</a>
+<div class="side-group">Preference</div>
+<a href="#currency"><i>09</i>Cash vs. Points</a>
+<a href="#prefs"><i>10</i>User Preferences</a>
+<a href="#bonus"><i>11</i>Welcome Bonuses</a>
+<a href="#offers"><i>12</i>Card Offers</a>
+<div class="side-group">Ranking</div>
+<a href="#weighted"><i>13</i>Preference-Weighted Ranking</a>
+<a href="#ranking"><i>14</i>Tie-Breaking</a>
+<a href="#default"><i>15</i>Default Comparison</a>
+<div class="side-group">Trust</div>
+<a href="#confidence"><i>16</i>Confidence</a>
+<a href="#stale"><i>17</i>Stale Data</a>
+<a href="#explain"><i>18</i>Explanations</a>
+<a href="#abstain"><i>19</i>No Confident Answer</a>
+<div class="side-group">Build</div>
+<a href="#model"><i>20</i>Data Model</a>
+<a href="#open"><i>21</i>Open Decisions</a>
+</nav></details></aside><main class="main"><header class="cover"><div class="cover-in">
+  <div class="cover-meta" style="margin-bottom:6px"><span>Recommendation Engine</span></div>
+  <h1>How Cardnal <em>decides.</em></h1>
+  <p>The logic behind every recommendation — objective card data, the user's stated goals, and how
+     the two combine. No UI, no interface decisions. Where we don't know yet, it says so.</p>
+  <div class="cover-meta">
+    <div>Version<b>0.2</b></div><div>Owner<b>Cardnal</b></div>
+    <div>Co-Founders<b>Suhas · Abhi</b></div><div>Companion to<b>MVP Screens v1.2</b></div>
+  </div>
+</div></header><section class="sec" id="scope"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">00</span><span class="sec-rule"></span></div>
+  <h2>Purpose &amp; Scope</h2>
+
+<p class="lead">This document defines how Cardnal decides which card wins. It contains no UI. Where the
+answer is "we don't know yet", it says so rather than inventing a mechanism.</p>
+<h3>What the engine must do</h3>
+<ol>
+<li>Identify the merchant from the page.</li>
+<li>Assign a category, with a confidence level.</li>
+<li>Compute what each card in the wallet would earn.</li>
+<li>Rank them by objective earn, then re-rank by the user's stated goals.</li>
+<li>Break ties deterministically, and compare to the user's default.</li>
+<li>Produce a one-sentence reason — or decline to recommend.</li>
+</ol>
+<h3>The two halves of a recommendation</h3>
+<p>Cardnal ranks on two kinds of information, and they must never be conflated in code or in copy.</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th></th><th>Objective card data</th><th>User preferences</th></tr>
+<tr><td><strong>Examples</strong></td><td>Reward rate, category, cap, annual fee, FX fee, network, active offer</td><td>Cash vs. points, welcome-bonus priority, preferred ecosystem, FX avoidance</td></tr>
+<tr><td><strong>Source</strong></td><td>Published issuer terms, authored by us</td><td>Stated by the user in onboarding or Settings</td></tr>
+<tr><td><strong>Truth status</strong></td><td>Verifiable. Wrong = a bug.</td><td>Not verifiable. Wrong = we misheard them.</td></tr>
+<tr><td><strong>Changes when</strong></td><td>Issuer changes terms; ruleset version bumps</td><td>User changes their mind; takes effect immediately</td></tr>
+<tr><td><strong>Stored</strong></td><td class="m">Ruleset</td><td class="m">UserState.goals</td></tr>
+<tr><td><strong>In the explanation</strong></td><td>"Earns 5% at Amazon"</td><td>"You told us you prefer travel points"</td></tr>
+</table></div>
+<div class="callout"><b>Why the separation is load-bearing</b>
+<p>If a recommendation is wrong because a rate is wrong, that's our fault and we fix the ruleset. If
+it's "wrong" because the user's goals changed, that's not an error — it's a setting. Collapsing the two
+into one score makes it impossible to tell which is happening, and impossible to explain the answer in
+the two different registers the user needs to hear.</p></div>
+
+<h3>Design constraints</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Constraint</th><th>Consequence</th></tr>
+<tr><td><strong>Rules-based, not learned</strong></td><td>Every recommendation must be explainable in one sentence. A model that can't articulate why fails the product requirement. No ML in v0.1.</td></tr>
+<tr><td><strong>Runs client-side</strong></td><td>200ms budget from detection to answer. The ruleset is cached; the network is an enhancement, not a dependency.</td></tr>
+<tr><td><strong>No transaction data</strong></td><td>We can't observe spend, so caps and cycle progress are user-declared or unknown. Never inferred.</td></tr>
+<tr><td><strong>Abstention is a valid output</strong></td><td>"We don't know" is a first-class result, not an error. Silence beats a wrong answer.</td></tr>
+<tr><td><strong>Deterministic</strong></td><td>Same inputs → same output, always. No randomness, no A/B in the ranking path.</td></tr>
+</table></div>
+<div class="callout"><b>The engine's real job is knowing when to shut up</b>
+<p>Picking the highest number is trivial arithmetic. The engineering difficulty is in the four
+questions around it: is this the right merchant, is this the right category, is this rule still true,
+and is the difference big enough to bother the user. Most of this document is about those four.</p></div>
+
+</div></section>
+<section class="sec" id="pipeline"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">01</span><span class="sec-rule"></span></div>
+  <h2>The Pipeline</h2>
+
+<p class="lead">Eleven stages, each able to abort. An abort is not a failure — it produces a defined
+non-recommendation state that the UI already has a design for.</p>
+<div class="flow">
+  <span class="n">page</span><span class="a">→</span>
+  <span class="n hl">identify merchant</span><span class="a">→</span>
+  <span class="n hl">assign category</span><span class="a">→</span>
+  <span class="n">load rules</span><span class="a">→</span>
+  <span class="n">compute earn</span><span class="a">→</span>
+  <span class="n">apply caps</span><span class="a">→</span>
+  <span class="n hl">rank</span><span class="a">→</span>
+  <span class="n hl">apply goals</span><span class="a">→</span>
+  <span class="n">compare default</span><span class="a">→</span>
+  <span class="n">explain</span>
+</div>
+<div class="tblwrap"><table class="tbl">
+<tr><th>#</th><th>Stage</th><th>Can abort with</th><th>Budget</th></tr>
+<tr><td class="m">1</td><td>Identify merchant</td><td class="m">no_merchant</td><td class="m">&lt;10ms</td></tr>
+<tr><td class="m">2</td><td>Assign category</td><td class="m">no_category</td><td class="m">&lt;5ms</td></tr>
+<tr><td class="m">3</td><td>Load ruleset</td><td class="m">error, stale</td><td class="m">&lt;20ms</td></tr>
+<tr><td class="m">4</td><td>Filter wallet</td><td class="m">no_cards, all_paused</td><td class="m">&lt;1ms</td></tr>
+<tr><td class="m">5</td><td>Compute earn per card</td><td>—</td><td class="m">&lt;5ms</td></tr>
+<tr><td class="m">6</td><td>Apply caps &amp; fees</td><td>—</td><td class="m">&lt;2ms</td></tr>
+<tr><td class="m">7</td><td>Rank by objective earn</td><td class="m">all_equal</td><td class="m">&lt;2ms</td></tr>
+<tr><td class="m">8</td><td><strong>Apply user goals</strong></td><td>—</td><td class="m">&lt;2ms</td></tr>
+<tr><td class="m">9</td><td>Break ties</td><td>—</td><td class="m">&lt;1ms</td></tr>
+<tr><td class="m">10</td><td>Compare to default</td><td>—</td><td class="m">&lt;1ms</td></tr>
+<tr><td class="m">11</td><td>Generate explanation</td><td class="m">error if reason is null</td><td class="m">&lt;1ms</td></tr>
+</table></div>
+<p>Order total extraction runs <strong>in parallel</strong> with stages 1–7 and never blocks them. If it
+resolves late, the delta fades in. If it never resolves, the recommendation still ships without one.</p>
+
+</div></section>
+<section class="sec" id="merchant"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">02</span><span class="sec-rule"></span></div>
+  <h2>Merchant Identification</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">url.hostname</td><td>Primary signal. Normalised: lowercase, strip <code>www.</code>, strip country suffix where the mapping says it's safe.</td></tr><tr><td class="m">url.pathname</td><td>Secondary. Distinguishes marketplaces and sub-brands, e.g. <code>/wholefoods</code> on an Amazon domain.</td></tr><tr><td class="m">document.title</td><td>Tertiary, low trust. Used only to raise confidence, never to establish identity alone.</td></tr><tr><td class="m">merchantMap</td><td>Curated <code>domain → merchantId</code> table shipped in the ruleset.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>{ merchantId, name, confidence: high | medium | low } or null</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>Marketplace sellers.</strong> A third-party seller on Amazon still transacts as Amazon. Match the platform, not the seller.</li><li><strong>Payment processors.</strong> If the hostname is a processor (Shopify checkout, Stripe-hosted), the merchant is the <em>referring</em> site. Carry identity across the redirect or abort.</li><li><strong>Subdomains.</strong> <code>smile.amazon.com</code>, <code>music.amazon.com</code> — same merchant, potentially different category. Match merchant on domain, category on path.</li><li><strong>Regional TLDs.</strong> <code>amazon.co.uk</code> is the same merchant but a foreign transaction for a US card. Merchant matches; the FX flag is set separately.</li><li><strong>Unknown domain.</strong> Abort with <code>no_merchant</code>. Do not fuzzy-match, do not guess from the title alone.</li><li><strong>Domain squatting / lookalikes.</strong> Exact-match only. A near-match to a known merchant is a non-match, deliberately.</li></ul>
+<div class="callout warn"><b>Exact matching only in v0.1</b>
+<p>Fuzzy merchant matching sounds helpful and is the fastest route to a wrong recommendation on a
+phishing lookalike domain. The curated map is the whole mechanism. Coverage grows by adding entries,
+which is boring, safe, and measurable — and "Request this store" gives you the demand signal for
+which entry to add next.</p></div>
+
+</div></section>
+<section class="sec" id="category"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">03</span><span class="sec-rule"></span></div>
+  <h2>Merchant Category</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">merchantId</td><td>Resolved in stage 1.</td></tr><tr><td class="m">categoryMap</td><td><code>merchantId → categoryId</code>, plus optional path overrides.</td></tr><tr><td class="m">url.pathname</td><td>Applies a path override where one exists.</td></tr><tr><td class="m">mccHint</td><td>Optional. If a future data source supplies an MCC, it takes precedence over the map.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>{ categoryId, label, source: domain | path | default, confidence }</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>Multi-category merchants.</strong> Amazon is online retail; Amazon Fresh is groceries; Whole Foods is groceries. Path overrides handle this. Where the path is ambiguous, fall back to the merchant's primary category and mark confidence <code>medium</code>.</li><li><strong>Issuer disagreement.</strong> Issuers classify the same merchant differently — Target may code as a superstore for one card and groceries for another. Category is <strong>per-issuer</strong>, not global. The map is keyed <code>(merchantId, issuerId)</code> where they differ.</li><li><strong>Warehouse clubs, superstores, gas at grocery.</strong> Classic ambiguity. When two categories are plausible, use the one the issuer's own terms name, and if the terms are silent, take the <em>lower-earning</em> interpretation.</li><li><strong>No category.</strong> Abort with <code>no_category</code> — every card earns base rate, which is the <code>all_equal</code> outcome.</li><li><strong>Category changed mid-session.</strong> Recompute silently; never re-animate.</li></ul>
+<div class="callout"><b>The conservative-interpretation rule</b>
+<p>When a category is ambiguous and the issuer's terms don't settle it, assume the interpretation that
+earns <strong>less</strong>. Over-promising a bonus rate that doesn't post is the single fastest way to
+lose a user's trust permanently — they'll see the statement weeks later and remember that we were
+wrong. Under-promising costs nothing.</p></div>
+
+</div></section>
+<section class="sec" id="rules"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">04</span><span class="sec-rule"></span></div>
+  <h2>Card Reward Rules</h2>
+
+<p class="lead">The ruleset is versioned, immutable data. It is authored by us from published issuer
+terms, never scraped at runtime, and never inferred.</p>
+<div style="background:var(--ink-950);border-radius:var(--r-lg);padding:20px 22px;overflow-x:auto;margin:14px 0 20px"><pre style="font-family:var(--mono);font-size:12px;line-height:1.7;color:#C9CED6"><span style="color:#6B727C">// one card in the ruleset</span>
+{
+  cardId: <span style="color:#8FD8B0">'chase_prime_visa'</span>,
+  displayName: <span style="color:#8FD8B0">'Prime Visa'</span>,
+  issuer: <span style="color:#8FD8B0">'chase'</span>,
+  network: <span style="color:#8FD8B0">'visa'</span>,
+  currency: <span style="color:#8FD8B0">'cash'</span>,            <span style="color:#6B727C">// 'cash' | 'UR' | 'MR' | 'venture_miles' | …</span>
+  annualFeeCents: <span style="color:#8FD8B0">0</span>,
+  foreignTxFeePct: <span style="color:#8FD8B0">0</span>,
+  baseRate: { value: <span style="color:#8FD8B0">1</span>, unit: <span style="color:#8FD8B0">'percent'</span> },
+  bonuses: [
+    { categoryId: <span style="color:#8FD8B0">'amazon'</span>,   value: <span style="color:#8FD8B0">5</span>, unit: <span style="color:#8FD8B0">'percent'</span>, cap: <span style="color:#FF9BA6">null</span> },
+    { categoryId: <span style="color:#8FD8B0">'dining'</span>,   value: <span style="color:#8FD8B0">2</span>, unit: <span style="color:#8FD8B0">'percent'</span>, cap: <span style="color:#FF9BA6">null</span> },
+  ],
+  rotating: <span style="color:#FF9BA6">null</span>,
+  termsUrl: <span style="color:#8FD8B0">'https://…'</span>,
+  ratesVerifiedAt: <span style="color:#8FD8B0">'2026-08-01'</span>
+}</pre></div>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Field</th><th>Rule</th></tr>
+<tr><td class="m">currency</td><td>Determines comparability. Two cards are only directly comparable if this matches. See section 09.</td></tr>
+<tr><td class="m">unit</td><td><code>percent</code> for cashback, <code>multiplier</code> for points. Never mixed on one card.</td></tr>
+<tr><td class="m">cap</td><td><code>null</code> means uncapped. A cap object carries <code>{ amountCents, period, resets }</code>.</td></tr>
+<tr><td class="m">ratesVerifiedAt</td><td>Per-card, not per-ruleset. One stale card shouldn't age the whole file.</td></tr>
+<tr><td class="m">termsUrl</td><td>Required. Every rate must be traceable to a published source.</td></tr>
+</table></div>
+<h3>Precedence</h3>
+<ol>
+<li>Merchant-specific bonus (e.g. 5% at Amazon on the Amazon card).</li>
+<li>Active rotating category, if enrolled and within cap.</li>
+<li>Standing category bonus (dining, groceries, travel).</li>
+<li>Base rate.</li>
+</ol>
+<p><strong>Highest applicable rate wins; bonuses never stack</strong> unless the issuer's terms
+explicitly say they do, in which case the ruleset encodes it as a single combined rate rather than
+summing at runtime.</p>
+
+</div></section>
+<section class="sec" id="rates"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">05</span><span class="sec-rule"></span></div>
+  <h2>Base &amp; Bonus Rates</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">card</td><td>Ruleset entry.</td></tr><tr><td class="m">categoryId</td><td>From stage 2.</td></tr><tr><td class="m">merchantId</td><td>For merchant-specific bonuses.</td></tr><tr><td class="m">orderTotalCents</td><td>Optional. Absent for browse-time recommendations.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>{ rate, unit, currency, appliedRule, earned? }</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>No order total.</strong> Return rate only, <code>earned</code> undefined. Everything downstream must tolerate this.</li><li><strong>Rate is a range</strong> (some cards vary by tier). Use the <em>lowest</em> in the range and say so in the reason.</li><li><strong>Promotional / limited-time rates.</strong> Not modelled in v0.1. Encoded only if they have a hard end date in the terms; otherwise ignored.</li><li><strong>Portal-only rates</strong> (issuer shopping portals). Excluded from v0.1 — the user isn't in the portal, so the rate doesn't apply.</li><li><strong>Zero-earn cards.</strong> Legitimate; they simply lose. Never filtered out of the comparison.</li></ul>
+</div></section>
+<section class="sec" id="rotating"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">06</span><span class="sec-rule"></span></div>
+  <h2>Rotating Categories</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">card.rotating</td><td>Quarter definitions with activation requirement.</td></tr><tr><td class="m">today</td><td>Determines the active quarter.</td></tr><tr><td class="m">user.enrolled[cardId][quarter]</td><td><strong>User-declared.</strong> We cannot see enrolment.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>Active bonus rate for this quarter, or base rate if not enrolled / unknown</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>Enrolment unknown.</strong> This is the common case. Treat as <strong>not enrolled</strong> and use base rate — then, if the bonus rate <em>would</em> have won, surface it as a secondary line: &ldquo;If you've activated this quarter's 5% category, Freedom Flex earns more.&rdquo; Never silently assume enrolment.</li><li><strong>Quarter boundary.</strong> Categories change at 00:00 on the first day of the quarter in the issuer's timezone, not the user's. Store the boundary explicitly per issuer.</li><li><strong>Quarter not yet published.</strong> Issuers announce roughly a month ahead. If the upcoming quarter is unknown, the card falls to base rate on that date and the ruleset is flagged for update.</li><li><strong>Activation deadline passed.</strong> If the user never activated and the deadline is gone, that quarter is base rate permanently — no prompt.</li></ul>
+<div class="callout warn"><b>Rotating categories are the biggest correctness risk in the MVP</b>
+<p>They change quarterly, they require activation we can't observe, and they carry caps we can't
+measure. Getting one wrong produces a confidently wrong recommendation. The safe posture is to treat
+rotating bonuses as <strong>inactive unless the user has told us otherwise</strong>, and to present the
+alternative as a conditional line rather than a claim.</p></div>
+
+</div></section>
+<section class="sec" id="caps"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">07</span><span class="sec-rule"></span></div>
+  <h2>Spending Caps</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">bonus.cap</td><td>{ amountCents, period, resets } from the ruleset.</td></tr><tr><td class="m">user.declaredSpend[cardId][categoryId]</td><td><strong>User-declared, optional.</strong> Blank in most cases.</td></tr><tr><td class="m">orderTotalCents</td><td>To detect a purchase that straddles the cap.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>Effective rate after cap logic, plus a capState flag</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>Spend unknown (default).</strong> Assume the cap is <em>not</em> reached. Use the bonus rate. Do not warn — an unprompted &ldquo;you may have hit your cap&rdquo; on every purchase is noise.</li><li><strong>Declared spend ≥ cap.</strong> Drop to base rate for that category and say why in the reason.</li><li><strong>Purchase straddles the cap.</strong> Part earns bonus, part earns base. In v0.1, use the <strong>base rate for the whole purchase</strong> — the conservative interpretation — and note it.</li><li><strong>Cap period reset.</strong> Reset declared spend to zero at the period boundary and stop applying the cap state.</li><li><strong>Cap per statement vs. per calendar year.</strong> Different issuers differ. Store the period type explicitly; never assume calendar.</li></ul>
+<div class="callout info"><b>Why user-declared and not tracked</b>
+<p>Tracking spend against a cap requires transaction data, which requires a bank connection, which is
+explicitly out of MVP scope. The honest alternative is an optional field on the card row and a
+<strong>conservative default of "not reached"</strong>. It's imperfect, and it's better than either
+guessing or building the wrong product to find out.</p></div>
+
+</div></section>
+<section class="sec" id="fx"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">08</span><span class="sec-rule"></span></div>
+  <h2>Foreign Transaction Fees</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">merchant.settlementCurrency</td><td>From the merchant map, where known.</td></tr><tr><td class="m">card.foreignTxFeePct</td><td>From the ruleset.</td></tr><tr><td class="m">orderTotalCents</td><td>To size the fee against the reward.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>netRate = earnRate − foreignTxFeePct, plus an fxApplied flag</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>Currency unknown.</strong> The common case for a US-domain merchant. Assume domestic, apply no fee, set <code>fxApplied: false</code>.</li><li><strong>Foreign merchant, card charges 3%.</strong> A 3% FX fee usually outweighs a 2% reward. The net rate can be <em>negative</em> and the ranking must handle that — a card can lose to a 1% card with no FX fee.</li><li><strong>All cards charge FX.</strong> The fee is then common to every option and doesn't change the ranking, but it still belongs in the explanation.</li><li><strong>FX is the tiebreaker.</strong> When two cards tie on earn rate, the one without an FX fee wins — see section 10.</li><li><strong>Dynamic currency conversion at checkout.</strong> Out of scope. Not detectable from the page.</li></ul>
+</div></section>
+<section class="sec" id="currency"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">09</span><span class="sec-rule"></span></div>
+  <h2>Cash vs. Points</h2>
+
+<p class="lead">The single most consequential decision in this document: <strong>Cardnal does not
+convert points into dollars in v0.1.</strong></p>
+<div class="callout"><b>Why not just use 1¢ per point?</b>
+<p>Because it isn't true, and the error isn't small. A Chase UR point is worth roughly 1¢ redeemed for
+cash and materially more transferred to a partner — the spread depends entirely on how the individual
+redeems. Publishing one number turns a redemption preference into an apparent fact, and it would make
+our maths wrong for most users in one direction or the other. A product whose core promise is
+"we explain our reasoning" cannot rest on an undisclosed valuation.</p></div>
+<h3>Comparability rules</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Winner currency</th><th>Compared card</th><th>Comparable?</th><th>Output</th></tr>
+<tr><td>cash</td><td>cash</td><td class="m" style="color:var(--success-text)">yes</td><td>Dollar delta.</td></tr>
+<tr><td>UR</td><td>UR</td><td class="m" style="color:var(--success-text)">yes</td><td>Points delta and multipliers. No dollars.</td></tr>
+<tr><td>UR</td><td>MR</td><td class="m" style="color:var(--alert)">no</td><td>Both shown, neither declared better.</td></tr>
+<tr><td>cash</td><td>UR</td><td class="m" style="color:var(--alert)">no</td><td>Two separate lists, winner within each.</td></tr>
+</table></div>
+<h3>Which card is recommended when both a cash and a points card exist?</h3>
+<p><strong>The cashback winner</strong> — with the points alternative named on a secondary line. The
+reasoning: cash value is certain and immediate, points value is contingent on future behaviour we
+can't observe. Certainty beats theoretical maximum when we're the ones being trusted.</p>
+<div style="background:var(--ink-950);border-radius:var(--r-lg);padding:20px 22px;overflow-x:auto;margin:14px 0 20px"><pre style="font-family:var(--mono);font-size:12px;line-height:1.7;color:#C9CED6"><span style="color:#6B727C">// comparability is computed, never assumed by the UI</span>
+<span style="color:#8FD8B0">function</span> comparable(a, b) {
+  <span style="color:#8FD8B0">return</span> a.currency === b.currency;
+}
+
+<span style="color:#6B727C">// ranking within a currency group only</span>
+<span style="color:#8FD8B0">const</span> groups = groupBy(cards, c => c.currency);
+<span style="color:#8FD8B0">const</span> winners = mapValues(groups, g => rank(g)[0]);
+<span style="color:#8FD8B0">const</span> headline = winners[<span style="color:#8FD8B0">'cash'</span>] ?? highestConfidenceGroup(winners);</pre></div>
+<div class="callout warn"><b>"Best overall value" is the exception, and it costs something</b>
+<p>Section 10 lets a user choose <em>Best overall value</em> as their goal. That goal is only meaningful
+if points can be compared to cash — which requires exactly the valuation this section refuses to assume.
+The resolution: <strong>choosing that goal is the user opting in to a disclosed valuation.</strong> When
+it's selected, Cardnal uses a published, per-currency table (baseline: the issuer's own cash-redemption
+rate, never a travel-blog aspirational figure), shows the figure it used, and lets the user override it.
+Every other goal leaves cross-currency comparison switched off.</p></div>
+<div class="callout info"><b>The default valuation is deliberately pessimistic</b>
+<p>We value points at the rate the issuer will give you in cash — typically 1.0¢, sometimes 0.6¢ — not
+at transfer-partner potential. A user who transfers well will do better than we predicted, which is the
+right direction to be wrong in. Any figure shown carries "at cash-redemption value" next to it.</p></div>
+
+</div></section>
+<section class="sec" id="prefs"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">10</span><span class="sec-rule"></span></div>
+  <h2>User Preferences</h2>
+
+<p class="lead">Preferences are the second input to every ranking. They're stated, not inferred, and
+they're a ranked list rather than a single choice — most people want more than one thing.</p>
+
+<h3>The goal set</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Goal</th><th class="m">id</th><th>Effect on ranking</th></tr>
+<tr><td><strong>Cash back</strong></td><td class="m">cash</td><td>Cash-currency cards get preference weight. Points cards can still win, but only by the override margin.</td></tr>
+<tr><td><strong>Points &amp; miles</strong></td><td class="m">points</td><td>Transferable-currency cards get preference weight. Fixed-value points rank below transferable.</td></tr>
+<tr><td><strong>Welcome bonuses</strong></td><td class="m">welcome_bonus</td><td>Any card with an <em>active, incomplete</em> bonus requirement gets the strongest weight in the system. See section 11.</td></tr>
+<tr><td><strong>Card offers</strong></td><td class="m">offers</td><td>Cards with an activated merchant offer matching this merchant get weight. See section 12.</td></tr>
+<tr><td><strong>Best overall value</strong></td><td class="m">best_value</td><td>Enables cross-currency comparison using the disclosed valuation. Ranks purely on estimated dollar value.</td></tr>
+</table></div>
+
+<h3>Ranked, not exclusive</h3>
+<p>The user orders up to three goals. Position determines weight:</p>
+<div style="background:var(--ink-950);border-radius:var(--r-lg);padding:20px 22px;overflow-x:auto;margin:14px 0 20px"><pre style="font-family:var(--mono);font-size:12px;line-height:1.7;color:#C9CED6"><span style="color:#6B727C">// weights are multipliers on the objective score</span>
+<span style="color:#8FD8B0">const</span> GOAL_WEIGHT = { 1: <span style="color:#8FD8B0">1.00</span>, 2: <span style="color:#8FD8B0">0.60</span>, 3: <span style="color:#8FD8B0">0.30</span> };
+
+<span style="color:#6B727C">// example: [welcome_bonus, points, cash]</span>
+<span style="color:#6B727C">//   a card advancing a welcome bonus  → weight 1.00</span>
+<span style="color:#6B727C">//   a transferable-points card        → weight 0.60</span>
+<span style="color:#6B727C">//   a cashback card                   → weight 0.30</span>
+<span style="color:#6B727C">//   a card matching none of the goals → weight 0.00 (objective score only)</span></pre></div>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Rule</th><th>Detail</th></tr>
+<tr><td>Maximum three goals</td><td>Beyond three, the weights are too close to change any outcome and the UI becomes a chore.</td></tr>
+<tr><td>Minimum one</td><td>Default for a new user is <code>[best_value]</code> — but the onboarding screen asks, so most users never sit on the default.</td></tr>
+<tr><td><code>best_value</code> is exclusive</td><td>It can't be combined with others. It <em>is</em> the "just work it out" option; mixing it with a preference contradicts it.</td></tr>
+<tr><td>Changing goals</td><td>Takes effect on the next recommendation. Never recomputes history, never notifies.</td></tr>
+<tr><td>No goals set</td><td>Behaves as <code>best_value</code> with cross-currency comparison <strong>off</strong> — so cash and points rank separately, as in v0.1.</td></tr>
+</table></div>
+
+<h3>The override rule</h3>
+<div class="callout"><b>Preferences bend the ranking. They must not break it.</b>
+<p>A user who prefers points still wants to know when a cashback card earns dramatically more. If the
+top objective card beats the top preference-weighted card by more than the <strong>override margin</strong>,
+the objective winner is recommended anyway — and the explanation says why it overrode the preference.</p></div>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Comparison</th><th>Override margin</th><th>Example</th></tr>
+<tr><td>Same currency</td><td><strong>2× the rate</strong>, or <strong>$10</strong> absolute, whichever is smaller</td><td>5% cash vs. 2% cash — recommend the 5% even if the 2% card is the preferred product.</td></tr>
+<tr><td>Cross-currency</td><td><strong>3× the rate</strong></td><td>5% cash vs. 4x points: 5% doesn't clear 3× of a 1x-equivalent baseline, so the points preference holds.</td></tr>
+<tr><td>Welcome bonus active</td><td><strong>No override.</strong></td><td>A bonus worth hundreds outweighs any per-purchase rate difference. Section 11.</td></tr>
+</table></div>
+<p>This is the mechanism behind "don't recommend my Amex unless it's substantially better" —
+<em>substantially</em> is 2× same-currency, 3× cross-currency, and it's a published number rather than
+a feeling.</p>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">user.goals[]</td><td>Ranked list of 1–3 goal ids.</td></tr><tr><td class="m">candidates[]</td><td>Cards with objective scores from stage 7.</td></tr><tr><td class="m">valuationEnabled</td><td>True only when the goal is <code>best_value</code>.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>Re-ranked candidates, each with { objectiveScore, goalWeight, finalScore, overrodePreference }</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>No card matches any goal.</strong> All weights are 0; ranking is purely objective. Explanation omits the preference clause entirely.</li><li><strong>Every card matches the top goal.</strong> Weights cancel out; ranking is objective again. Do not manufacture a preference reason.</li><li><strong>Goal is unsatisfiable here</strong> (e.g. <code>offers</code> but no offers at this merchant). Fall through to the next goal in the list silently.</li><li><strong>Preference and objective agree.</strong> The common case. Lead with the objective reason; mention the preference only if it's the tiebreaker.</li><li><strong>Override triggered.</strong> <code>overrodePreference: true</code> — the explanation must acknowledge it, never silently contradict what the user asked for.</li></ul>
+</div></section>
+<section class="sec" id="bonus"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">11</span><span class="sec-rule"></span></div>
+  <h2>Welcome Bonuses</h2>
+
+<p class="lead">The highest-value signal in the whole engine, and the one built on the shakiest data.
+A $900 bonus dwarfs every per-purchase rate difference — which is exactly why the tracking has to be
+honest about what it doesn't know.</p>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">user.bonusProgress[cardId]</td><td><strong>User-declared:</strong> { requiredCents, spentCents, deadline }.</td></tr><tr><td class="m">orderTotalCents</td><td>To compute remaining after this purchase.</td></tr><tr><td class="m">today</td><td>Against the deadline.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>{ active, remainingCents, daysLeft, atRisk, wouldComplete }</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>No bonus declared.</strong> The overwhelmingly common case. The goal simply has nothing to act on; fall through to the next goal.</li><li><strong>Deadline passed.</strong> Mark inactive, stop weighting, and tell the user once so they can clear it.</li><li><strong>Requirement already met.</strong> Mark complete, stop weighting. Prompt once to confirm and remove.</li><li><strong>This purchase completes it.</strong> Strongest possible signal — say so explicitly: \u201cThis purchase completes your welcome bonus.\u201d</li><li><strong>At risk</strong> — remaining spend exceeds what's plausible in the days left. Still weight it, but do not create urgency in the copy. State the facts.</li><li><strong>Multiple active bonuses.</strong> Weight the one with the nearest deadline. Never split a purchase across two.</li><li><strong>Spend tracking drifts.</strong> We only know what the user told us. Show the declared figure and its date in the explanation so they can sanity-check it.</li></ul>
+<div class="callout warn"><b>We cannot track bonus progress ourselves</b>
+<p>Progress requires transaction data, which requires a bank connection, which is out of MVP scope by
+deliberate choice. So the number comes from the user: a card row field reading "spent about $X of
+$Y by {date}". <strong>Blank means no active bonus</strong> — never assume one, and never estimate
+progress from anything.</p></div>
+<div class="callout info"><b>Why this goal has no override</b>
+<p>Every other preference bends when the objective difference is large enough. Welcome bonus doesn't,
+because the magnitudes aren't comparable: 3% versus 5% on a $284 purchase is $5.68, while completing a
+bonus is often several hundred dollars. When a bonus is genuinely active and incomplete, the per-purchase
+rate is close to noise.</p></div>
+
+</div></section>
+<section class="sec" id="offers"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">12</span><span class="sec-rule"></span></div>
+  <h2>Card Offers</h2>
+
+<p class="lead">Merchant-specific offers (Amex Offers, Chase Offers, and similar) can beat any base
+category rate — 10% back at one merchant for one month. They're also the most volatile data in the
+system and the hardest to verify.</p>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">user.activatedOffers[cardId][]</td><td><strong>User-declared:</strong> { merchantId, value, unit, expires, minSpendCents }.</td></tr><tr><td class="m">merchantId</td><td>From stage 1.</td></tr><tr><td class="m">orderTotalCents</td><td>To check the offer's minimum spend.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>{ hasOffer, offerValue, meetsMinimum, expiresInDays }</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>Offer not activated.</strong> Most issuer offers require activation. If the user hasn't marked it activated, treat it as unavailable and mention it conditionally at most.</li><li><strong>Minimum spend not met.</strong> Offer doesn't apply. Do not tell them to spend more to reach it — that's the opposite of our job.</li><li><strong>Offer expired.</strong> Drop it silently and clear the record.</li><li><strong>Offer stacks with the base rate.</strong> Usually true, but issuer-dependent. Encode <code>stacks: boolean</code> per offer; when unknown, assume it does <strong>not</strong> stack.</li><li><strong>Multiple cards have an offer here.</strong> Rank by total value after the base rate, not by offer size alone.</li><li><strong>Offer is a statement credit, not a rate.</strong> Model as a fixed cents value, not a percentage.</li></ul>
+<div class="callout warn"><b>Offers are v0.2's weakest data and should ship last</b>
+<p>They change weekly, they're per-user, they require activation we can't see, and they're not published
+in any structured form. For the MVP this is a <strong>user-declared field with no automated source</strong>,
+and the goal should be presented as such: "Cardnal will factor in offers you've told us about." If that
+feels too manual to be useful, the honest move is to cut the goal from the launch set rather than fake
+the coverage.</p></div>
+
+</div></section>
+<section class="sec" id="weighted"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">13</span><span class="sec-rule"></span></div>
+  <h2>Preference-Weighted Ranking</h2>
+
+<p class="lead">How the two halves combine. The objective score is computed first and stays inspectable;
+preferences multiply it, they never replace it.</p>
+<div style="background:var(--ink-950);border-radius:var(--r-lg);padding:20px 22px;overflow-x:auto;margin:14px 0 20px"><pre style="font-family:var(--mono);font-size:12px;line-height:1.7;color:#C9CED6"><span style="color:#6B727C">// stage 7 — objective, preference-free</span>
+objectiveScore = earnedCents ?? (netRate × 100)     <span style="color:#6B727C">// cents where a total exists</span>
+
+<span style="color:#6B727C">// stage 8 — apply goals</span>
+goalWeight     = maxWeightOfMatchingGoals(card, user.goals)   <span style="color:#6B727C">// 0, 0.30, 0.60 or 1.00</span>
+finalScore     = objectiveScore × (1 + goalWeight)
+
+<span style="color:#6B727C">// override guard — objective truth wins when the gap is large</span>
+<span style="color:#8FD8B0">if</span> (topObjective.objectiveScore >= topFinal.objectiveScore × OVERRIDE_MULTIPLE
+    <span style="color:#FF9BA6">&&</span> !topFinal.hasActiveWelcomeBonus) {
+  winner = topObjective;
+  winner.overrodePreference = <span style="color:#8FD8B0">true</span>;
+}</pre></div>
+<h3>Worked example — your restaurant case</h3>
+<p>Purchase: $200 at a restaurant. Wallet: Amex Gold (4x MR dining), Card B (5% cash dining),
+Card C (2% cash, $300 remaining on an active welcome bonus).</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th>User goals</th><th>Winner</th><th>Why</th></tr>
+<tr><td class="m">[cash]</td><td><strong>Card B</strong></td><td>5% cash is both the objective cash winner and the preferred currency. $10.00 back.</td></tr>
+<tr><td class="m">[points]</td><td><strong>Amex Gold</strong></td><td>800 MR. Card B's 5% doesn't clear the 3× cross-currency override margin, so the preference holds.</td></tr>
+<tr><td class="m">[welcome_bonus, cash]</td><td><strong>Card C</strong></td><td>Bonus is active and incomplete. No override applies. $200 of $300 remaining is cleared.</td></tr>
+<tr><td class="m">[best_value]</td><td><strong>Card B</strong></td><td>At cash-redemption valuation, 800 MR ≈ $8.00 vs. $10.00 cash. Shown with the valuation stated.</td></tr>
+<tr><td class="m">[points]</td><td><strong>Card B</strong> <span style="color:var(--ink-500)">(override)</span></td><td>If Card B earned 15% instead of 5%, it clears 3× and wins despite the points preference — explanation acknowledges the override.</td></tr>
+</table></div>
+<div class="callout ok"><b>This is the part that makes Cardnal more than a rate calculator</b>
+<p>Four different correct answers to the same purchase, each explainable in one sentence, each traceable
+to something the user actually told us. A database of 5x categories can't produce that.</p></div>
+
+</div></section>
+<section class="sec" id="ranking"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">14</span><span class="sec-rule"></span></div>
+  <h2>Tie-Breaking</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">candidates[]</td><td>Every non-paused card with a computed net rate.</td></tr><tr><td class="m">currencyGroup</td><td>Ranking happens within a group, never across.</td></tr><tr><td class="m">orderTotalCents</td><td>Optional; changes sorting from rate to absolute earn where present.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>{ winner, alternates[], isTie, tiebreaker }</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>Sort key.</strong> With an order total, sort by absolute earn. Without one, sort by net rate. These can disagree when caps straddle — prefer absolute earn.</li><li><strong>Tie threshold.</strong> Two cards tie if their rates are within <strong>0.5 percentage points</strong>, or their earn is within <strong>$0.50</strong>.</li><li><strong>All cards within 0.25pp.</strong> Emit <code>all_equal</code> — no winner, no recommendation. Interrupting someone for a rounding difference is a net negative.</li><li><strong>Single card in wallet.</strong> It wins by definition. Flag <code>trivialWin: true</code> so the UI can nudge for a second card instead of pretending it made a choice.</li><li><strong>Negative net rate</strong> (FX fee exceeds reward). Still ranked; may legitimately lose to a lower-earning card.</li></ul>
+<h3>Tie-breaking, in strict order</h3>
+<ol>
+<li><strong>No foreign transaction fee</strong> — only when the merchant is foreign or currency is unknown-but-suspected-foreign.</li>
+<li><strong>No annual fee</strong> — a $0 card beats a $95 card at equal earn.</li>
+<li><strong>Uncapped over capped</strong> — preserves the user's capped headroom for later.</li>
+<li><strong>The user's default card</strong> — if it's tied for first, it wins. Do not move someone off their habit for zero gain.</li>
+<li><strong>Alphabetical by <code>cardId</code></strong> — a deterministic last resort so the same inputs always produce the same output.</li>
+</ol>
+<p>When a tie is broken by rules 1–3, <strong>the tiebreaker is named in the explanation</strong> and the
+UI shows both cards. Rules 4 and 5 are silent — they're arbitration, not reasoning.</p>
+
+</div></section>
+<section class="sec" id="default"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">15</span><span class="sec-rule"></span></div>
+  <h2>Default Comparison</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">winner</td><td>Result of stage 7.</td></tr><tr><td class="m">defaultCard</td><td><code>user.defaultCardId</code>, may be null.</td></tr><tr><td class="m">orderTotalCents</td><td>Required for a dollar delta.</td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>{ comparable, deltaCents | null, defaultIsWinner, suppressedReason }</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>No default set.</strong> <code>comparable: false</code>, <code>suppressedReason: 'no_default'</code>. Every delta suppressed product-wide.</li><li><strong>Default is the winner.</strong> <code>defaultIsWinner: true</code>. The UI says so explicitly — this is a trust-building moment, not a null result.</li><li><strong>Default is paused or removed.</strong> Treat as no default. Prompt once to pick a new one.</li><li><strong>Cross-currency.</strong> <code>comparable: false</code>, <code>suppressedReason: 'cross_currency'</code>.</li><li><strong>No order total.</strong> <code>suppressedReason: 'no_total'</code>. Rate difference may still be described in words.</li><li><strong>Delta below $1.00.</strong> <code>suppressedReason: 'below_threshold'</code>. Computed but not shown.</li><li><strong>Rounding.</strong> Always round the delta <strong>down</strong> to the cent.</li></ul>
+<div class="callout"><b>The delta is a claim, and claims need standards</b>
+<p>Every dollar figure Cardnal shows is a promise the user will check against a statement weeks later.
+The suppression rules exist so that the figure is either right or absent. There is no acceptable
+middle ground where it's approximately right — an &ldquo;about $11&rdquo; that arrives as $4 costs the account.</p></div>
+
+</div></section>
+<section class="sec" id="confidence"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">16</span><span class="sec-rule"></span></div>
+  <h2>Confidence</h2>
+
+<p class="lead">Confidence isn't decoration — it gates behaviour. Low confidence changes what the
+product is allowed to say.</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Level</th><th>Established by</th><th>Product may…</th></tr>
+<tr><td class="m">high</td><td>Exact domain match in the curated map, category from domain or an explicit path override</td><td>Show the recommendation, the delta, and send notifications.</td></tr>
+<tr><td class="m">medium</td><td>Domain matched, category inferred from a fallback or a merchant with multiple plausible categories</td><td>Show the recommendation and the delta. <strong>No notification.</strong> State the category source in the explanation.</td></tr>
+<tr><td class="m">low</td><td>Anything weaker — title-based guesses, partial matches, unresolved redirects</td><td><strong>Nothing.</strong> Treated as <code>no_merchant</code>.</td></tr>
+</table></div>
+<p>There is no numeric confidence score in v0.1. Three named levels are easier to reason about,
+easier to test, and don't imply a precision we can't justify. A score would invite thresholds nobody
+can defend.</p>
+<div class="callout info"><b>Confidence is per-stage and takes the minimum</b>
+<p>Merchant confidence and category confidence are tracked separately, and the recommendation's overall
+confidence is the <strong>lower of the two</strong>. A perfectly identified merchant with an ambiguous
+category is a medium-confidence recommendation.</p></div>
+
+</div></section>
+<section class="sec" id="stale"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">17</span><span class="sec-rule"></span></div>
+  <h2>Stale Reward Data</h2>
+<div class="tblwrap"><table class="tbl"><tr><th>Input</th><th>Description</th></tr><tr><td class="m">card.ratesVerifiedAt</td><td>Per-card verification date.</td></tr><tr><td class="m">ruleset.fetchedAt</td><td>When the client last successfully refreshed.</td></tr><tr><td class="m">today</td><td></td></tr><tr><td class="m" style="color:var(--red-600)">→ output</td><td><strong>{ ageDays, staleness: fresh | aging | stale | expired }</strong></td></tr></table></div><h3>Edge cases</h3><ul><li><strong>0–7 days (fresh).</strong> Full behaviour, no notice.</li><li><strong>8–30 days (aging).</strong> Recommendation shown; <strong>delta suppressed</strong>; amber notice; notifications off.</li><li><strong>31–90 days (stale).</strong> Recommendation shown at reduced emphasis with an explicit &ldquo;verify with your issuer&rdquo; line. No delta, no notifications.</li><li><strong>&gt;90 days (expired).</strong> <strong>No recommendation.</strong> Show the refresh path only. A three-month-old rotating category is likely wrong.</li><li><strong>Refresh fails while offline.</strong> Age keeps counting; the same thresholds apply. Offline is not an excuse to show stale rates confidently.</li><li><strong>A single card is stale but others are fresh.</strong> Rank without the stale card and note its exclusion, rather than ageing the whole recommendation.</li></ul>
+<div class="callout warn"><b>Rotating-category cards age fastest</b>
+<p>A card with a rotating bonus should be treated as aging after <strong>the quarter it was verified
+in ends</strong>, regardless of day count. A rate verified on March 30th is stale on April 1st.</p></div>
+
+</div></section>
+<section class="sec" id="explain"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">18</span><span class="sec-rule"></span></div>
+  <h2>Recommendation Explanations</h2>
+
+<p class="lead">The explanation is a required output of the engine, not a string composed in the view.
+If the engine can't produce one, it hasn't produced a recommendation.</p>
+<h3>Template set</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Rule applied</th><th>Reason string</th></tr>
+<tr><td class="m">merchant_bonus</td><td>Highest rewards for {merchant} purchases.</td></tr>
+<tr><td class="m">category_bonus</td><td>{category} bonus — {rate} vs. {baseRate} on your other cards.</td></tr>
+<tr><td class="m">rotating_active</td><td>{category} is this quarter's rotating category.</td></tr>
+<tr><td class="m">rotating_unknown</td><td>If you've activated this quarter's {category} bonus, {card} earns {rate}.</td></tr>
+<tr><td class="m">cap_reached</td><td>{otherCard} has hit its {cap} {category} cap and now earns {baseRate}.</td></tr>
+<tr><td class="m">fx_advantage</td><td>No foreign transaction fee — worth more than the {delta} rate difference.</td></tr>
+<tr><td class="m">tie_broken</td><td>Either works. {card} has no {tiebreaker}.</td></tr>
+<tr><td class="m">base_only</td><td>Every card earns {rate} here. Use whichever you prefer.</td></tr>
+</table></div>
+<h3>Preference-aware templates</h3>
+<p>When a goal changed the outcome, the explanation must say so — in the user's own framing, not ours.</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Situation</th><th>Reason string</th></tr>
+<tr><td class="m">goal_points</td><td>You told us you prefer travel points. Earn {multiplier} on this purchase.</td></tr>
+<tr><td class="m">goal_cash</td><td>You prioritise cash back. This card earns {rate} here.</td></tr>
+<tr><td class="m">goal_bonus_progress</td><td>You're ${remaining} away from earning your welcome bonus.</td></tr>
+<tr><td class="m">goal_bonus_complete</td><td>This purchase completes your welcome bonus.</td></tr>
+<tr><td class="m">goal_offer</td><td>You activated a {offerValue} offer at {merchant} on this card.</td></tr>
+<tr><td class="m">goal_best_value</td><td>Highest estimated value here — {value} at cash-redemption rates.</td></tr>
+<tr><td class="m">override_preference</td><td>Normally we'd suggest {preferredCard}, but this earns {multiple}× more here.</td></tr>
+<tr><td class="m">goal_unsatisfiable</td><td>No {goal} option at this merchant — this is your best card otherwise.</td></tr>
+</table></div>
+<div class="callout"><b>Two registers, never mixed in one sentence</b>
+<p>Objective reasons state a fact about the card: "Highest rewards for Amazon purchases." Preference
+reasons state something the user told us: "You told us you prefer travel points." A sentence that does
+both becomes long and slightly patronising. Pick the one that actually decided the outcome.</p></div>
+<h3>Constraints</h3>
+<ul>
+<li><strong>One sentence, under 60 characters where possible</strong>, hard cap 90. It must never truncate in the UI.</li>
+<li><strong>Names the deciding factor</strong>, not the outcome. "Highest rewards for Amazon" explains; "This is your best card" restates.</li>
+<li><strong>No hedging words</strong> — "may", "could", "potentially" — except in the <code>rotating_unknown</code> template, where the conditional is the point.</li>
+<li><strong>Never references Cardnal.</strong> "We think", "Cardnal recommends" adds nothing and consumes the character budget.</li>
+<li><strong>Templates are versioned with the ruleset</strong>, so a rule change and its explanation ship together.</li>
+</ul>
+
+</div></section>
+<section class="sec" id="abstain"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">19</span><span class="sec-rule"></span></div>
+  <h2>When Cardnal Can't Be Confident</h2>
+
+<p class="lead">Abstention is a designed outcome with its own return values. Every one of these maps to
+a screen that already exists in the MVP spec.</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Status</th><th>Cause</th><th>Panel</th><th>Notification</th></tr>
+<tr><td class="m">no_merchant</td><td>Domain not in the map, or confidence low</td><td>Informational</td><td>No</td></tr>
+<tr><td class="m">no_category</td><td>Merchant known, category unresolvable</td><td>Treated as all_equal</td><td>No</td></tr>
+<tr><td class="m">no_cards</td><td>Empty wallet</td><td>Nothing on page; badge in toolbar</td><td>No</td></tr>
+<tr><td class="m">all_paused</td><td>Every card disabled</td><td>Nothing on page</td><td>No</td></tr>
+<tr><td class="m">all_equal</td><td>Spread under 0.25pp</td><td>Informational</td><td>No</td></tr>
+<tr><td class="m">expired</td><td>Ruleset older than 90 days</td><td>Refresh prompt only</td><td>No</td></tr>
+<tr><td class="m">error</td><td>Ruleset unavailable, no cache</td><td>Nothing on page</td><td>No</td></tr>
+</table></div>
+<div class="callout"><b>The abstention bar is deliberately low</b>
+<p>Seven of the engine's possible outputs are "say nothing useful". That ratio is correct for a product
+that appears uninvited on someone else's checkout page. The cost of a missed recommendation is one
+lost cent-fraction; the cost of a wrong one is the install. <strong>When any stage is uncertain, the
+whole pipeline abstains.</strong></p></div>
+<h3>What abstention must never do</h3>
+<ul>
+<li>Never fall back to "use your default card" as though it were a recommendation. If we don't know, we don't know.</li>
+<li>Never show a rate we haven't verified for this merchant and category.</li>
+<li>Never show a dollar figure derived from an assumed total.</li>
+<li>Never retry silently in a loop — two attempts, then a defined failure state.</li>
+</ul>
+
+</div></section>
+<section class="sec" id="model"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">20</span><span class="sec-rule"></span></div>
+  <h2>Data Model</h2>
+
+<p class="lead">Minimum data required to run the pipeline. Nothing here is a card number, a credential,
+or a transaction.</p>
+<div style="background:var(--ink-950);border-radius:var(--r-lg);padding:20px 22px;overflow-x:auto;margin:14px 0 20px"><pre style="font-family:var(--mono);font-size:12px;line-height:1.7;color:#C9CED6"><span style="color:#6B727C">// ---- shipped by us, versioned, cached client-side ----</span>
+Ruleset {
+  version, publishedAt,
+  merchants: { domain → { merchantId, name, primaryCategoryId, pathOverrides[] } },
+  categories: { categoryId → { label, issuerOverrides{} } },
+  cards: { cardId → CardRule },
+  totalSelectors: { merchantId → { selector, validator } }
+}
+
+<span style="color:#6B727C">// ---- owned by the user, local ----</span>
+UserState {
+  cards: [{ cardId, nickname, paused, addedAt }],
+  defaultCardId: string | <span style="color:#FF9BA6">null</span>,
+  goals: [<span style="color:#8FD8B0">'welcome_bonus'</span>, <span style="color:#8FD8B0">'points'</span>, <span style="color:#8FD8B0">'cash'</span>],       <span style="color:#6B727C">// ranked, max 3</span>
+  valuation: { enabled: <span style="color:#8FD8B0">false</span>, perPoint: { MR: <span style="color:#8FD8B0">1.0</span>, UR: <span style="color:#8FD8B0">1.0</span> } },  <span style="color:#6B727C">// only for best_value</span>
+  bonusProgress: { cardId → { requiredCents, spentCents, deadline } },   <span style="color:#6B727C">// declared</span>
+  activatedOffers: { cardId → [{ merchantId, value, unit, expires }] },  <span style="color:#6B727C">// declared</span>
+  declaredSpend: { <span style="color:#8FD8B0">'cardId:categoryId'</span> → { cents, period } },   <span style="color:#6B727C">// optional</span>
+  enrolled: { <span style="color:#8FD8B0">'cardId:2026Q3'</span> → boolean },                  <span style="color:#6B727C">// optional</span>
+  muted: [domain],
+  settings: { showBanner, notifications, countAnnualFees }
+}
+
+<span style="color:#6B727C">// ---- computed per page, never persisted ----</span>
+Context { merchantId, categoryId, orderTotalCents?, currency?, confidence }</pre></div>
+<div class="tblwrap"><table class="tbl">
+<tr><th>Store</th><th>Where</th><th>Refresh</th></tr>
+<tr><td>Ruleset</td><td><code>chrome.storage.local</code></td><td>Daily, on service-worker wake. Bundled copy ships with the extension as a floor.</td></tr>
+<tr><td>UserState</td><td><code>chrome.storage.local</code>, synced later</td><td>On write</td></tr>
+<tr><td>Context</td><td>Memory only</td><td>Per page load</td></tr>
+</table></div>
+<p><strong>No PANs, no CVVs, no credentials, no transactions.</strong> The engine works entirely from
+card <em>identity</em> plus public reward terms — which is what keeps Cardnal outside PCI scope.</p>
+
+</div></section>
+<section class="sec" id="open"><div class="wrap">
+  <div class="sec-head"><span class="sec-num">21</span><span class="sec-rule"></span></div>
+  <h2>Open Decisions</h2>
+
+<p class="lead">Decisions this document deliberately leaves open, with the tradeoff stated so they can
+be closed properly rather than by default.</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th>#</th><th>Question</th><th>Tradeoff</th><th>Needed by</th></tr>
+<tr><td class="m">1</td><td>Launch merchant coverage — 20 merchants deeply, or 200 shallowly?</td><td>Depth means accurate categories and working total-extraction. Breadth means more users see something. Depth is probably right for v0.1.</td><td>Before ruleset authoring</td></tr>
+<tr><td class="m">2</td><td>Card catalog size at launch</td><td>Every added card is ongoing verification work. ~50 cards covers most wallets; 200 covers almost all and triples maintenance.</td><td>Before onboarding build</td></tr>
+<tr><td class="m">3</td><td>Who authors and verifies reward rules?</td><td>This is a recurring editorial job, not a one-off import. It needs an owner and a cadence or the whole product silently rots.</td><td>Before launch</td></tr>
+<tr><td class="m">4</td><td>Points valuation — ever?</td><td>Enables cross-currency comparison and a bigger apparent value story, at the cost of publishing a number we'd have to defend.</td><td>Post-MVP</td></tr>
+<tr><td class="m">5</td><td>Cap tracking without bank data</td><td>User-declared is imperfect. The alternative is a bank connection that changes the product's risk profile entirely.</td><td>Post-MVP</td></tr>
+<tr><td class="m">6</td><td>Do card offers ship at launch at all?</td><td>Fully user-declared and weekly-volatile. A goal the product can barely honour is worse than one fewer goal.</td><td>Before onboarding copy is final</td></tr>
+<tr><td class="m">7</td><td>Published valuation table — who owns the numbers?</td><td>Choosing 1.0¢ vs 0.6¢ per point is a defensible editorial call that users will argue with. It needs an owner and a stated methodology, same as the reward rules.</td><td>Before best_value ships</td></tr>
+<tr><td class="m">8</td><td>Override margins: 2× / 3× — are these right?</td><td>Too low and preferences feel ignored; too high and users miss obviously better cards. These are guesses that should be revisited with real usage.</td><td>Post-launch tuning</td></tr>
+<tr><td class="m">9</td><td>Checkout detection per merchant</td><td>URL patterns are brittle; DOM heuristics are brittle differently. Needs a per-merchant test suite either way.</td><td>Before launch</td></tr>
+</table></div>
+<div class="callout ok"><b>The highest-leverage thing to resolve first</b>
+<p>Question 3. Rules authorship is the part of this system that has no clever engineering solution and
+no end date — it's a person checking issuer terms on a schedule, forever. Every other decision here is
+downstream of whether that job has an owner.</p></div>
+<div class="footer">
+  <p style="margin:0 0 6px"><strong>Cardnal Recommendation Engine</strong> — version 0.2</p>
+  <p style="margin:0;font-size:13px">Companion to MVP Product Screens v1.2 · Owner: Cardnal · Co-Founders: Suhas and Abhi</p>
+</div>
+
+</div></section>
+</main></div><script>
+const links=[...document.querySelectorAll('.side nav a')];
+const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+  links.forEach(a=>a.classList.remove('on'));const a=map.get(e.target.id);if(a)a.classList.add('on');}});},
+  {rootMargin:'-10% 0px -80% 0px',threshold:0});
+document.querySelectorAll('.sec').forEach(s=>obs.observe(s));
+</script></body></html>

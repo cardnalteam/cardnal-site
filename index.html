@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cardnal helps you choose the right card before you pay.">
+  <title>Cardnal — The right card. Every time.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0b0c0e;
+      --red: #e60b21;
+      --red-deep: #a80a18;
+      --paper: #fff;
+      --muted: #676c75;
+      --line: #e6e8ec;
+      --display: "Archivo", system-ui, sans-serif;
+      --body: "Instrument Sans", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--body);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 3px solid var(--red); outline-offset: 4px; }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .page::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 56rem;
+      height: 56rem;
+      top: -25rem;
+      right: -20rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(230, 11, 33, .13), transparent 66%);
+      pointer-events: none;
+    }
+    .page::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background: linear-gradient(116deg, transparent 0 52%, rgba(230, 11, 33, .025) 52% 55%, transparent 55%);
+      pointer-events: none;
+    }
+
+    header {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 28px 0;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; }
+    .brand-mark { width: 30px; height: 30px; display: block; }
+    .brand-name {
+      font-family: var(--display);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 48px));
+      flex: 1;
+      margin: 0 auto;
+      display: grid;
+      place-items: center;
+      padding: 72px 0 112px;
+    }
+    .content { width: min(100%, 700px); text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 26px;
+      color: var(--red-deep);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+    h1 {
+      max-width: 680px;
+      margin: 0 auto 24px;
+      font-family: var(--display);
+      font-size: clamp(3.2rem, 8vw, 6.7rem);
+      font-weight: 800;
+      line-height: .93;
+      letter-spacing: -.065em;
+    }
+    h1 span { display: block; }
+    h1 span:last-child { color: var(--red); }
+    .intro {
+      max-width: 510px;
+      margin: 0 auto 42px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      line-height: 1.55;
+    }
+    .signup-card {
+      width: min(100%, 560px);
+      margin: 0 auto;
+      padding: 25px;
+      text-align: left;
+      background: rgba(255, 255, 255, .86);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 22px 60px -34px rgba(11, 12, 14, .35);
+      backdrop-filter: blur(10px);
+    }
+    .signup-card h2 {
+      margin: 0 0 5px;
+      font-family: var(--display);
+      font-size: 20px;
+      letter-spacing: -.025em;
+    }
+    .signup-card p { margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+    .signup { display: flex; gap: 10px; }
+    .signup input {
+      min-width: 0;
+      flex: 1;
+      height: 54px;
+      padding: 0 16px;
+      color: var(--ink);
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+    }
+    .signup input::placeholder { color: #9aa0a8; }
+    .signup input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px rgba(230, 11, 33, .1); }
+    .signup button {
+      height: 54px;
+      padding: 0 21px;
+      color: #fff;
+      background: var(--red);
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: background .18s, transform .18s;
+    }
+    .signup button:hover { background: var(--red-deep); transform: translateY(-1px); }
+    .signup button:disabled { cursor: wait; opacity: .7; transform: none; }
+    .message {
+      min-height: 21px;
+      margin: 12px 2px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .message.success { color: #0e9f5b; }
+    .message.error { color: var(--red); }
+    .privacy-note { margin-top: 18px; color: var(--muted); font-size: 12px; text-align: center; }
+    footer {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 22px 0 28px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 560px) {
+      header, main, footer { width: min(100% - 32px, 1120px); }
+      header { padding-top: 22px; }
+      main { padding: 48px 0 80px; }
+      .signup-card { padding: 20px; }
+      .signup { flex-direction: column; }
+      .signup button { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <a class="brand" href="/" aria-label="Cardnal home">
+        <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
+          <path fill="#E60B21" d="M962 95.91 341.94 408.23q-5.36 2.7-8.17 8L62 928.09l571.2-223.16q14.9-5.82 22.83-19.72l53.84-94.37q6.93-12.16-6.93-10.22l-317.6 44.45q61.22-57.38 94.01-69.63l276.24-103.24q16.86-6.3 25.45-22.12z"/>
+          <path fill="#BD0C1B" d="m62 928.09 571.2-223.16q14.9-5.82 22.83-19.72l53.84-94.37q6.93-12.16-6.93-10.22l-317.6 44.45q61.22-57.38 94.01-69.63L62 928.09z"/>
+        </svg>
+        <span class="brand-name">Cardnal</span>
+      </a>
+    </header>
+
+    <main>
+      <section class="content" aria-labelledby="page-title">
+        <div class="eyebrow">Coming soon</div>
+        <h1 id="page-title"><span>The right card.</span><span>Every time.</span></h1>
+        <p class="intro">Cardnal helps you choose the best card for every purchase, so you can get more from the cards you already own.</p>
+
+        <div class="signup-card">
+          <h2>Join the waitlist</h2>
+          <p>Be first to know when Cardnal is ready.</p>
+          <form class="signup" id="signup" novalidate>
+            <label class="sr-only" for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <button id="submit" type="submit">Join the waitlist</button>
+          </form>
+          <p class="message" id="message" role="status" aria-live="polite"></p>
+          <div class="privacy-note">No card details required. Just your email.</div>
+        </div>
+      </section>
+    </main>
+
+    <footer>© 2026 Cardnal. Make every purchase count.</footer>
+  </div>
+
+  <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+  <script>
+    const form = document.getElementById('signup');
+    const email = document.getElementById('email');
+    const submit = document.getElementById('submit');
+    const message = document.getElementById('message');
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = 'message' + (type ? ' ' + type : '');
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const value = email.value.trim();
+      if (!value || !emailPattern.test(value)) {
+        showMessage('Enter a valid email address to join the waitlist.', 'error');
+        email.focus();
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Joining…';
+      showMessage('Adding you to the waitlist…');
+
+      try {
+        const response = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: value })
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          submit.textContent = 'You’re on the list';
+          email.readOnly = true;
+          showMessage("You're in. We'll email you when Cardnal is ready.", 'success');
+        } else if (response.status === 409) {
+          submit.disabled = false;
+          submit.textContent = 'Join the waitlist';
+          showMessage("That email is already on the list — you're all set.", 'success');
+        } else {
+          throw new Error(data.error || 'Something went wrong. Try again.');
+        }
+      } catch (error) {
+        submit.disabled = false;
+        submit.textContent = 'Join the waitlist';
+        showMessage(error.message || 'Could not reach the server. Try again.', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

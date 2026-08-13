@@ -1,0 +1,173 @@
+{
+  "schemaVersion": "0.1",
+  "rulesetVersion": "2026-08-09.1",
+  "publishedAt": "2026-08-09",
+
+  "_README": [
+    "EVERY RATE IN THIS FILE IS UNVERIFIED. verified=false on every rule is deliberate.",
+    "These values were seeded from general knowledge of published card terms and have NOT",
+    "been checked against issuer documentation. A human must open each termsUrl, confirm the",
+    "rate, and set verified=true with their initials and the date before this ships to anyone",
+    "outside the team. See VERIFICATION.md.",
+    "Extension logic reads this file and nothing else — updating rates never requires a code change."
+  ],
+
+  "categories": {
+    "online_retail":  { "label": "Online retail" },
+    "groceries":      { "label": "Groceries" },
+    "dining":         { "label": "Dining & restaurants" },
+    "superstore":     { "label": "Superstores & wholesale clubs" },
+    "delivery":       { "label": "Food delivery" },
+    "other":          { "label": "Everything else" }
+  },
+
+  "merchants": [
+    {
+      "merchantId": "amazon",
+      "name": "Amazon",
+      "domains": ["amazon.com", "smile.amazon.com"],
+      "categoryId": "online_retail",
+      "confidence": "high",
+      "pathOverrides": [
+        { "startsWith": "/alm/storefront", "categoryId": "groceries", "note": "Amazon Fresh storefront" }
+      ]
+    },
+    {
+      "merchantId": "whole_foods",
+      "name": "Whole Foods Market",
+      "domains": ["wholefoodsmarket.com"],
+      "categoryId": "groceries",
+      "confidence": "high",
+      "pathOverrides": []
+    },
+    {
+      "merchantId": "target",
+      "name": "Target",
+      "domains": ["target.com"],
+      "categoryId": "superstore",
+      "confidence": "medium",
+      "note": "Issuers classify Target inconsistently — some as superstore, some as groceries. Conservative default: superstore.",
+      "pathOverrides": []
+    },
+    {
+      "merchantId": "chipotle",
+      "name": "Chipotle",
+      "domains": ["chipotle.com"],
+      "categoryId": "dining",
+      "confidence": "high",
+      "pathOverrides": []
+    },
+    {
+      "merchantId": "doordash",
+      "name": "DoorDash",
+      "domains": ["doordash.com"],
+      "categoryId": "delivery",
+      "confidence": "medium",
+      "note": "Some issuers code delivery as dining, others as its own category. Mapped to delivery; card rules may treat delivery as dining explicitly.",
+      "pathOverrides": []
+    }
+  ],
+
+  "cards": [
+    {
+      "cardId": "chase_prime_visa",
+      "displayName": "Prime Visa",
+      "issuer": "Chase",
+      "network": "Visa",
+      "currency": "cash",
+      "currencyLabel": "cash back",
+      "annualFeeCents": 0,
+      "foreignTxFeePct": 0,
+      "colorHex": "#1C3FAB",
+      "termsUrl": "https://creditcards.chase.com/rewards-credit-cards/amazon-prime-rewards-visa",
+      "base": { "value": 1, "unit": "percent" },
+      "bonuses": [
+        { "match": { "merchantId": "amazon" },      "value": 5, "unit": "percent", "note": "Requires an active Prime membership", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "merchantId": "whole_foods" }, "value": 5, "unit": "percent", "note": "Requires an active Prime membership", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "categoryId": "dining" },      "value": 2, "unit": "percent", "verified": false, "verifiedAt": null, "verifiedBy": null }
+      ]
+    },
+    {
+      "cardId": "chase_freedom_unlimited",
+      "displayName": "Freedom Unlimited",
+      "issuer": "Chase",
+      "network": "Visa",
+      "currency": "cash",
+      "currencyLabel": "cash back",
+      "annualFeeCents": 0,
+      "foreignTxFeePct": 3,
+      "colorHex": "#1C5FAB",
+      "termsUrl": "https://creditcards.chase.com/cash-back-credit-cards/freedom/unlimited",
+      "base": { "value": 1.5, "unit": "percent" },
+      "bonuses": [
+        { "match": { "categoryId": "dining" }, "value": 3, "unit": "percent", "verified": false, "verifiedAt": null, "verifiedBy": null }
+      ]
+    },
+    {
+      "cardId": "amex_blue_cash_preferred",
+      "displayName": "Blue Cash Preferred",
+      "issuer": "American Express",
+      "network": "Amex",
+      "currency": "cash",
+      "currencyLabel": "cash back",
+      "annualFeeCents": 9500,
+      "foreignTxFeePct": 2.7,
+      "colorHex": "#1D9BD1",
+      "termsUrl": "https://www.americanexpress.com/us/credit-cards/card/blue-cash-preferred",
+      "base": { "value": 1, "unit": "percent" },
+      "bonuses": [
+        {
+          "match": { "categoryId": "groceries" },
+          "value": 6, "unit": "percent",
+          "cap": { "amountCents": 600000, "period": "calendar_year", "thenValue": 1, "thenUnit": "percent" },
+          "note": "US supermarkets only. Excludes superstores and warehouse clubs.",
+          "excludesMerchants": ["target"],
+          "verified": false, "verifiedAt": null, "verifiedBy": null
+        }
+      ]
+    },
+    {
+      "cardId": "amex_gold",
+      "displayName": "Amex Gold",
+      "issuer": "American Express",
+      "network": "Amex",
+      "currency": "MR",
+      "currencyLabel": "Membership Rewards points",
+      "annualFeeCents": 32500,
+      "foreignTxFeePct": 0,
+      "colorHex": "#C9A227",
+      "termsUrl": "https://www.americanexpress.com/us/credit-cards/card/gold-card",
+      "base": { "value": 1, "unit": "multiplier" },
+      "bonuses": [
+        { "match": { "categoryId": "dining" },    "value": 4, "unit": "multiplier", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "categoryId": "delivery" },  "value": 4, "unit": "multiplier", "note": "Issuer treats delivery as dining", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        {
+          "match": { "categoryId": "groceries" },
+          "value": 4, "unit": "multiplier",
+          "cap": { "amountCents": 2500000, "period": "calendar_year", "thenValue": 1, "thenUnit": "multiplier" },
+          "note": "US supermarkets only",
+          "excludesMerchants": ["target"],
+          "verified": false, "verifiedAt": null, "verifiedBy": null
+        }
+      ]
+    },
+    {
+      "cardId": "chase_sapphire_preferred",
+      "displayName": "Sapphire Preferred",
+      "issuer": "Chase",
+      "network": "Visa",
+      "currency": "UR",
+      "currencyLabel": "Ultimate Rewards points",
+      "annualFeeCents": 9500,
+      "foreignTxFeePct": 0,
+      "colorHex": "#2E6FC0",
+      "termsUrl": "https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred",
+      "base": { "value": 1, "unit": "multiplier" },
+      "bonuses": [
+        { "match": { "categoryId": "dining" },   "value": 3, "unit": "multiplier", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "categoryId": "delivery" }, "value": 3, "unit": "multiplier", "note": "Issuer treats delivery as dining", "verified": false, "verifiedAt": null, "verifiedBy": null },
+        { "match": { "categoryId": "online_retail" }, "value": 1, "unit": "multiplier", "verified": false, "verifiedAt": null, "verifiedBy": null }
+      ]
+    }
+  ]
+}
