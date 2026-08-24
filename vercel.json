@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/founder.js": {
+      "includeFiles": ["founder-roadmap.html"]
+    }
+  },
+  "rewrites": [
+    { "source": "/founder", "destination": "/api/founder" },
+    { "source": "/founder/", "destination": "/api/founder" },
+    { "source": "/founder-roadmap.html", "destination": "/api/founder" }
+  ]
+}
