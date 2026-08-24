@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/founder.js": {
-      "includeFiles": ["founder-roadmap.html"]
+      "includeFiles": "founder-roadmap.html"
     }
   },
   "rewrites": [
