@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Cardnal",
+  "version": "0.1.0",
+  "description": "Choose the right card for supported purchases.",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.amazon.com/*",
+        "https://*.target.com/*",
+        "https://*.walmart.com/*"
+      ],
+      "js": [
+        "engine.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
